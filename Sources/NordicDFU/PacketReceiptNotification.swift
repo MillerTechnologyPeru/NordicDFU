@@ -8,7 +8,7 @@
 import Foundation
 
 /// DFU Packet Receipt Notification
-public struct DFUPacketReceiptNotification: DFUResponseProtocol {
+public struct DFUPacketReceiptNotification: DFUMessage {
     
     public static let opcode: DFUOpcode = .packetReceiptNotification
     
@@ -25,5 +25,12 @@ public struct DFUPacketReceiptNotification: DFUResponseProtocol {
             else { return nil }
         
         self.bytesReceived = UInt32(littleEndian: UInt32(bytes: (data[1], data[2], data[3], data[4])))
+    }
+    
+    public var data: Data {
+        
+        let bytes = bytesReceived.littleEndian.bytes
+        
+        return Data([type(of: self).opcode.rawValue, bytes.0, bytes.1, bytes.2, bytes.3])
     }
 }

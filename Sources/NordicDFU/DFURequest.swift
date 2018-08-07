@@ -7,17 +7,23 @@
 
 import Foundation
 
-/// DFU Request
-public protocol DFURequest {
+public protocol DFUMessage {
     
-    /// Request Opcode
+    /// DFU Opcode
     static var opcode: DFUOpcode { get }
     
-    /// Whether the request expects acknowledgement from the peripheral.
-    static var acknowledge: Bool { get }
+    /// Initialize from PDU bytes.
+    init?(data: Data)
     
     /// Request PDU data.
     var data: Data { get }
+}
+
+/// DFU Request
+public protocol DFURequest: DFUMessage {
+    
+    /// Whether the request expects acknowledgement from the peripheral.
+    static var acknowledge: Bool { get }
 }
 
 // Default values
@@ -43,9 +49,24 @@ public struct DFUStartRequest: DFURequest {
     
     public static let acknowledge = false
     
+    internal static let length = MemoryLayout<DFUOpcode.RawValue>.size + MemoryLayout<FirmwareType.RawValue>.size
+    
     public var firmwareType: FirmwareType
     
     public init(firmwareType: FirmwareType) {
+        
+        self.firmwareType = firmwareType
+    }
+    
+    public init?(data: Data) {
+        
+        guard data.count == type(of: self).length,
+            let opcode = DFUOpcode(rawValue: data[0]),
+            opcode == type(of: self).opcode
+            else { return nil }
+        
+        guard let firmwareType = FirmwareType(rawValue: data[1])
+            else { return nil }
         
         self.firmwareType = firmwareType
     }
@@ -61,32 +82,43 @@ public struct DFUStartRequestV1: DFURequest {
     
     public static let opcode: DFUOpcode = .start
     
+    internal static let length = MemoryLayout<DFUOpcode.RawValue>.size
+    
     public init() { }
+    
+    public init?(data: Data) {
+        
+        guard data.count == type(of: self).length,
+            let opcode = DFUOpcode(rawValue: data[0]),
+            opcode == type(of: self).opcode
+            else { return nil }
+    }
 }
 
 /// Initialize DFU Parameters
-public struct DFUInitialize: DFURequest {
+public enum DFUInitialize: UInt8, DFURequest {
     
     public static let opcode: DFUOpcode = .initialize
     
-    public var parameter: DFUInitializeParameter
+    internal static let length = 2
     
-    public init(parameter: DFUInitializeParameter) {
+    case receiveInitPacket  = 0
+    case initPacketComplete = 1
+    
+    public init?(data: Data) {
         
-        self.parameter = parameter
+        guard data.count == type(of: self).length,
+            let opcode = DFUOpcode(rawValue: data[0]),
+            opcode == type(of: self).opcode
+            else { return nil }
+        
+        self.init(rawValue: data[1])
     }
     
     public var data: Data {
         
-        return Data([type(of: self).opcode.rawValue, parameter.rawValue])
+        return Data([type(of: self).opcode.rawValue, rawValue])
     }
-}
-
-/// Initialize DFU Parameters
-public enum DFUInitializeParameter: UInt8 {
-    
-    case receiveInitPacket  = 0
-    case initPacketComplete = 1
 }
 
 /// Initialize DFU Parameters Version 1
@@ -95,6 +127,14 @@ public struct DFUInitializeV1: DFURequest {
     public static let opcode: DFUOpcode = .initialize
     
     public init() { }
+    
+    public init?(data: Data) {
+        
+        guard data.count == type(of: self).opcode.rawValue,
+            let opcode = DFUOpcode(rawValue: data[0]),
+            opcode == type(of: self).opcode
+            else { return nil }
+    }
 }
 
 /// Receive Firmware Image
@@ -103,6 +143,14 @@ public struct DFUReceiveFirmwareImage: DFURequest {
     public static let opcode: DFUOpcode = .receiveFirmwareImage
     
     public init() { }
+    
+    public init?(data: Data) {
+        
+        guard data.count == type(of: self).opcode.rawValue,
+            let opcode = DFUOpcode(rawValue: data[0]),
+            opcode == type(of: self).opcode
+            else { return nil }
+    }
 }
 
 /// DFU Validate Firmware
@@ -111,6 +159,14 @@ public struct DFUValidateFirmware: DFURequest {
     public static let opcode: DFUOpcode = .validateFirmware
     
     public init() { }
+    
+    public init?(data: Data) {
+        
+        guard data.count == type(of: self).opcode.rawValue,
+            let opcode = DFUOpcode(rawValue: data[0]),
+            opcode == type(of: self).opcode
+            else { return nil }
+    }
 }
 
 /// DFU Activate and Reset
@@ -121,6 +177,14 @@ public struct DFUActivate: DFURequest {
     public static let acknowledge = false
     
     public init() { }
+    
+    public init?(data: Data) {
+        
+        guard data.count == type(of: self).opcode.rawValue,
+            let opcode = DFUOpcode(rawValue: data[0]),
+            opcode == type(of: self).opcode
+            else { return nil }
+    }
 }
 
 /// DFU Reset
@@ -131,12 +195,22 @@ public struct DFUReset: DFURequest {
     public static let acknowledge = false
     
     public init() { }
+    
+    public init?(data: Data) {
+        
+        guard data.count == type(of: self).opcode.rawValue,
+            let opcode = DFUOpcode(rawValue: data[0]),
+            opcode == type(of: self).opcode
+            else { return nil }
+    }
 }
 
 /// DFU Receipt Notification Request
-public struct DFUPacketReceiptNotificationRequest: DFURequest {
+public struct DFUPacketReceiptRequest: DFURequest {
     
     public static let opcode: DFUOpcode = .packetReceipt
+    
+    internal static let length = 3
     
     /// Number of packets of firmware data to be received by the DFU target
     /// before sending a new Packet Receipt Notification.
@@ -147,6 +221,16 @@ public struct DFUPacketReceiptNotificationRequest: DFURequest {
     public init(packets: UInt16 = 0) {
         
         self.packets = packets
+    }
+    
+    public init?(data: Data) {
+        
+        guard data.count == type(of: self).length,
+            let opcode = DFUOpcode(rawValue: data[0]),
+            opcode == type(of: self).opcode
+            else { return nil }
+        
+        self.packets = UInt16(littleEndian: UInt16(bytes: (data[1], data[2])))
     }
     
     public var data: Data {

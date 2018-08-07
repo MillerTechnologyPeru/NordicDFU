@@ -8,17 +8,7 @@
 import Foundation
 
 /// DFU Response
-public protocol DFUResponseProtocol {
-    
-    /// Response Opcode
-    static var opcode: DFUOpcode { get }
-    
-    /// Initialize from PDU bytes.
-    init?(data: Data)
-}
-
-/// DFU Response
-public struct DFUResponse: DFUResponseProtocol {
+public struct DFUResponse: DFUMessage {
     
     public static let opcode: DFUOpcode = .response
     
@@ -36,6 +26,19 @@ public struct DFUResponse: DFUResponseProtocol {
         return DFUError(code: status)
     }
     
+    public init(request: DFUOpcode,
+                error: DFUError? = nil) {
+        
+        self.init(request: request, status: error?.code ?? .success)
+    }
+    
+    internal init(request: DFUOpcode,
+                  status: DFUResultCode = .success) {
+        
+        self.request = request
+        self.status = status
+    }
+    
     public init?(data: Data) {
         
         guard data.count == DFUResponse.length,
@@ -47,5 +50,19 @@ public struct DFUResponse: DFUResponseProtocol {
         
         self.request = request
         self.status = status
+    }
+    
+    public var data: Data {
+        
+        return Data([type(of: self).opcode.rawValue, request.rawValue, status.rawValue])
+    }
+}
+
+extension DFUResponse: Equatable {
+    
+    public static func == (lhs: DFUResponse, rhs: DFUResponse) -> Bool {
+        
+        return lhs.request == rhs.request
+            && lhs.status == rhs.status
     }
 }

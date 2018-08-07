@@ -23,50 +23,10 @@ public enum DFUControlPoint: GATTProfileCharacteristic {
     case validateFirmware
     case activate
     case reset
-    case packetReceiptRequest(DFUPacketReceiptNotificationRequest)
+    case packetReceiptRequest(DFUPacketReceiptRequest)
     case response(DFUResponse)
     case packetReceiptNotification(DFUPacketReceiptNotification)
-    /*
-    public init?(request: DFURequest) {
-        
-        if let request = request as? DFUStartRequest {
-            
-            self = .start(request)
-            
-        } else if let request = request as? DFUInitialize {
-            
-            self = .initialize(request)
-            
-        } else if let request = request as? DFUReceiveFirmwareImage {
-            
-            self = .receiveFirmwareImage
-            
-        } else if let request = request as? DFUValidateFirmware {
-            
-            self = .validateFirmware
-            
-        } else if let request = request as? DFUActivate {
-            
-            self = .start(request)
-            
-        } else if let request = request as? DFUReset {
-            
-            self = .start(request)
-            
-        } else if let request = request as? DFUStartRequest {
-            
-            self = .start(request)
-            
-        } else if let request = request as? DFUStartRequest {
-            
-            self = .start(request)
-            
-        } else {
-            
-            return nil
-        }
-    }
-    */
+    
     public init?(data: Data) {
         
         guard data.isEmpty == false
@@ -78,16 +38,138 @@ public enum DFUControlPoint: GATTProfileCharacteristic {
         switch opcode {
             
         case .start:
-            let request = DFUStartRequest(firmwareType: <#T##FirmwareType#>)
-            self = .start(<#T##DFUStartRequest#>)
+            
+            guard let request = DFUStartRequest(data: data)
+                else { return nil }
+            
+            self = .start(request)
+            
+        case .initialize:
+            
+            guard let request = DFUInitialize(data: data)
+                else { return nil }
+            
+            self = .initialize(request)
+            
+        case .receiveFirmwareImage:
+            
+            guard let _ = DFUReceiveFirmwareImage(data: data)
+                else { return nil }
+            
+            self = .receiveFirmwareImage
+            
+        case .validateFirmware:
+            
+            guard let _ = DFUValidateFirmware(data: data)
+                else { return nil }
+            
+            self = .validateFirmware
+            
+        case .activate:
+            
+            guard let _ = DFUActivate(data: data)
+                else { return nil }
+            
+            self = .activate
+            
+        case .reset:
+            
+            guard let _ = DFUReset(data: data)
+                else { return nil }
+            
+            self = .reset
+            
+        case .packetReceipt:
+            
+            guard let request = DFUPacketReceiptRequest(data: data)
+                else { return nil }
+            
+            self = .packetReceiptRequest(request)
+            
+        case .response:
+            
+            guard let response = DFUResponse(data: data)
+                else { return nil }
+            
+            self = .response(response)
+            
+        case .packetReceiptNotification:
+            
+            guard let notification = DFUPacketReceiptNotification(data: data)
+                else { return nil }
+            
+            self = .packetReceiptNotification(notification)
+        
+        case .reportReceivedImageSize:
+            
+            return nil // not supported
         }
     }
     
     public var data: Data {
         
+        return rawValue.data
+    }
+}
+
+extension DFUControlPoint: RawRepresentable {
+    
+    public init?(rawValue: DFUMessage) {
+        
+        if let request = rawValue as? DFUStartRequest {
+            
+            self = .start(request)
+            
+        } else if let request = rawValue as? DFUInitialize {
+            
+            self = .initialize(request)
+            
+        } else if rawValue is DFUReceiveFirmwareImage {
+            
+            self = .receiveFirmwareImage
+            
+        } else if rawValue is DFUValidateFirmware {
+            
+            self = .validateFirmware
+            
+        } else if rawValue is DFUActivate {
+            
+            self = .activate
+            
+        } else if rawValue is DFUReset {
+            
+            self = .reset
+            
+        } else if let request = rawValue as? DFUPacketReceiptRequest {
+            
+            self = .packetReceiptRequest(request)
+            
+        } else if let response = rawValue as? DFUResponse {
+            
+            self = .response(response)
+            
+        } else if let notification = rawValue as? DFUPacketReceiptNotification {
+            
+            self = .packetReceiptNotification(notification)
+            
+        }  else {
+            
+            return nil
+        }
+    }
+    
+    public var rawValue: DFUMessage {
+        
         switch self {
-        case let .start(request): return request.data
-        case let .initialize
+        case let .start(request): return request
+        case let .initialize(request): return request
+        case .receiveFirmwareImage: return DFUReceiveFirmwareImage()
+        case .validateFirmware: return DFUValidateFirmware()
+        case .activate: return DFUActivate()
+        case .reset: return DFUReset()
+        case let .packetReceiptRequest(request): return request
+        case let .response(response): return response
+        case let .packetReceiptNotification(notification): return notification
         }
     }
 }
