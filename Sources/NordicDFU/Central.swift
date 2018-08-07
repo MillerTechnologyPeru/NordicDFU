@@ -64,7 +64,7 @@ internal extension CentralProtocol {
     func notify <T: GATTProfileCharacteristic> (_ characteristic: T.Type,
                                                 for cache: [Characteristic<Peripheral>],
                                                 timeout: Timeout,
-                                                notification: ((GATTProfileNotification<T>) -> ())?) throws {
+                                                notification: ((ErrorValue<T>) -> ())?) throws {
         
         guard let foundCharacteristic = cache.first(where: { $0.uuid == T.uuid })
             else { throw CentralError.invalidAttribute(T.uuid) }
@@ -75,7 +75,7 @@ internal extension CentralProtocol {
             
             dataNotification = { (data) in
                 
-                let response: GATTProfileNotification<T>
+                let response: ErrorValue<T>
                 
                 if let value = T.init(data: data) {
                     
@@ -83,7 +83,7 @@ internal extension CentralProtocol {
                     
                 } else {
                     
-                    response = .invalid(data)
+                    response = .error(NordicGATTError.invalidData(data))
                 }
                 
                 notification(response)
@@ -137,8 +137,9 @@ internal extension CentralProtocol {
     }
 }
 
-internal enum GATTProfileNotification <T: GATTProfileCharacteristic> {
+/// Basic wrapper for error / value pairs.
+internal enum ErrorValue <T> {
     
-    case invalid(Data)
+    case error(Error)
     case value(T)
 }

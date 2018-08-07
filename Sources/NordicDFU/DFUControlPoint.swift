@@ -174,11 +174,80 @@ extension DFUControlPoint: RawRepresentable {
     }
 }
 
-public extension CentralProtocol {
+// MARK: - Central
+
+internal extension CentralProtocol {
     
-    func send <T: DFURequest> (_ request: T) throws {
+    func send <T: DFURequest> (_ request: T,
+                               for cache: [Characteristic<Peripheral>],
+                               timeout: Timeout) throws {
         
+        guard let foundCharacteristic = cache.first(where: { $0.uuid == DFUControlPoint.uuid })
+            else { throw CentralError.invalidAttribute(DFUControlPoint.uuid) }
         
+        let expectAcknowledgement = T.acknowledge
+        
+        var notificationValue: ErrorValue<DFUControlPoint>?
+        
+        if expectAcknowledgement {
+            
+            try self.notify(DFUControlPoint.self, for: cache, timeout: timeout, notification: { notificationValue = $0 })
+        }
+        
+        // send request
+        try self.writeValue(request.data,
+                            for: foundCharacteristic,
+                            withResponse: true,
+                            timeout: try timeout.timeRemaining())
+        
+        if expectAcknowledgement {
+            
+            // wait for notification
+            repeat {
+                
+                // attempt to timeout
+                try timeout.timeRemaining()
+                
+                // get notification response
+                guard let response = notificationValue
+                    else { usleep(100); continue }
+                
+                switch response {
+                    
+                case let .error(error):
+                    throw error
+                    
+                case let .value(value):
+                    
+                    // stop notifications
+                    try self.notify(DFUControlPoint.self, for: cache, timeout: timeout, notification: nil)
+                    
+                    switch value {
+                        
+                    case let .response(response):
+                        
+                        if let error = response.error {
+                            
+                            throw error
+                            
+                        } else {
+                            
+                            guard response.request == T.opcode
+                                else { throw NordicGATTError.invalidData(response.data) }
+                            
+                            // success
+                            return
+                        }
+                        
+                    default:
+                        
+                        throw NordicGATTError.invalidData(value.data)
+                    }
+                    
+                }
+                
+            } while true // keep waiting
+        }
     }
 }
 
