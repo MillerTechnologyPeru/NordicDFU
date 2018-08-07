@@ -9,11 +9,13 @@ import Foundation
 import Bluetooth
 import GATT
 
-public struct DFUControlPoint {
+public struct DFUControlPoint: GATTProfileCharacteristic {
     
     public static let uuid = BluetoothUUID(rawValue: "00001531-1212-EFDE-1523-785FEABCD123")!
     
     public static let properies: BitMaskOptionSet<GATT.Characteristic.Property> = [.write, .notify]
+    
+    public static var service: GATTProfileService.Type = DFUService.self
     
     public init?(data: Data) {
         
@@ -26,11 +28,11 @@ public struct DFUControlPoint {
     }
 }
 
-// MARK: -
-
-public enum DFUInitializeParameter: UInt8 {
+public extension CentralProtocol {
     
-    case receiveInitPacket  = 0
-    case initPacketComplete = 1
+    func send <T: DFURequest> (_ request: T) throws {
+        
+        
+    }
 }
 

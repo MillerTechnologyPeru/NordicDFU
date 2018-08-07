@@ -7,18 +7,26 @@
 
 import Foundation
 
-
 /// DFU Request
 public protocol DFURequest {
     
     /// Request Opcode
     static var opcode: DFUOpcode { get }
     
+    /// Whether the request expects acknowledgement from the peripheral.
+    static var acknowledge: Bool { get }
+    
     /// Request PDU data.
     var data: Data { get }
 }
 
+// Default values
 public extension DFURequest {
+    
+    static var acknowledge: Bool {
+        
+        return true
+    }
     
     var data: Data {
         
@@ -26,10 +34,14 @@ public extension DFURequest {
     }
 }
 
+// MARK: - Requests
+
 /// Start DFU
 public struct DFUStartRequest: DFURequest {
     
     public static let opcode: DFUOpcode = .start
+    
+    public static let acknowledge = false
     
     public var firmwareType: FirmwareType
     
@@ -70,6 +82,13 @@ public struct DFUInitialize: DFURequest {
     }
 }
 
+/// Initialize DFU Parameters
+public enum DFUInitializeParameter: UInt8 {
+    
+    case receiveInitPacket  = 0
+    case initPacketComplete = 1
+}
+
 /// Initialize DFU Parameters Version 1
 public struct DFUInitializeV1: DFURequest {
     
@@ -99,6 +118,8 @@ public struct DFUActivate: DFURequest {
     
     public static let opcode: DFUOpcode = .activate
     
+    public static let acknowledge = false
+    
     public init() { }
 }
 
@@ -106,6 +127,8 @@ public struct DFUActivate: DFURequest {
 public struct DFUReset: DFURequest {
     
     public static let opcode: DFUOpcode = .reset
+    
+    public static let acknowledge = false
     
     public init() { }
 }
