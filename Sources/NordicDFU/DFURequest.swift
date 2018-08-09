@@ -49,11 +49,11 @@ public struct DFUStartRequest: DFURequest {
     
     public static let acknowledge = false
     
-    internal static let length = MemoryLayout<DFUOpcode.RawValue>.size + MemoryLayout<FirmwareType.RawValue>.size
+    internal static let length = MemoryLayout<DFUOpcode.RawValue>.size + MemoryLayout<DFUFirmwareType.RawValue>.size
     
-    public var firmwareType: FirmwareType
+    public var firmwareType: DFUFirmwareType
     
-    public init(firmwareType: FirmwareType) {
+    public init(firmwareType: DFUFirmwareType) {
         
         self.firmwareType = firmwareType
     }
@@ -65,7 +65,7 @@ public struct DFUStartRequest: DFURequest {
             opcode == type(of: self).opcode
             else { return nil }
         
-        guard let firmwareType = FirmwareType(rawValue: data[1])
+        guard let firmwareType = DFUFirmwareType(rawValue: data[1])
             else { return nil }
         
         self.firmwareType = firmwareType
