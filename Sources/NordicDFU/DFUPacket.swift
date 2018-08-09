@@ -9,29 +9,50 @@ import Foundation
 import Bluetooth
 
 /// DFU Packet
-public struct DFUPacket: GATTProfileCharacteristic {
+public struct DFUPacket <Value: DFUPacketValue>: GATTProfileCharacteristic {
     
-    public static let uuid = BluetoothUUID(rawValue: "00001534-1212-EFDE-1523-785FEABCD123")!
+    public static var uuid: BluetoothUUID { return BluetoothUUID(rawValue: "00001534-1212-EFDE-1523-785FEABCD123")! }
     
-    public static let service: GATTProfileService.Type = DFUService.self
+    public static var service: GATTProfileService.Type { return DFUService.self }
     
-    public static let properies: BitMaskOptionSet<GATT.Characteristic.Property> = [.writeWithoutResponse]
+    public static var properies: BitMaskOptionSet<GATT.Characteristic.Property> { return [.writeWithoutResponse] }
     
     internal let packetSize: UInt32 = 20 // Legacy DFU does not support higher MTUs
     
-    /// Number of bytes of firmware already sent.
-    public let bytesSent: UInt32
+    public let value: Value
     
-    /// Number of bytes sent at the last progress notification. This value is used to calculate the current speed.
-    public let bytesSentSinceProgessNotification: UInt32
+    public init(value: Value) {
+        
+        self.value = value
+    }
     
     public init?(data: Data) {
         
-        fatalError()
+        guard let value = Value(data: data)
+            else { return nil }
+        
+        self.init(value: value)
     }
     
     public var data: Data {
         
-        fatalError()
+        return value.data
+    }
+}
+
+public protocol DFUPacketValue {
+    
+    init?(data: Data)
+    
+    var data: Data { get }
+}
+
+public struct DFUPacketData: DFUPacketValue {
+    
+    public let data: Data
+    
+    public init(data: Data) {
+        
+        self.data = data
     }
 }

@@ -33,7 +33,7 @@ public struct DFUFirmwareSize {
     }
 }
 
-public extension DFUFirmwareSize {
+extension DFUFirmwareSize: DFUPacketValue {
     
     internal static let length = MemoryLayout<UInt32>.size * 3
     

@@ -15,6 +15,14 @@ public protocol GATTProfile {
     static var services: [GATTProfileService.Type] { get }
 }
 
+public extension GATTProfile {
+    
+    static var characteristics: [GATTProfileCharacteristic.Type] {
+        
+        return services.reduce([]) { $0.0 + $0.1.characteristics }
+    }
+}
+
 /// GATT Service
 public protocol GATTProfileService {
     

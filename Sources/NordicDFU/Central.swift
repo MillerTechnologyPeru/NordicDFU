@@ -13,9 +13,9 @@ internal extension CentralProtocol {
     
     /// Connects to the device, fetches the data, performs the action, and disconnects.
     func device <T> (for peripheral: Peripheral,
-                             characteristics: [GATTProfileCharacteristic.Type],
-                             timeout: Timeout,
-                             _ action: ([Characteristic<Peripheral>]) throws -> (T)) throws -> T {
+                     profile: GATTProfile.Type,
+                     timeout: Timeout,
+                     _ action: ([Characteristic<Peripheral>]) throws -> (T)) throws -> T {
         
         // connect first
         try connect(to: peripheral, timeout: try timeout.timeRemaining())
@@ -23,9 +23,9 @@ internal extension CentralProtocol {
         // disconnect
         defer { disconnect(peripheral: peripheral) }
         
-        let foundCharacteristics = try self.characteristics(characteristics,
-                                                            for: peripheral,
-                                                            timeout: timeout)
+        let foundCharacteristics = try self.profile(profile,
+                                                    for: peripheral,
+                                                    timeout: timeout)
         
         // perform action
         return try action(foundCharacteristics)
@@ -98,14 +98,14 @@ internal extension CentralProtocol {
     }
     
     /// Verify a peripheral declares the GATT profile.
-    func characteristics(_ characteristics: [GATTProfileCharacteristic.Type],
-                         for peripheral: Peripheral,
-                         timeout: Timeout) throws -> [Characteristic<Peripheral>] {
+    func profile(_ profile: GATTProfile.Type,
+                for peripheral: Peripheral,
+                timeout: Timeout) throws -> [Characteristic<Peripheral>] {
         
         // group characteristics by service
         var characteristicsByService = [BluetoothUUID: [BluetoothUUID]]()
-        characteristics.forEach {
-            characteristicsByService[$0.service.uuid] = (characteristicsByService[$0.service.uuid] ?? []) + [$0.uuid]
+        profile.services.forEach {
+            characteristicsByService[$0.uuid] = (characteristicsByService[$0.uuid] ?? []) + $0.characteristics.map { $0.uuid }
         }
         
         var results = [Characteristic<Peripheral>]()
@@ -131,7 +131,7 @@ internal extension CentralProtocol {
             }
         }
         
-        assert(results.count == characteristics.count)
+        assert(results.count == profile.characteristics.count)
         
         return results
     }

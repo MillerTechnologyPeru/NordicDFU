@@ -18,6 +18,4 @@ public struct DFUService: GATTProfileService {
     public static let characteristics: [GATTProfileCharacteristic.Type] = [
         DFUControlPoint.self
     ]
-    
-    public var controlPoint: DFUControlPoint
 }
