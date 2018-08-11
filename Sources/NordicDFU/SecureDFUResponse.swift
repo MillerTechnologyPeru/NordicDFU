@@ -333,6 +333,8 @@ public struct SecureDFUReadObjectInfoResponse: SecureDFUResponseProtocol {
     }
 }
 
+public typealias SecureDFUPacketReceiptNotification = SecureDFUCalculateChecksumResponse
+
 public struct SecureDFUCalculateChecksumResponse: SecureDFUResponseProtocol {
     
     // The correct reponse for Calculate Checksum has additional 8 bytes: Offset and CRC
