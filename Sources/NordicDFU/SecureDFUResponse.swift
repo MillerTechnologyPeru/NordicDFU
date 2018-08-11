@@ -7,16 +7,138 @@
 
 import Foundation
 
-/*
 public enum SecureDFUResponse {
     
-    public static let opcode: SecureDFUOpcode = .response
+    public static var opcode: SecureDFUOpcode { return .response }
     
-    case success(request: SecureDFUOpcode)
-    case error(SecureDFUError)
-    case extendedError(SecureDFUExtendedError)
+    case success(SecureDFUSuccessResponse)
+    case readObject(SecureDFUReadObjectInfoResponse)
+    case calculateChecksum(SecureDFUCalculateChecksumResponse)
+    
+    case error(SecureDFUErrorResponse)
+    case extendedError(SecureDFUExtendedErrorResponse)
 }
-*/
+
+public extension SecureDFUResponse {
+    
+    public var error: Error? {
+        
+        switch self {
+        case let .error(response):
+            return response.error
+        case let .extendedError(response):
+            return response.error
+        default:
+            return nil
+        }
+    }
+}
+
+// MARK: - RawRepresentable
+
+extension SecureDFUResponse: RawRepresentable {
+    
+    public init?(rawValue: SecureDFUResponseProtocol) {
+        
+        if let rawValue = rawValue as? SecureDFUSuccessResponse {
+            
+            self = .success(rawValue)
+            
+        } else if let rawValue = rawValue as? SecureDFUErrorResponse {
+            
+            self = .error(rawValue)
+            
+        } else if let rawValue = rawValue as? SecureDFUExtendedErrorResponse {
+            
+            self = .extendedError(rawValue)
+            
+        } else if let rawValue = rawValue as? SecureDFUReadObjectInfoResponse {
+            
+            self = .readObject(rawValue)
+            
+        } else if let rawValue = rawValue as? SecureDFUCalculateChecksumResponse {
+            
+            self = .calculateChecksum(rawValue)
+            
+        } else {
+            
+            return nil
+        }
+    }
+    
+    public var rawValue: SecureDFUResponseProtocol {
+        
+        switch self {
+        case let .success(response): return response
+        case let .error(response): return response
+        case let .extendedError(response): return response
+        case let .readObject(response): return response
+        case let .calculateChecksum(response): return response
+        }
+    }
+}
+
+// MARK: - Data
+
+public extension SecureDFUResponse {
+    
+    internal static let length = 3
+    
+    public init?(data: Data) {
+        
+        guard data.count >= type(of: self).length,
+            let opcode = SecureDFUOpcode(rawValue: data[0]),
+            opcode == type(of: self).opcode,
+            let request = SecureDFUOpcode(rawValue: data[1]),
+            let status = SecureDFUResultCode(rawValue: data[2])
+            else { return nil }
+        
+        switch (status, request) {
+            
+        case (.success, .readObjectInfo):
+            
+            guard let value = SecureDFUReadObjectInfoResponse(data: data)
+                else { return nil }
+            
+            self = .readObject(value)
+            
+        case (.success, .calculateChecksum):
+            
+            guard let value = SecureDFUCalculateChecksumResponse(data: data)
+                else { return nil }
+            
+            self = .calculateChecksum(value)
+            
+        case (.success, _):
+            
+            guard let value = SecureDFUSuccessResponse(data: data)
+                else { return nil }
+            
+            self = .success(value)
+            
+        case (.extendedError, _):
+            
+            guard let value = SecureDFUExtendedErrorResponse(data: data)
+                else { return nil }
+            
+            self = .extendedError(value)
+            
+        default:
+            
+            guard let value = SecureDFUErrorResponse(data: data)
+                else { return nil }
+            
+            self = .error(value)
+        }
+    }
+    
+    public var data: Data {
+        
+        return rawValue.data
+    }
+}
+
+// MARK: - SecureDFUResponseProtocol
 
 public protocol SecureDFUResponseProtocol {
     
@@ -34,13 +156,18 @@ public extension SecureDFUResponseProtocol {
     static var opcode: SecureDFUOpcode { return .response }
 }
 
-public struct SecureDFUResponse: SecureDFUResponseProtocol {
+public struct SecureDFUSuccessResponse: SecureDFUResponseProtocol {
     
     internal static let length = 3
     
     public let request: SecureDFUOpcode
     
-    public let status: SecureDFUResultCode
+    public var status: SecureDFUResultCode { return .success }
+    
+    public init(request: SecureDFUOpcode) {
+        
+        self.request = request
+    }
     
     public init?(data: Data) {
         
@@ -48,20 +175,65 @@ public struct SecureDFUResponse: SecureDFUResponseProtocol {
             let opcode = SecureDFUOpcode(rawValue: data[0]),
             opcode == type(of: self).opcode,
             let request = SecureDFUOpcode(rawValue: data[1]),
-            let status = SecureDFUResultCode(rawValue: data[2])
+            let status = SecureDFUResultCode(rawValue: data[2]),
+            status == .success
             else { return nil }
         
         self.request = request
-        self.status = status
     }
     
     public var data: Data {
         
-        return Data([type(of: self).opcode.rawValue, request.rawValue, status.rawValue])
+        return Data([
+            type(of: self).opcode.rawValue,
+            request.rawValue,
+            status.rawValue
+            ])
     }
 }
 
-public struct SecureDFUExtendedErrorResponse: SecureDFUResponseProtocol {
+public struct SecureDFUErrorResponse: SecureDFUResponseProtocol, Error {
+    
+    internal static let length = 3
+    
+    public let request: SecureDFUOpcode
+    
+    public var status: SecureDFUResultCode { return error.code }
+    
+    public let error: SecureDFUError
+    
+    public init(request: SecureDFUOpcode,
+                error: SecureDFUError) {
+        
+        self.request = request
+        self.error = error
+    }
+    
+    public init?(data: Data) {
+        
+        guard data.count == type(of: self).length,
+            let opcode = SecureDFUOpcode(rawValue: data[0]),
+            opcode == type(of: self).opcode,
+            let request = SecureDFUOpcode(rawValue: data[1]),
+            let status = SecureDFUResultCode(rawValue: data[2]),
+            let error = SecureDFUError(code: status)
+            else { return nil }
+        
+        self.request = request
+        self.error = error
+    }
+    
+    public var data: Data {
+        
+        return Data([
+            type(of: self).opcode.rawValue,
+            request.rawValue,
+            status.rawValue
+            ])
+    }
+}
+
+public struct SecureDFUExtendedErrorResponse: SecureDFUResponseProtocol, Error {
     
     internal static let length = 3
     
@@ -70,6 +242,13 @@ public struct SecureDFUExtendedErrorResponse: SecureDFUResponseProtocol {
     public var status: SecureDFUResultCode { return .extendedError }
     
     public let error: SecureDFUExtendedError
+    
+    public init(request: SecureDFUOpcode,
+                error: SecureDFUExtendedError) {
+        
+        self.request = request
+        self.error = error
+    }
     
     public init?(data: Data) {
         
