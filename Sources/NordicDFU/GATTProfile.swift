@@ -34,12 +34,12 @@ public protocol GATTProfileService {
 }
 
 /// GATT Service Characteristic
-public protocol GATTProfileCharacteristic {
+public protocol GATTProfileCharacteristic: GATTCharacteristic {
     
     static var service: GATTProfileService.Type { get }
     
     static var uuid: BluetoothUUID { get }
-        
+    
     init?(data: Data)
     
     var data: Data { get }

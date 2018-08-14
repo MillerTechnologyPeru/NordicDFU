@@ -179,10 +179,10 @@ extension DFUControlPoint: RawRepresentable {
 internal extension CentralProtocol {
     
     func send <T: DFURequest> (_ request: T,
-                               for cache: [Characteristic<Peripheral>],
+                               for cache: GATTConnectionCache<Peripheral>,
                                timeout: Timeout) throws {
         
-        guard let foundCharacteristic = cache.first(where: { $0.uuid == DFUControlPoint.uuid })
+        guard let foundCharacteristic = cache.characteristics.first(where: { $0.uuid == DFUControlPoint.uuid })
             else { throw CentralError.invalidAttribute(DFUControlPoint.uuid) }
         
         let expectAcknowledgement = T.acknowledge
