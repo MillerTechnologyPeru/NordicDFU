@@ -49,7 +49,7 @@ public struct DFUStartRequest: DFURequest {
     
     public static let acknowledge = false
     
-    internal static let length = MemoryLayout<DFUOpcode.RawValue>.size + MemoryLayout<DFUFirmwareType.RawValue>.size
+    internal static let length = MemoryLayout<DFUOpcode.RawValue>.size + MemoryLayout<UInt8>.size
     
     public var firmwareType: DFUFirmwareType
     
@@ -126,11 +126,13 @@ public struct DFUInitializeV1: DFURequest {
     
     public static let opcode: DFUOpcode = .initialize
     
+    internal static let length = 1
+    
     public init() { }
     
     public init?(data: Data) {
         
-        guard data.count == type(of: self).opcode.rawValue,
+        guard data.count == type(of: self).length,
             let opcode = DFUOpcode(rawValue: data[0]),
             opcode == type(of: self).opcode
             else { return nil }
@@ -142,11 +144,13 @@ public struct DFUReceiveFirmwareImage: DFURequest {
     
     public static let opcode: DFUOpcode = .receiveFirmwareImage
     
+    internal static let length = 1
+    
     public init() { }
     
     public init?(data: Data) {
         
-        guard data.count == type(of: self).opcode.rawValue,
+        guard data.count == type(of: self).length,
             let opcode = DFUOpcode(rawValue: data[0]),
             opcode == type(of: self).opcode
             else { return nil }
@@ -158,11 +162,13 @@ public struct DFUValidateFirmware: DFURequest {
     
     public static let opcode: DFUOpcode = .validateFirmware
     
+    internal static let length = 1
+    
     public init() { }
     
     public init?(data: Data) {
         
-        guard data.count == type(of: self).opcode.rawValue,
+        guard data.count == type(of: self).length,
             let opcode = DFUOpcode(rawValue: data[0]),
             opcode == type(of: self).opcode
             else { return nil }
@@ -174,13 +180,15 @@ public struct DFUActivate: DFURequest {
     
     public static let opcode: DFUOpcode = .activate
     
+    internal static let length = 1
+    
     public static let acknowledge = false
     
     public init() { }
     
     public init?(data: Data) {
         
-        guard data.count == type(of: self).opcode.rawValue,
+        guard data.count == type(of: self).length,
             let opcode = DFUOpcode(rawValue: data[0]),
             opcode == type(of: self).opcode
             else { return nil }
@@ -194,11 +202,13 @@ public struct DFUReset: DFURequest {
     
     public static let acknowledge = false
     
+    internal static let length = 1
+    
     public init() { }
     
     public init?(data: Data) {
         
-        guard data.count == type(of: self).opcode.rawValue,
+        guard data.count == type(of: self).length,
             let opcode = DFUOpcode(rawValue: data[0]),
             opcode == type(of: self).opcode
             else { return nil }

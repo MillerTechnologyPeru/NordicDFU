@@ -11,6 +11,12 @@ let package = Package(
     ],
     
     dependencies: [
-        .Package(url: "https://github.com/PureSwift/GATT.git", majorVersion: 2)
+        .Package(url: "https://github.com/PureSwift/GATT.git", majorVersion: 2),
+        .Package(url: "https://github.com/PureSwift/Zip.git", majorVersion: 1)
     ]
 )
+
+#if swift(>=3.2)
+#elseif swift(>=3.0)
+package.dependencies.append(.Package(url: "https://github.com/PureSwift/Codable.git", majorVersion: 1))
+#endif

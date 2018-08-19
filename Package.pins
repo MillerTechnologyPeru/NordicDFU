@@ -5,7 +5,7 @@
       "package": "Bluetooth",
       "reason": null,
       "repositoryURL": "https://github.com/PureSwift/Bluetooth.git",
-      "version": "2.1.8"
+      "version": "2.2.2"
     },
     {
       "package": "BluetoothLinux",
@@ -14,10 +14,22 @@
       "version": "3.1.2"
     },
     {
+      "package": "Codable",
+      "reason": null,
+      "repositoryURL": "https://github.com/PureSwift/Codable.git",
+      "version": "1.0.5"
+    },
+    {
       "package": "GATT",
       "reason": null,
       "repositoryURL": "https://github.com/PureSwift/GATT.git",
-      "version": "2.0.5"
+      "version": "2.1.1"
+    },
+    {
+      "package": "ZIPFoundation",
+      "reason": null,
+      "repositoryURL": "https://github.com/PureSwift/Zip.git",
+      "version": "1.0.0"
     }
   ],
   "version": 1
