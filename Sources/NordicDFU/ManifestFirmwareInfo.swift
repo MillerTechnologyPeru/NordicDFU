@@ -13,6 +13,7 @@ import Foundation
     import Codable
 #endif
 
+/// DFU Manifest Firmware Info
 public struct DFUManifestFirmwareInfo {
     
     public var binFile: String
@@ -22,7 +23,7 @@ public struct DFUManifestFirmwareInfo {
 
 // MARK: - Codable
 
-extension DFUSoftdeviceBootloaderInfo: Codable {
+extension DFUManifestFirmwareInfo: Codable {
     
     public enum CodingKeys: String, CodingKey {
         
