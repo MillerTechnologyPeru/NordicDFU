@@ -30,4 +30,27 @@ final class ManifestTests: XCTestCase {
         
         catch { XCTFail("\(error)") }
     }
+    
+    func testManifest2() {
+        
+        let jsonData = loadAsset(name: "manifest2", fileExtension: "json")
+        
+        let jsonDecoder = JSONDecoder()
+        
+        do {
+            
+            let manifest = try jsonDecoder.decode(DFUManifest.self, from: jsonData)
+            
+            XCTAssertNil(manifest.manifest.version)
+            
+            guard case let .application(application) = manifest.manifest
+                else { XCTFail("Unexpected manifest type \(manifest)"); return }
+            
+            XCTAssertEqual(application.application.binFile, "app.bin")
+            XCTAssertEqual(application.application.datFile, "app.dat")
+            XCTAssertNil(application.version)
+        }
+            
+        catch { XCTFail("\(error)") }
+    }
 }

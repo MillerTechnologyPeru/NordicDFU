@@ -49,7 +49,7 @@ public extension DFUManifestInfo {
         }
     }
     
-    public var version: DFUVersion {
+    public var version: DFUVersion? {
         
         switch self {
         case let .softdevice(value): return value.version
@@ -66,7 +66,7 @@ public struct DFUManifestSoftdeviceInfo {
     
     public let application: DFUManifestFirmwareInfo?
     
-    public let version: DFUVersion
+    public let version: DFUVersion?
 }
 
 public struct DFUManifestBootloaderInfo {
@@ -75,7 +75,7 @@ public struct DFUManifestBootloaderInfo {
     
     public let application: DFUManifestFirmwareInfo?
     
-    public let version: DFUVersion
+    public let version: DFUVersion?
 }
 
 public struct DFUManifestSoftdeviceBootloaderInfo {
@@ -84,14 +84,14 @@ public struct DFUManifestSoftdeviceBootloaderInfo {
     
     public let application: DFUManifestFirmwareInfo?
     
-    public let version: DFUVersion
+    public let version: DFUVersion?
 }
 
 public struct DFUManifestApplicationInfo {
     
     public let application: DFUManifestFirmwareInfo
     
-    public let version: DFUVersion
+    public let version: DFUVersion?
 }
 
 // MARK: - Codable
@@ -137,7 +137,7 @@ extension DFUManifestInfo: Codable {
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        let version = try container.decode(DFUVersion.self, forKey: .version)
+        let version = try container.decodeIfPresent(DFUVersion.self, forKey: .version)
         
         if let softdevice = try container.decodeIfPresent(DFUManifestFirmwareInfo.self, forKey: .softdevice) {
             
