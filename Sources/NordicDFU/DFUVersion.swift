@@ -10,43 +10,41 @@ import Bluetooth
 import GATT
 
 /// DFU Version
-public struct DFUVersion: GATTProfileCharacteristic {
-    
-    public static let uuid = BluetoothUUID.init(rawValue: "00001534-1212-EFDE-1523-785FEABCD123")!
-    
-    public static let service: GATTProfileService.Type = DFUService.self
-    
-    public static let properies: BitMaskOptionSet<GATT.Characteristic.Property> = [.read]
-    
-    internal static let length = 2
+public struct DFUVersion {
     
     public typealias Major = UInt8
     
     public typealias Minor = UInt8
     
-    public var minor: Minor
-    
     public var major: Major
     
-    public init(minor: Minor,
-                major: Major) {
+    public var minor: Minor
+    
+    public init(major: Major,
+                minor: Minor) {
         
-        self.minor = minor
         self.major = major
+        self.minor = minor
+    }
+}
+
+internal extension DFUVersion {
+    
+    init(_ floatValue: Float) {
+        
+        let components = "\(floatValue)".components(separatedBy: ".")
+        
+        guard components.count == 2,
+            let major = Major(components[0]),
+            let minor = Minor(components[1])
+            else { fatalError("Invalid float value \(floatValue)") }
+        
+        self.init(major: minor, minor: major)
     }
     
-    public init?(data: Data) {
+    var floatValue: Float {
         
-        guard data.count == type(of: self).length
-            else { return nil }
-        
-        self.minor = data[0]
-        self.major = data[1]
-    }
-    
-    public var data: Data {
-        
-        return Data([minor, major])
+        return Float(description)!
     }
 }
 
@@ -57,5 +55,24 @@ extension DFUVersion: CustomStringConvertible {
     public var description: String {
         
         return "\(major).\(minor)"
+    }
+}
+
+// MARK: - Codable
+
+extension DFUVersion: Codable {
+    
+    public init(from decoder: Decoder) throws {
+        
+        let container = try decoder.singleValueContainer()
+        
+        let rawValue = try container.decode(Float.self)
+        
+        self.init(rawValue)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        
+        
     }
 }

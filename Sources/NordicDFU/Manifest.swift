@@ -18,9 +18,13 @@ public struct DFUManifest {
     
     public let manifest: DFUManifestInfo
     
-    public init(manifest: DFUManifestInfo) {
+    public let version: DFUVersion
+    
+    public init(manifest: DFUManifestInfo,
+                version: DFUVersion) {
         
         self.manifest = manifest
+        self.version = version
     }
 }
 
@@ -57,6 +61,7 @@ extension DFUManifest: Codable {
     internal enum CodingKeys: String, CodingKey {
         
         case manifest
+        case version = "dfu_version"
     }
     
     public init(from decoder: Decoder) throws {
@@ -64,6 +69,7 @@ extension DFUManifest: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         self.manifest = try container.decode(DFUManifestInfo.self, forKey: .manifest)
+        self.version = try container.decode(DFUVersion.self, forKey: .version)
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -71,6 +77,7 @@ extension DFUManifest: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
         try container.encode(manifest, forKey: .manifest)
+        try container.encode(version, forKey: .version)
     }
 }
 
