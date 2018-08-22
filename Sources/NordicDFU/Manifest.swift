@@ -185,6 +185,7 @@ extension DFUManifestInfo: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
         switch self {
+            
         case let .softdevice(value):
             
             try container.encode(value.softdevice, forKey: .softdevice)

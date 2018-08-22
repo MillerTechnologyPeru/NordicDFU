@@ -21,7 +21,7 @@ final class FirmwareTests: XCTestCase {
         
         do {
             
-            let firmwareZip = try DFUStreamZip(url: fileURL, type: [.application])
+            let firmwareZip = try DFUStreamZip(url: fileURL)
             
             
         }
