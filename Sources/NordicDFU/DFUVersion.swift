@@ -28,9 +28,11 @@ public struct DFUVersion {
     }
 }
 
+// MARK: - Float Conversion
+
 internal extension DFUVersion {
     
-    init(_ floatValue: Float) {
+    init(floatValue: Float) {
         
         let components = "\(floatValue)".components(separatedBy: ".")
         
@@ -48,6 +50,17 @@ internal extension DFUVersion {
     }
 }
 
+// MARK: - Equatable
+
+extension DFUVersion: Equatable {
+    
+    public static func == (lhs: DFUVersion, rhs: DFUVersion) -> Bool {
+        
+        return lhs.major == rhs.major
+            && lhs.minor == rhs.minor
+    }
+}
+
 // MARK: - CustomStringConvertible
 
 extension DFUVersion: CustomStringConvertible {
@@ -55,6 +68,16 @@ extension DFUVersion: CustomStringConvertible {
     public var description: String {
         
         return "\(major).\(minor)"
+    }
+}
+
+// MARK: -
+
+extension DFUVersion: ExpressibleByFloatLiteral {
+    
+    public init(floatLiteral floatValue: Float) {
+        
+        self.init(floatValue: floatValue)
     }
 }
 
@@ -68,7 +91,7 @@ extension DFUVersion: Codable {
         
         let rawValue = try container.decode(Float.self)
         
-        self.init(rawValue)
+        self.init(floatValue: rawValue)
     }
     
     public func encode(to encoder: Encoder) throws {

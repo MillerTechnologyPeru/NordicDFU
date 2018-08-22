@@ -12,11 +12,22 @@ import XCTest
 final class ManifestTests: XCTestCase {
     
     static var allTests = [
-        ("testManifests", testManifests),
+        ("testManifest1", testManifest1),
         ]
     
-    func testManifests() {
+    func testManifest1() {
         
+        let jsonData = loadAsset(name: "manifest1", fileExtension: "json")
         
+        let jsonDecoder = JSONDecoder()
+        
+        do {
+            
+            let manifest = try jsonDecoder.decode(DFUManifest.self, from: jsonData)
+            
+            XCTAssertEqual(manifest.manifest.version, 0.5)
+        }
+        
+        catch { XCTFail("\(error)") }
     }
 }

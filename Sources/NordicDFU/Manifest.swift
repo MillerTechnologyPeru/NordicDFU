@@ -18,13 +18,9 @@ public struct DFUManifest {
     
     public let manifest: DFUManifestInfo
     
-    public let version: DFUVersion
-    
-    public init(manifest: DFUManifestInfo,
-                version: DFUVersion) {
+    public init(manifest: DFUManifestInfo) {
         
         self.manifest = manifest
-        self.version = version
     }
 }
 
@@ -35,10 +31,10 @@ public struct DFUManifest {
 /// 2. only the app
 public enum DFUManifestInfo {
     
-    case softdevice(DFUManifestFirmwareInfo, application: DFUManifestFirmwareInfo?)
-    case bootloader(DFUManifestFirmwareInfo, application: DFUManifestFirmwareInfo?)
-    case softdeviceBootloader(DFUSoftdeviceBootloaderInfo, application: DFUManifestFirmwareInfo?)
-    case application(DFUManifestFirmwareInfo)
+    case softdevice(DFUManifestSoftdeviceInfo)
+    case bootloader(DFUManifestBootloaderInfo)
+    case softdeviceBootloader(DFUManifestSoftdeviceBootloaderInfo)
+    case application(DFUManifestApplicationInfo)
 }
 
 public extension DFUManifestInfo {
@@ -46,12 +42,56 @@ public extension DFUManifestInfo {
     public var application: DFUManifestFirmwareInfo? {
         
         switch self {
-        case let .softdevice(_, application: application): return application
-        case let .bootloader(_, application: application): return application
-        case let .softdeviceBootloader(_, application: application): return application
-        case let .application(application): return application
+        case let .softdevice(value): return value.application
+        case let .bootloader(value): return value.application
+        case let .softdeviceBootloader(value): return value.application
+        case let .application(value): return value.application
         }
     }
+    
+    public var version: DFUVersion {
+        
+        switch self {
+        case let .softdevice(value): return value.version
+        case let .bootloader(value): return value.version
+        case let .softdeviceBootloader(value): return value.version
+        case let .application(value): return value.version
+        }
+    }
+}
+
+public struct DFUManifestSoftdeviceInfo {
+    
+    public let softdevice: DFUManifestFirmwareInfo
+    
+    public let application: DFUManifestFirmwareInfo?
+    
+    public let version: DFUVersion
+}
+
+public struct DFUManifestBootloaderInfo {
+    
+    public let bootloader: DFUManifestFirmwareInfo
+    
+    public let application: DFUManifestFirmwareInfo?
+    
+    public let version: DFUVersion
+}
+
+public struct DFUManifestSoftdeviceBootloaderInfo {
+    
+    public let softdeviceBootloader: DFUSoftdeviceBootloaderInfo
+    
+    public let application: DFUManifestFirmwareInfo?
+    
+    public let version: DFUVersion
+}
+
+public struct DFUManifestApplicationInfo {
+    
+    public let application: DFUManifestFirmwareInfo
+    
+    public let version: DFUVersion
 }
 
 // MARK: - Codable
@@ -61,7 +101,6 @@ extension DFUManifest: Codable {
     internal enum CodingKeys: String, CodingKey {
         
         case manifest
-        case version = "dfu_version"
     }
     
     public init(from decoder: Decoder) throws {
@@ -69,7 +108,6 @@ extension DFUManifest: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         self.manifest = try container.decode(DFUManifestInfo.self, forKey: .manifest)
-        self.version = try container.decode(DFUVersion.self, forKey: .version)
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -77,7 +115,6 @@ extension DFUManifest: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
         try container.encode(manifest, forKey: .manifest)
-        try container.encode(version, forKey: .version)
     }
 }
 
@@ -89,6 +126,7 @@ extension DFUManifestInfo: Codable {
         case softdeviceBootloader = "softdevice_bootloader"
         case softdevice
         case bootloader
+        case version = "dfu_version"
     }
     
     public init(from decoder: Decoder) throws {
@@ -99,30 +137,46 @@ extension DFUManifestInfo: Codable {
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
+        let version = try container.decode(DFUVersion.self, forKey: .version)
+        
         if let softdevice = try container.decodeIfPresent(DFUManifestFirmwareInfo.self, forKey: .softdevice) {
             
             let application = try container.decodeIfPresent(DFUManifestFirmwareInfo.self, forKey: .application)
             
-            self = .softdevice(softdevice, application: application)
+            let info = DFUManifestSoftdeviceInfo(softdevice: softdevice,
+                                                 application: application,
+                                                 version: version)
+            
+            self = .softdevice(info)
             
         } else if let bootloader = try container.decodeIfPresent(DFUManifestFirmwareInfo.self, forKey: .bootloader) {
             
             let application = try container.decodeIfPresent(DFUManifestFirmwareInfo.self, forKey: .application)
             
-            self = .bootloader(bootloader, application: application)
+            let info = DFUManifestBootloaderInfo(bootloader: bootloader,
+                                                 application: application,
+                                                 version: version)
+            
+            self = .bootloader(info)
             
         } else if let softdeviceBootloader = try container.decodeIfPresent(DFUSoftdeviceBootloaderInfo.self, forKey: .softdeviceBootloader) {
             
             let application = try container.decodeIfPresent(DFUManifestFirmwareInfo.self, forKey: .application)
             
-            self = .softdeviceBootloader(softdeviceBootloader, application: application)
+            let info = DFUManifestSoftdeviceBootloaderInfo(softdeviceBootloader: softdeviceBootloader,
+                                                           application: application,
+                                                           version: version)
+            
+            self = .softdeviceBootloader(info)
             
         } else {
             
             // must have application
             let application = try container.decode(DFUManifestFirmwareInfo.self, forKey: .application)
             
-            self = .application(application)
+            let info = DFUManifestApplicationInfo(application: application, version: version)
+            
+            self = .application(info)
         }
     }
     
@@ -131,24 +185,28 @@ extension DFUManifestInfo: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
         switch self {
-        case let .softdevice(softdevice, application: application):
+        case let .softdevice(value):
             
-            try container.encode(softdevice, forKey: .softdevice)
-            try container.encode(application, forKey: .application)
+            try container.encode(value.softdevice, forKey: .softdevice)
+            try container.encode(value.application, forKey: .application)
+            try container.encode(value.version, forKey: .version)
             
-        case let .bootloader(bootloader, application: application):
+        case let .bootloader(value):
             
-            try container.encode(bootloader, forKey: .bootloader)
-            try container.encode(application, forKey: .application)
+            try container.encode(value.bootloader, forKey: .bootloader)
+            try container.encode(value.application, forKey: .application)
+            try container.encode(value.version, forKey: .version)
             
-        case let .softdeviceBootloader(softdeviceBootloader, application: application):
+        case let .softdeviceBootloader(value):
             
-            try container.encode(softdeviceBootloader, forKey: .softdeviceBootloader)
-            try container.encode(application, forKey: .application)
+            try container.encode(value.softdeviceBootloader, forKey: .softdeviceBootloader)
+            try container.encode(value.application, forKey: .application)
+            try container.encode(value.version, forKey: .version)
             
-        case let .application(application):
+        case let .application(value):
             
-            try container.encode(application, forKey: .application)
+            try container.encode(value.application, forKey: .application)
+            try container.encode(value.version, forKey: .version)
         }
     }
 }
