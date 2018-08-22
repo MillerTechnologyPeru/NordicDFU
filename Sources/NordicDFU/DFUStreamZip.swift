@@ -8,13 +8,15 @@
 import Foundation
 import ZIPFoundation
 
-internal final class DFUStreamZip {
+public final class DFUStreamZip {
     
     internal static let jsonDecoder = JSONDecoder()
     
-    let manifest: DFUManifest
+    public let manifest: DFUManifest
     
-    convenience init(url: URL) throws {
+    public let firmware: DFUFirmware
+    
+    public convenience init(url: URL) throws {
         
         guard let archive = Archive(url: url, accessMode: .read)
             else { throw DFUStreamZipError.invalidFormat }
@@ -46,23 +48,44 @@ internal final class DFUStreamZip {
             
         case let .softdevice(manifestInfo):
             
-            fatalError()
+            let systemData = try DFUStreamZip.load(manifestInfo.softdevice, from: archive)
+            
+            var firmwareData = [systemData]
+            
+            if let applicationManifest = manifestInfo.application {
+                
+                let applicationData = try DFUStreamZip.load(applicationManifest, from: archive)
+                
+                firmwareData.append(applicationData)
+            }
+            
+            self.firmware = DFUFirmware(data: firmwareData)
             
         case let .bootloader(manifestInfo):
             
-            fatalError()
+            let systemData = try DFUStreamZip.load(manifestInfo.bootloader, from: archive)
+            
+            var firmwareData = [systemData]
+            
+            if let applicationManifest = manifestInfo.application {
+                
+                let applicationData = try DFUStreamZip.load(applicationManifest, from: archive)
+                
+                firmwareData.append(applicationData)
+            }
+            
+            self.firmware = DFUFirmware(data: firmwareData)
             
         case let .application(manifestInfo):
             
-            let firmwareData = try DFUStreamZip.load(manifestInfo.application, from: archive)
+            let applicationData = try DFUStreamZip.load(manifestInfo.application, from: archive)
             
-            dump(firmwareData)
-            
+            self.firmware = DFUFirmware(data: [applicationData])
         }
     }
     
     private static func load(_ firmwareInfo: DFUManifestFirmwareInfo,
-                             from archive: Archive) throws -> ManifestFirmwareData {
+                             from archive: Archive) throws -> DFUFirmware.FirmwareData {
         
         let bin = try archive.load(path: firmwareInfo.binFile)
         
@@ -77,7 +100,7 @@ internal final class DFUStreamZip {
             dat = nil
         }
         
-        return ManifestFirmwareData(bin: bin, dat: dat)
+        return DFUFirmware.FirmwareData(data: bin, initPacket: dat)
     }
 }
 

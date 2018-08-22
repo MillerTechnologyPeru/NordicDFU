@@ -8,14 +8,19 @@
 import Foundation
 
 /// Nordic DFU Firmware
-public final class DFUFirmware {
+public struct DFUFirmware {
     
-    public let data: Data
+    public let data: [FirmwareData]
+}
+
+public extension DFUFirmware {
     
-    public init(data: Data) {
+    public struct FirmwareData {
         
-        self.data = data
+        /// The firmware data to be sent to the DFU target.
+        public let data: Data
+        
+        /// The whole init packet matching the current part. Data may be longer than 20 bytes.
+        public let initPacket: Data?
     }
-    
-    
 }

@@ -70,7 +70,7 @@ internal extension CentralProtocol {
                         prn prnValue: UInt16,
                         bytesSent: inout UInt32,
                         range: Range<Int>,
-                        of firmware: DFUFirmware,
+                        of firmware: DFUFirmware.FirmwareData,
                         cache: GATTConnectionCache<Peripheral>,
                         timeout: Timeout) throws {
         
