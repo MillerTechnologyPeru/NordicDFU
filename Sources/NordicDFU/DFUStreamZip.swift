@@ -45,7 +45,7 @@ public final class DFUStreamZip {
             
         case let .softdeviceBootloader(manifestInfo):
             
-            let systemData = try DFUStreamZip.load(manifestInfo.softdeviceBootloader, type: [.softdevice], from: archive)
+            let systemData = try DFUStreamZip.load(manifestInfo.softdeviceBootloader, type: [.softdevice, .bootloader], from: archive)
             
             var firmwareData = [systemData]
             
