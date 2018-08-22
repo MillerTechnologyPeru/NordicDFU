@@ -9,6 +9,11 @@ import Foundation
 import Bluetooth
 import ZIPFoundation
 
+#if swift(>=3.2)
+#elseif swift(>=3.0)
+    import Codable
+#endif
+
 public final class DFUStreamZip {
     
     internal static let jsonDecoder = JSONDecoder()

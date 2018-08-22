@@ -13,6 +13,8 @@ final class FirmwareTests: XCTestCase {
     
     static var allTests = [
         ("testNRF52832Application", testNRF52832Application),
+        ("testNRF52832Bootloader", testNRF52832Bootloader),
+        ("testNRF52832SoftdeviceBootloaderApplication", testNRF52832SoftdeviceBootloaderApplication)
         ]
     
     func testNRF52832Application() {

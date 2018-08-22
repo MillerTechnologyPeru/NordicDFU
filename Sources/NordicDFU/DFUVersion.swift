@@ -9,6 +9,11 @@ import Foundation
 import Bluetooth
 import GATT
 
+#if swift(>=3.2)
+#elseif swift(>=3.0)
+    import Codable
+#endif
+
 /// DFU Version
 public struct DFUVersion {
     
@@ -71,7 +76,7 @@ extension DFUVersion: CustomStringConvertible {
     }
 }
 
-// MARK: -
+// MARK: - ExpressibleByFloatLiteral
 
 extension DFUVersion: ExpressibleByFloatLiteral {
     
@@ -96,6 +101,8 @@ extension DFUVersion: Codable {
     
     public func encode(to encoder: Encoder) throws {
         
+        var container = encoder.singleValueContainer()
         
+        try container.encode(floatValue)
     }
 }
