@@ -20,6 +20,12 @@
       "version": "1.0.5"
     },
     {
+      "package": "CZlib",
+      "reason": null,
+      "repositoryURL": "https://github.com/IBM-Swift/CZlib.git",
+      "version": "0.1.2"
+    },
+    {
       "package": "GATT",
       "reason": null,
       "repositoryURL": "https://github.com/PureSwift/GATT.git",
