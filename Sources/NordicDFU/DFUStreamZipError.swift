@@ -9,7 +9,8 @@ import Foundation
 
 /// DFU Stream Zip Error
 public enum DFUStreamZipError: Error {
-    
+
+    case invalidFormat
     case noManifest
     case invalidManifest
     case fileNotFound
@@ -36,6 +37,12 @@ extension DFUStreamZipError: CustomNSError {
         let description: String
         
         switch self {
+            
+        case .invalidFormat:
+            
+            description = String(format: NSLocalizedString(
+                "Invalid file format.",
+                comment: "com.nordicsemiconductor.NordicDFU.DFUStreamZipError.invalidFormat"))
             
         case .noManifest:
             
