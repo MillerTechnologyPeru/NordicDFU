@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Bluetooth
 
 /// Nordic DFU Firmware
 public struct DFUFirmware {
@@ -16,6 +17,9 @@ public struct DFUFirmware {
 public extension DFUFirmware {
     
     public struct FirmwareData {
+        
+        /// Firmware type.
+        public let type: BitMaskOptionSet<DFUFirmwareType>
         
         /// The firmware data to be sent to the DFU target.
         public let data: Data

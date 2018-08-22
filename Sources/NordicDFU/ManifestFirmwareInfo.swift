@@ -14,18 +14,25 @@ import Foundation
 #endif
 
 /// DFU Manifest Firmware Info
-public struct DFUManifestFirmwareInfo {
+public struct DFUManifestFirmwareInfo: DFUManifestFirmwareInfoProtocol {
     
     public var binFile: String
     
     public var datFile: String?
 }
 
+public protocol DFUManifestFirmwareInfoProtocol {
+    
+    var binFile: String { get }
+    
+    var datFile: String? { get }
+}
+
 // MARK: - Codable
 
 extension DFUManifestFirmwareInfo: Codable {
     
-    public enum CodingKeys: String, CodingKey {
+    internal enum CodingKeys: String, CodingKey {
         
         case binFile = "bin_file"
         case datFile = "dat_file"

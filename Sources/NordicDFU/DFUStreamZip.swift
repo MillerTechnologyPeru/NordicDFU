@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Bluetooth
 import ZIPFoundation
 
 public final class DFUStreamZip {
@@ -44,17 +45,28 @@ public final class DFUStreamZip {
             
         case let .softdeviceBootloader(manifestInfo):
             
-            fatalError()
-            
-        case let .softdevice(manifestInfo):
-            
-            let systemData = try DFUStreamZip.load(manifestInfo.softdevice, from: archive)
+            let systemData = try DFUStreamZip.load(manifestInfo.softdeviceBootloader, type: [.softdevice], from: archive)
             
             var firmwareData = [systemData]
             
             if let applicationManifest = manifestInfo.application {
                 
-                let applicationData = try DFUStreamZip.load(applicationManifest, from: archive)
+                let applicationData = try DFUStreamZip.load(applicationManifest, type: [.application], from: archive)
+                
+                firmwareData.append(applicationData)
+            }
+            
+            self.firmware = DFUFirmware(data: firmwareData)
+            
+        case let .softdevice(manifestInfo):
+            
+            let systemData = try DFUStreamZip.load(manifestInfo.softdevice, type: [.softdevice], from: archive)
+            
+            var firmwareData = [systemData]
+            
+            if let applicationManifest = manifestInfo.application {
+                
+                let applicationData = try DFUStreamZip.load(applicationManifest, type: [.application], from: archive)
                 
                 firmwareData.append(applicationData)
             }
@@ -63,13 +75,13 @@ public final class DFUStreamZip {
             
         case let .bootloader(manifestInfo):
             
-            let systemData = try DFUStreamZip.load(manifestInfo.bootloader, from: archive)
+            let systemData = try DFUStreamZip.load(manifestInfo.bootloader, type: [.bootloader], from: archive)
             
             var firmwareData = [systemData]
             
             if let applicationManifest = manifestInfo.application {
                 
-                let applicationData = try DFUStreamZip.load(applicationManifest, from: archive)
+                let applicationData = try DFUStreamZip.load(applicationManifest, type: [.application], from: archive)
                 
                 firmwareData.append(applicationData)
             }
@@ -78,14 +90,15 @@ public final class DFUStreamZip {
             
         case let .application(manifestInfo):
             
-            let applicationData = try DFUStreamZip.load(manifestInfo.application, from: archive)
+            let applicationData = try DFUStreamZip.load(manifestInfo.application, type: [.application], from: archive)
             
             self.firmware = DFUFirmware(data: [applicationData])
         }
     }
     
-    private static func load(_ firmwareInfo: DFUManifestFirmwareInfo,
-                             from archive: Archive) throws -> DFUFirmware.FirmwareData {
+    private static func load <T> (_ firmwareInfo: T,
+                             type: BitMaskOptionSet<DFUFirmwareType>,
+                             from archive: Archive) throws -> DFUFirmware.FirmwareData where T: DFUManifestFirmwareInfoProtocol {
         
         let bin = try archive.load(path: firmwareInfo.binFile)
         
@@ -100,7 +113,7 @@ public final class DFUStreamZip {
             dat = nil
         }
         
-        return DFUFirmware.FirmwareData(data: bin, initPacket: dat)
+        return DFUFirmware.FirmwareData(type: type, data: bin, initPacket: dat)
     }
 }
 

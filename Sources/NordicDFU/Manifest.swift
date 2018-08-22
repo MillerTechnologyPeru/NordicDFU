@@ -61,7 +61,7 @@ public extension DFUManifestInfo {
 }
 
 public struct DFUManifestSoftdeviceInfo {
-    
+        
     public let softdevice: DFUManifestFirmwareInfo
     
     public let application: DFUManifestFirmwareInfo?
