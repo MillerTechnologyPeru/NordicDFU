@@ -40,8 +40,19 @@ func loadAsset(name: String, fileExtension: String) -> Data {
     
     print("Loading test asset at \(fileURL.path)")
     
-    guard let assetData = try? Data(contentsOf: fileURL)
-        else { fatalError("No test asset found") }
+    let fileManager = FileManager.default
     
-    return assetData
+    #if os(macOS)
+        
+    do { return try Data(contentsOf: fileURL) }
+    
+    catch { fatalError("No test asset found: \(error)") }
+        
+    #elseif os(Linux)
+        
+    guard let data = fileManager.contents(atPath: fileURL.path)
+        else { fatalError("No test asset found")  }
+    
+    return data
+    #endif
 }
