@@ -15,7 +15,7 @@ public enum DFUControlPoint: GATTProfileCharacteristic {
     
     public static let properies: BitMaskOptionSet<GATT.Characteristic.Property> = [.write, .notify]
     
-    public static var service: GATTProfileService.Type = DFUService.self
+    public static let service: GATTProfileService.Type = DFUService.self
     
     case start(DFUStartRequest)
     case initialize(DFUInitialize)

@@ -16,7 +16,7 @@ public struct SecureDFUPacket: GATTProfileCharacteristic {
     
     public static let properies: BitMaskOptionSet<GATT.Characteristic.Property> = [.writeWithoutResponse]
     
-    public static var service: GATTProfileService.Type = SecureDFUService.self
+    public static let service: GATTProfileService.Type = SecureDFUService.self
     
     public init(data: Data) {
         

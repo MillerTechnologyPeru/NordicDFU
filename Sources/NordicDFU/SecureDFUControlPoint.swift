@@ -14,7 +14,7 @@ public enum SecureDFUControlPoint: GATTProfileCharacteristic {
     
     public static let properies: BitMaskOptionSet<GATT.Characteristic.Property> = [.write, .notify]
     
-    public static var service: GATTProfileService.Type = SecureDFUService.self
+    public static let service: GATTProfileService.Type = SecureDFUService.self
     
     case request(SecureDFURequest)
     case response(SecureDFUResponse)
