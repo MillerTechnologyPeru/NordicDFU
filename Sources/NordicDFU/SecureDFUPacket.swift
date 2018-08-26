@@ -98,8 +98,8 @@ internal extension CentralProtocol {
         }
         
         // Calculate the total progress of the firmware, presented to the delegate
-        let totalBytesSent = UInt32(range.lowerBound) + bytesSent
-        let totalProgress = UInt8(totalBytesSent * 100 / UInt32(firmware.data.count))
+        //let totalBytesSent = UInt32(range.lowerBound) + bytesSent
+        //let totalProgress = UInt8(totalBytesSent * 100 / UInt32(firmware.data.count))
         
         let originalPacketsToSendNow = packetsToSendNow
         
@@ -124,8 +124,8 @@ internal extension CentralProtocol {
             packetsToSendNow -= 1
             
             // Calculate the total progress of the firmware, presented to the delegate
-            let totalBytesSent = UInt32(range.lowerBound) + bytesSent
-            let totalProgress = UInt8(totalBytesSent * 100 / UInt32(firmware.data.count))
+            //let totalBytesSent = UInt32(range.lowerBound) + bytesSent
+            //let totalProgress = UInt8(totalBytesSent * 100 / UInt32(firmware.data.count))
             
             /*
             // Notify progress listener only if current progress has increased since last time

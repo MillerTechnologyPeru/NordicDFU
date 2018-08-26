@@ -7,7 +7,16 @@
 
 import Foundation
 
-public protocol SecureDFURequest {
+public enum SecureDFURequest {
+    
+    case createObject(SecureDFUCreateObject)
+    case setPRNValue(SecureDFUSetPacketReceiptNotification)
+    case calculateChecksum
+    case execute
+    case readObjectInfo(SecureDFUReadObjectInfo)
+}
+
+public protocol SecureDFURequestProtocol {
     
     /// DFU Opcode
     static var opcode: SecureDFUOpcode { get }
@@ -19,7 +28,7 @@ public protocol SecureDFURequest {
     var data: Data { get }
 }
 
-public struct SecureDFUCreateObject: SecureDFURequest {
+public struct SecureDFUCreateObject: SecureDFURequestProtocol {
     
     public static let opcode: SecureDFUOpcode = .createObject
     
@@ -43,7 +52,7 @@ public struct SecureDFUCreateObject: SecureDFURequest {
             let type = SecureDFUProcedureType(rawValue: data[1])
             else { return nil }
         
-        let size = data[2 ..< type(of: self).length].withUnsafeBytes { UInt32(littleEndian: $0.pointee) }
+        let size = data.withUnsafeBytes { UInt32(littleEndian: $0.advanced(by: 2).pointee) }
         
         self.type = type
         self.size = size
@@ -65,7 +74,7 @@ public struct SecureDFUCreateObject: SecureDFURequest {
     }
 }
 
-public struct SecureDFUReadObjectInfo: SecureDFURequest {
+public struct SecureDFUReadObjectInfo: SecureDFURequestProtocol {
     
     public static let opcode: SecureDFUOpcode = .readObjectInfo
     
@@ -99,7 +108,7 @@ public struct SecureDFUReadObjectInfo: SecureDFURequest {
     }
 }
 
-public struct SecureDFUSetPacketReceiptNotification: SecureDFURequest {
+public struct SecureDFUSetPacketReceiptNotification: SecureDFURequestProtocol {
     
     public static let opcode: SecureDFUOpcode = .setPRNValue
     
@@ -119,7 +128,7 @@ public struct SecureDFUSetPacketReceiptNotification: SecureDFURequest {
             opcode == type(of: self).opcode
             else { return nil }
         
-        let rawValue = data[1 ..< 3].withUnsafeBytes { UInt16(littleEndian: $0.pointee) }
+        let rawValue = data.withUnsafeBytes { UInt16(littleEndian: $0.advanced(by: 1).pointee) }
         
         self.init(rawValue: rawValue)
     }
@@ -145,7 +154,7 @@ extension SecureDFUSetPacketReceiptNotification: ExpressibleByIntegerLiteral {
     }
 }
 
-public struct SecureDFUCalculateChecksumCommand: SecureDFURequest {
+public struct SecureDFUCalculateChecksumCommand: SecureDFURequestProtocol {
     
     public static let opcode: SecureDFUOpcode = .calculateChecksum
     
@@ -169,7 +178,7 @@ public struct SecureDFUCalculateChecksumCommand: SecureDFURequest {
     }
 }
 
-public struct SecureDFUExecuteCommand: SecureDFURequest {
+public struct SecureDFUExecuteCommand: SecureDFURequestProtocol {
     
     public static let opcode: SecureDFUOpcode = .execute
     
