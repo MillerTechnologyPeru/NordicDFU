@@ -16,6 +16,25 @@ public enum SecureDFURequest {
     case readObjectInfo(SecureDFUReadObjectInfo)
 }
 
+internal extension SecureDFURequest {
+    
+    var data: Data {
+        
+        switch self {
+        case let .createObject(request):
+            return request.data
+        case let .setPRNValue(request):
+            return request.data
+        case .calculateChecksum:
+            return SecureDFUCalculateChecksumCommand().data
+        case .execute:
+            return SecureDFUExecuteCommand().data
+        case let .readObjectInfo(request):
+            return request.data
+        }
+    }
+}
+
 public protocol SecureDFURequestProtocol {
     
     /// DFU Opcode

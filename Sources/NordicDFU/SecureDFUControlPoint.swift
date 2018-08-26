@@ -69,6 +69,11 @@ public enum SecureDFUControlPoint: GATTProfileCharacteristic {
     
     public var data: Data {
         
-        fatalError()
+        switch self {
+        case let .request(request):
+            return request.data
+        case let .response(response):
+            return response.data
+        }
     }
 }
