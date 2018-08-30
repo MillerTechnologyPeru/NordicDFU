@@ -149,48 +149,6 @@ public struct ButtonlessDFUWithBondSharing: ButtonlessDFUProtocol {
 
 // MARK: - Central
 
-fileprivate extension GATTConnectionCache {
-    
-    enum ButtonlessDFUCharacteristic {
-        
-        case experimental(ButtonlessDFUExperimental)
-        case withBondSharing(ButtonlessDFUWithBondSharing)
-        case withoutBondSharing(ButtonlessDFUWithoutBondSharing)
-        
-        var value: ButtonlessDFUValue {
-            
-            switch self {
-            case let .experimental(value): return value.rawValue
-            case let .withBondSharing(value): return value.rawValue
-            case let .withoutBondSharing(value): return value.rawValue
-            }
-        }
-    }
-    
-    func buttonlessDFUCharacteristic(_ rawValue: ButtonlessDFUValue) throws -> (Characteristic<Peripheral>, ButtonlessDFUCharacteristic) {
-        
-        // find buttonless DFU DFU characteristic
-        // only 1 should be present, but there are 3 variations (experimental, with bond, without bond)
-        
-        if let characteristic = characteristics.first(where: { $0.uuid == ButtonlessDFUExperimental.uuid }) {
-            
-            return (characteristic, .experimental(ButtonlessDFUExperimental(rawValue: rawValue)))
-            
-        } else if let characteristic = characteristics.first(where: { $0.uuid == ButtonlessDFUWithBondSharing.uuid }) {
-            
-            return (characteristic, .withBondSharing(ButtonlessDFUWithBondSharing(rawValue: rawValue)))
-            
-        } else if let characteristic = characteristics.first(where: { $0.uuid == ButtonlessDFUWithoutBondSharing.uuid }) {
-            
-            return (characteristic, .withoutBondSharing(ButtonlessDFUWithoutBondSharing(rawValue: rawValue)))
-            
-        } else {
-            
-            throw CentralError.invalidAttribute(ButtonlessDFUExperimental.uuid)
-        }
-    }
-}
-
 internal extension CentralProtocol {
     
     func buttonlessDFU(_ request: ButtonlessDFURequest,
@@ -243,6 +201,48 @@ internal extension CentralProtocol {
             }
             
         } while true // keep waiting
+    }
+}
+
+fileprivate extension GATTConnectionCache {
+    
+    enum ButtonlessDFUCharacteristic {
+        
+        case experimental(ButtonlessDFUExperimental)
+        case withBondSharing(ButtonlessDFUWithBondSharing)
+        case withoutBondSharing(ButtonlessDFUWithoutBondSharing)
+        
+        var value: ButtonlessDFUValue {
+            
+            switch self {
+            case let .experimental(value): return value.rawValue
+            case let .withBondSharing(value): return value.rawValue
+            case let .withoutBondSharing(value): return value.rawValue
+            }
+        }
+    }
+    
+    func buttonlessDFUCharacteristic(_ rawValue: ButtonlessDFUValue) throws -> (Characteristic<Peripheral>, ButtonlessDFUCharacteristic) {
+        
+        // find buttonless DFU DFU characteristic
+        // only 1 should be present, but there are 3 variations (experimental, with bond, without bond)
+        
+        if let characteristic = characteristics.first(where: { $0.uuid == ButtonlessDFUExperimental.uuid }) {
+            
+            return (characteristic, .experimental(ButtonlessDFUExperimental(rawValue: rawValue)))
+            
+        } else if let characteristic = characteristics.first(where: { $0.uuid == ButtonlessDFUWithBondSharing.uuid }) {
+            
+            return (characteristic, .withBondSharing(ButtonlessDFUWithBondSharing(rawValue: rawValue)))
+            
+        } else if let characteristic = characteristics.first(where: { $0.uuid == ButtonlessDFUWithoutBondSharing.uuid }) {
+            
+            return (characteristic, .withoutBondSharing(ButtonlessDFUWithoutBondSharing(rawValue: rawValue)))
+            
+        } else {
+            
+            throw CentralError.invalidAttribute(ButtonlessDFUExperimental.uuid)
+        }
     }
 }
 
