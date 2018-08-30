@@ -7,7 +7,13 @@
 
 import Foundation
 
-protocol ButtonlessDFURequestProtocol {
+public enum ButtonlessDFURequest {
+    
+    case enterBootloader
+    case setName(ButtonlessDFUSetName)
+}
+
+public protocol ButtonlessDFURequestProtocol {
     
     static var opcode: ButtonlessDFUOpCode { get }
     

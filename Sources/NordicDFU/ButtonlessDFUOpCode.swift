@@ -8,6 +8,6 @@
 public enum ButtonlessDFUOpCode: UInt8 {
     
     case enterBootloader = 0x01
-    case setName         = 0x02
-    case responseCode    = 0x20
+    case setName = 0x02
+    case response = 0x20
 }
