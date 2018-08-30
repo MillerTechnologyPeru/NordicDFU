@@ -156,28 +156,38 @@ fileprivate extension GATTConnectionCache {
         case experimental(ButtonlessDFUExperimental)
         case withBondSharing(ButtonlessDFUWithBondSharing)
         case withoutBondSharing(ButtonlessDFUWithoutBondSharing)
+        
+        var value: ButtonlessDFUValue {
+            
+            switch self {
+            case let .experimental(value): return value.rawValue
+            case let .withBondSharing(value): return value.rawValue
+            case let .withoutBondSharing(value): return value.rawValue
+            }
+        }
     }
     
-    func buttonlessDFUCharacteristic(_ rawValue: ButtonlessDFUValue) throws -> (Characteristic<Peripheral>, ButtonlessDFUProtocol.Type) {
-        
-        let characteristicTypes: [ButtonlessDFUProtocol.Type] = [
-            ButtonlessDFUExperimental.self,
-            ButtonlessDFUWithBondSharing.self,
-            ButtonlessDFUWithoutBondSharing.self
-        ]
+    func buttonlessDFUCharacteristic(_ rawValue: ButtonlessDFUValue) throws -> (Characteristic<Peripheral>, ButtonlessDFUCharacteristic) {
         
         // find buttonless DFU DFU characteristic
         // only 1 should be present, but there are 3 variations (experimental, with bond, without bond)
         
-        for characteristicType in characteristicTypes {
+        if let characteristic = characteristics.first(where: { $0.uuid == ButtonlessDFUExperimental.uuid }) {
             
-            guard let characteristic = self.characteristics.first(where: { $0.uuid == characteristicType.uuid })
-                else { continue }
+            return (characteristic, .experimental(ButtonlessDFUExperimental(rawValue: rawValue)))
             
-            return (characteristic, characteristicType)
+        } else if let characteristic = characteristics.first(where: { $0.uuid == ButtonlessDFUWithBondSharing.uuid }) {
+            
+            return (characteristic, .withBondSharing(ButtonlessDFUWithBondSharing(rawValue: rawValue)))
+            
+        } else if let characteristic = characteristics.first(where: { $0.uuid == ButtonlessDFUWithoutBondSharing.uuid }) {
+            
+            return (characteristic, .withoutBondSharing(ButtonlessDFUWithoutBondSharing(rawValue: rawValue)))
+            
+        } else {
+            
+            throw CentralError.invalidAttribute(ButtonlessDFUExperimental.uuid)
         }
-        
-        throw CentralError.invalidAttribute(characteristicTypes[0].uuid)
     }
 }
 
@@ -187,16 +197,19 @@ internal extension CentralProtocol {
                        for cache: GATTConnectionCache<Peripheral>,
                        timeout: Timeout) throws {
         
-        let (foundCharacteristic, buttonlessDFU) = try cache.buttonlessDFUCharacteristic()
+        let (foundCharacteristic, buttonlessDFU) = try cache.buttonlessDFUCharacteristic(.request(request))
         
         var notificationValue: ErrorValue<ButtonlessDFUResponse>?
         
-        try self.notify(buttonlessDFU, for: foundCharacteristic, timeout: timeout, notification: { notificationValue = $0 })
+        try self.notify(buttonlessDFU,
+                        for: foundCharacteristic,
+                        timeout: timeout) { notificationValue = $0 }
         
         // send request
-        try self.write(buttonlessDFU.init(rawValue: .request(request)),
-                       for: cache,
-                       timeout: timeout)
+        try self.writeValue(buttonlessDFU.value.data,
+                            for: foundCharacteristic,
+                            withResponse: true,
+                            timeout: try timeout.timeRemaining())
         
         // wait for notification
         repeat {
@@ -208,6 +221,9 @@ internal extension CentralProtocol {
             guard let response = notificationValue
                 else { usleep(100); continue }
             
+            // stop notifications
+            try self.notify(nil, for: foundCharacteristic, timeout: try timeout.timeRemaining())
+            
             switch response {
                 
             case let .error(error):
@@ -215,31 +231,15 @@ internal extension CentralProtocol {
                 
             case let .value(value):
                 
-                // stop notifications
-                try self.notify(DFUControlPoint.self, for: cache, timeout: timeout, notification: nil)
-                
-                switch value {
+                if let error = value.error {
                     
-                case let .response(response):
+                    throw error
                     
-                    if let error = response.error {
-                        
-                        throw error
-                        
-                    } else {
-                        
-                        guard response.request == T.opcode
-                            else { throw NordicGATTError.invalidData(response.data) }
-                        
-                        // success
-                        return
-                    }
+                } else {
                     
-                default:
-                    
-                    throw NordicGATTError.invalidData(value.data)
+                    // success
+                    return
                 }
-                
             }
             
         } while true // keep waiting
@@ -248,7 +248,7 @@ internal extension CentralProtocol {
 
 fileprivate extension CentralProtocol {
     
-    func notify(_ characteristicType: ButtonlessDFUProtocol.Type,
+    func notify(_ characteristicType: GATTConnectionCache<Peripheral>.ButtonlessDFUCharacteristic,
                 for characteristic: Characteristic<Peripheral>,
                 timeout: Timeout,
                 notification: ((ErrorValue<ButtonlessDFUResponse>) -> ())?) throws {
