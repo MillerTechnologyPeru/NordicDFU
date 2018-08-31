@@ -46,6 +46,14 @@ internal extension CentralProtocol {
         guard let foundCharacteristic = cache.characteristics.first(where: { $0.uuid == T.uuid })
             else { throw CentralError.invalidAttribute(T.uuid) }
         
+        try self.write(characteristic, for: foundCharacteristic, timeout: timeout)
+    }
+    
+    func write <T: GATTCharacteristic> (_ characteristic: T,
+                                        for foundCharacteristic: Characteristic<Peripheral>,
+                                        withResponse response: Bool = true,
+                                        timeout: Timeout) throws {
+        
         try self.writeValue(characteristic.data,
                             for: foundCharacteristic,
                             withResponse: response,
@@ -75,6 +83,14 @@ internal extension CentralProtocol {
         
         guard let foundCharacteristic = cache.characteristics.first(where: { $0.uuid == T.uuid })
             else { throw CentralError.invalidAttribute(T.uuid) }
+        
+        try notify(characteristic, for: foundCharacteristic, timeout: timeout, notification: notification)
+    }
+    
+    func notify <T: GATTCharacteristic> (_ characteristic: T.Type,
+                                         for foundCharacteristic: Characteristic<Peripheral>,
+                                         timeout: Timeout,
+                                         notification: ((ErrorValue<T>) -> ())?) throws {
         
         let dataNotification: ((Data) -> ())?
         

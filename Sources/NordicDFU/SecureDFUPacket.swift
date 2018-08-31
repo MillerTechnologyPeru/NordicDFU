@@ -36,7 +36,7 @@ internal extension CentralProtocol {
     func sendSecureInitPacket(for peripheral: Peripheral,
                               data: Data,
                               cache: GATTConnectionCache<Peripheral>,
-                              timeout: Timeout) throws {
+                              timeout: TimeInterval) throws {
         
         // set chunk size
         let mtu = try maximumTransmissionUnit(for: peripheral)
@@ -53,8 +53,7 @@ internal extension CentralProtocol {
             
             let characteristicValue = SecureDFUPacket(data: packet)
             
-            // peripheral.writeValue(packet, for: characteristic, type: .withoutResponse)
-            try write(characteristicValue, for: cache, withResponse: false, timeout: timeout)
+            try write(characteristicValue, for: cache, withResponse: false, timeout: Timeout(timeout: timeout))
             
             offset += packetLength
             bytesToSend -= packetLength

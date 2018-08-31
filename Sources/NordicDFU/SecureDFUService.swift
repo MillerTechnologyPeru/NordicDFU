@@ -46,16 +46,159 @@ internal extension SecureDFUService {
     }
 }
 
+fileprivate extension SecureDFUService {
+    
+    fileprivate final class ControlPointNotification <Central: CentralProtocol> {
+        
+        let central: Central
+        
+        let characteristic: Characteristic<Central.Peripheral>
+        
+        let timeout: TimeInterval
+        
+        private var notificationValue: ErrorValue<SecureDFUControlPoint>?
+        
+        deinit {
+            
+            do {
+                
+                // disable notifications
+                try central.notify(SecureDFUControlPoint.self,
+                                   for: characteristic,
+                                   timeout: Timeout(timeout: timeout),
+                                   notification: nil)
+            }
+            
+            catch { assertionFailure("Could not disable notification: \(error)") }
+        }
+        
+        init(central: Central, cache: GATTConnectionCache<Central.Peripheral>, timeout: TimeInterval) throws {
+            
+            guard let characteristic = cache.characteristics.first(where: { $0.uuid == SecureDFUControlPoint.uuid })
+                else { throw CentralError.invalidAttribute(SecureDFUControlPoint.uuid) }
+            
+            self.central = central
+            self.timeout = timeout
+            self.characteristic = characteristic
+            
+            // enable notifications
+            try central.notify(SecureDFUControlPoint.self,
+                           for: characteristic,
+                           timeout: Timeout(timeout: timeout),
+                           notification: { [weak self] in self?.notificationValue = $0 })
+        }
+        
+        func request(_ request: SecureDFURequest, timeout: TimeInterval) throws -> SecureDFUResponse {
+            
+            let timeout = Timeout(timeout: timeout)
+            
+            // send request
+            try central.writeValue(request.data,
+                                   for: characteristic,
+                                   withResponse: true,
+                                   timeout: try timeout.timeRemaining())
+            
+            // wait for notification
+            repeat {
+                
+                // attempt to timeout
+                try timeout.timeRemaining()
+                
+                // get notification response
+                guard let response = notificationValue
+                    else { usleep(100); continue }
+                
+                // clear stored value
+                notificationValue = nil
+                
+                switch response {
+                    
+                case let .error(error):
+                    throw error
+                    
+                case let .value(value):
+                    
+                    switch value {
+                        
+                    case let .response(response):
+                        switch response {
+                        case let .error(error):
+                            throw error
+                        case let .extendedError(error):
+                            throw error
+                        default:
+                            return response
+                        }
+                        
+                    case .request:
+                        throw GATTError.invalidData(value.data)
+                    }
+                }
+                
+            } while true // keep waiting
+        }
+        
+        func readObjectInfo(type: SecureDFUProcedureType, timeout: TimeInterval) throws -> SecureDFUReadObjectInfoResponse {
+            
+            let request = SecureDFUReadObjectInfo(type: type)
+            
+            let response = try self.request(.readObjectInfo(request), timeout: timeout)
+            
+            switch response {
+                
+            case let .readObject(readInfo):
+                return readInfo
+            default:
+                throw GATTError.invalidData(response.data)
+            }
+        }
+        
+        func setPRNValue(_ value: SecureDFUSetPacketReceiptNotification, timeout: TimeInterval) throws -> SecureDFUPacketReceiptNotification {
+            
+            let response = try self.request(.setPRNValue(value), timeout: timeout)
+            
+            switch response {
+            case let .calculateChecksum(checksum):
+                return checksum
+            default:
+                throw GATTError.invalidData(response.data)
+            }
+        }
+    }
+}
+
 internal extension CentralProtocol {
     
-    func secureDFU() throws {
+    func secureFirmwareUpload(_ firmwareData: DFUFirmware.FirmwareData,
+                              for cache: GATTConnectionCache<Peripheral>,
+                              timeout: TimeInterval) throws {
         
+        let controlPointNotification = try SecureDFUService.ControlPointNotification(central: self,
+                                                                                      cache: cache,
+                                                                                      timeout: timeout)
+        
+        // upload init packet
+        if let initPacket = firmwareData.initPacket {
+            
+            
+        }
+        
+        // upload firmware data
         
     }
+}
+
+fileprivate extension CentralProtocol {
     
-    func secureDFUSendInitPacket(data: Data) {
+    func secureInitPacketUpload(data: Data,
+                                controlPoint: SecureDFUService.ControlPointNotification<Self>,
+                                timeout: TimeInterval) throws {
+        
+        // start uploading command object
+        let objectInfo = try controlPoint.readObjectInfo(type: .command, timeout: timeout)
         
         // disable PRN
+        
         
     }
 }
