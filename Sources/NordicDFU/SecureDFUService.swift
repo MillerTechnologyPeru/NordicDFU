@@ -52,4 +52,10 @@ internal extension CentralProtocol {
         
         
     }
+    
+    func secureDFUSendInitPacket(data: Data) {
+        
+        // disable PRN
+        
+    }
 }

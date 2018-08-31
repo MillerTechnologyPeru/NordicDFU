@@ -94,6 +94,7 @@ final class SecureDFUControlPointTests: XCTestCase {
     func testSetPRNValueResponse() {
         
         // Notification received from 8EC90001-F315-4F60-9FB8-838830DAEA50, value (0x): 600201
+        // Packet Receipt Notif disabled (Op Code = 2, Value = 0)
         
         let data = Data([0x60, 0x02, 0x01])
         
