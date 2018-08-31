@@ -13,6 +13,8 @@ public enum NordicGATTError: Error {
     
     /// Invalid data.
     case invalidData(Data?)
+    
+    case invalidChecksum(UInt32, expected: UInt32)
 }
 
 internal typealias GATTError = NordicGATTError
@@ -20,7 +22,7 @@ internal typealias GATTError = NordicGATTError
 // MARK: - CustomNSError
 
 #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
-
+/*
 extension NordicGATTError: CustomNSError {
     
     public enum UserInfoKey: String {
@@ -56,5 +58,5 @@ extension NordicGATTError: CustomNSError {
         return userInfo
     }
 }
-
+*/
 #endif

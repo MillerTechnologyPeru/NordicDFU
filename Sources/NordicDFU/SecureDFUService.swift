@@ -153,6 +153,19 @@ fileprivate extension SecureDFUService {
                 throw GATTError.invalidData(response.data)
             }
         }
+        
+        func calculateChecksum(timeout: TimeInterval) throws -> SecureDFUCalculateChecksumResponse {
+            
+            let response = try self.request(.calculateChecksum, timeout: timeout)
+            
+            switch response {
+                
+            case let .calculateChecksum(calculateChecksum):
+                return calculateChecksum
+            default:
+                throw GATTError.invalidData(response.data)
+            }
+        }
     }
 }
 
@@ -188,7 +201,7 @@ fileprivate extension CentralProtocol {
                                 packet: Characteristic<Peripheral>,
                                 timeout timeoutInterval: TimeInterval) throws {
         
-        let timeout = Timeout(timeout: timeoutInterval)
+        var timeout = Timeout(timeout: timeoutInterval)
         
         // start uploading command object
         let objectInfo = try controlPoint.readObjectInfo(type: .command,
@@ -231,6 +244,19 @@ fileprivate extension CentralProtocol {
             bytesToSend -= packetLength
             
         } while bytesToSend > 0
+        
+        timeout = Timeout(timeout: timeoutInterval)
+        
+        // calculate checksum
+        let checksumResponse = try controlPoint.calculateChecksum(timeout: try timeout.timeRemaining())
+        
+        let expectedChecksum = CRC32(data: data).crc
+        
+        guard checksumResponse.crc == expectedChecksum
+            else { throw GATTError.invalidChecksum(checksumResponse.crc, expected: expectedChecksum) }
+        
+        // execute command
+        try controlPoint.request(.execute, timeout: try timeout.timeRemaining())
     }
     
     func secureFirmwareDataUpload(_ data: Data,
