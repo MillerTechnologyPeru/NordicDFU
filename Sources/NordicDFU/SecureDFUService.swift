@@ -192,10 +192,17 @@ fileprivate extension CentralProtocol {
     
     func secureInitPacketUpload(data: Data,
                                 controlPoint: SecureDFUService.ControlPointNotification<Self>,
-                                timeout: TimeInterval) throws {
+                                timeout timeoutInterval: TimeInterval) throws {
+        
+        let timeout = Timeout(timeout: timeoutInterval)
         
         // start uploading command object
-        let objectInfo = try controlPoint.readObjectInfo(type: .command, timeout: timeout)
+        let objectInfo = try controlPoint.readObjectInfo(type: .command,
+                                                         timeout: try timeout.timeRemaining())
+        
+        // create object
+        try controlPoint.request(.createObject(SecureDFUCreateObject(type: .command, size: UInt32(data.count))),
+                                 timeout: try timeout.timeRemaining())
         
         // disable PRN
         
