@@ -155,7 +155,7 @@ final class SecureDFUControlPointTests: XCTestCase {
         // 15:31:12.220 peripheral.writeValue(0x04, for: 8EC90001-F315-4F60-9FB8-838830DAEA50, type: .withResponse)
         // 15:31:12.274 Data written to 8EC90001-F315-4F60-9FB8-838830DAEA50
         
-        let data = Data([0x03])
+        let data = Data([0x04])
         
         guard let value = SecureDFUExecuteCommand(data: data)
             else { XCTFail("Could not parse"); return }
@@ -163,5 +163,21 @@ final class SecureDFUControlPointTests: XCTestCase {
         XCTAssertEqual(value.data, data)
         XCTAssertEqual(SecureDFURequest.execute.data, data)
         XCTAssertEqual(SecureDFUControlPoint(data: data)?.data, data)
+    }
+    
+    func testExecuteResponse() {
+        
+        // 15:31:12.395 Notification received from 8EC90001-F315-4F60-9FB8-838830DAEA50, value (0x): 600401
+        // 15:31:12.395 Command object executed
+        
+        let data = hexData("0x600401")
+        
+        guard let value = SecureDFUResponse(data: data)
+            else { XCTFail("Could not parse"); return }
+        
+        XCTAssertNil(value.error)
+        XCTAssertEqual(value.data, data)
+        XCTAssertEqual(value.rawValue.request, .execute)
+        XCTAssertEqual(value.rawValue.status, .success)
     }
 }
