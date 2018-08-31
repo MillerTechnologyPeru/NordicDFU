@@ -29,39 +29,6 @@ public struct SecureDFUPacket: GATTProfileCharacteristic {
 internal extension CentralProtocol {
     
     /**
-     Sends the whole content of the data object.
-     
-     - parameter data: the data to be sent
-     */
-    func sendSecureInitPacket(for peripheral: Peripheral,
-                              data: Data,
-                              cache: GATTConnectionCache<Peripheral>,
-                              timeout: TimeInterval) throws {
-        
-        // set chunk size
-        let mtu = try maximumTransmissionUnit(for: peripheral)
-        let packetSize = UInt32(mtu.rawValue - 3)
-        
-        // Data may be sent in up-to-20-bytes packets
-        var offset: UInt32 = 0
-        var bytesToSend = UInt32(data.count)
-        
-        repeat {
-            
-            let packetLength = min(bytesToSend, packetSize)
-            let packet = data.subdata(in: Int(offset) ..< Int(offset + packetLength))
-            
-            let characteristicValue = SecureDFUPacket(data: packet)
-            
-            try write(characteristicValue, for: cache, withResponse: false, timeout: Timeout(timeout: timeout))
-            
-            offset += packetLength
-            bytesToSend -= packetLength
-            
-        } while bytesToSend > 0
-    }
-    
-    /**
      Sends a given range of data from given firmware over DFU Packet characteristic. If the whole object is
      completed the completition callback will be called.
      */

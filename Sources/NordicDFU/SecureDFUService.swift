@@ -88,6 +88,7 @@ fileprivate extension SecureDFUService {
                            notification: { [weak self] in self?.notificationValue = $0 })
         }
         
+        @discardableResult
         func request(_ request: SecureDFURequest, timeout: TimeInterval) throws -> SecureDFUResponse {
             
             let timeout = Timeout(timeout: timeout)
@@ -152,18 +153,6 @@ fileprivate extension SecureDFUService {
                 throw GATTError.invalidData(response.data)
             }
         }
-        
-        func setPRNValue(_ value: SecureDFUSetPacketReceiptNotification, timeout: TimeInterval) throws -> SecureDFUPacketReceiptNotification {
-            
-            let response = try self.request(.setPRNValue(value), timeout: timeout)
-            
-            switch response {
-            case let .calculateChecksum(checksum):
-                return checksum
-            default:
-                throw GATTError.invalidData(response.data)
-            }
-        }
     }
 }
 
@@ -177,21 +166,26 @@ internal extension CentralProtocol {
                                                                                       cache: cache,
                                                                                       timeout: timeout)
         
+        guard let packetCharacteristic = cache.characteristics.first(where: { $0.uuid == SecureDFUPacket.uuid })
+            else { throw CentralError.invalidAttribute(SecureDFUPacket.uuid) }
+        
         // upload init packet
-        if let initPacket = firmwareData.initPacket {
+        if let data = firmwareData.initPacket {
             
-            
+            try secureInitPacketUpload(data, controlPoint: controlPointNotification, packet: packetCharacteristic, timeout: timeout)
         }
         
         // upload firmware data
+        
         
     }
 }
 
 fileprivate extension CentralProtocol {
     
-    func secureInitPacketUpload(data: Data,
+    func secureInitPacketUpload(_ data: Data,
                                 controlPoint: SecureDFUService.ControlPointNotification<Self>,
+                                packet: Characteristic<Peripheral>,
                                 timeout timeoutInterval: TimeInterval) throws {
         
         let timeout = Timeout(timeout: timeoutInterval)
@@ -200,12 +194,42 @@ fileprivate extension CentralProtocol {
         let objectInfo = try controlPoint.readObjectInfo(type: .command,
                                                          timeout: try timeout.timeRemaining())
         
+        // verify object size
+        guard Int(objectInfo.maxSize) >= data.count else {
+            
+            assertionFailure("Data too big (\(data.count)) for \(objectInfo)")
+            throw GATTError.invalidData(data)
+        }
+        
         // create object
         try controlPoint.request(.createObject(SecureDFUCreateObject(type: .command, size: UInt32(data.count))),
                                  timeout: try timeout.timeRemaining())
         
         // disable PRN
+        try controlPoint.request(.setPRNValue(0),
+                                 timeout: try timeout.timeRemaining())
         
+        // send data...
         
+        // set chunk size
+        let mtu = try maximumTransmissionUnit(for: packet.peripheral)
+        
+        let packetSize = UInt32(mtu.rawValue - 3)
+        
+        // Data may be sent in up-to-20-bytes packets (if MTU is 23)
+        var offset: UInt32 = 0
+        var bytesToSend = UInt32(data.count)
+        
+        repeat {
+            
+            let packetLength = min(bytesToSend, packetSize)
+            let packetData = data.subdataNoCopy(in: Int(offset) ..< Int(offset + packetLength))
+            
+            try writeValue(packetData, for: packet, withResponse: false, timeout: timeoutInterval)
+            
+            offset += packetLength
+            bytesToSend -= packetLength
+            
+        } while bytesToSend > 0
     }
 }
