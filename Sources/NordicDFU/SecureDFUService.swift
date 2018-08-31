@@ -177,7 +177,7 @@ internal extension CentralProtocol {
         
         // upload firmware data
         
-        
+        try secureFirmwareDataUpload(firmwareData.data, controlPoint: controlPointNotification, packet: packetCharacteristic, timeout: timeout)
     }
 }
 
@@ -214,16 +214,16 @@ fileprivate extension CentralProtocol {
         // set chunk size
         let mtu = try maximumTransmissionUnit(for: packet.peripheral)
         
-        let packetSize = UInt32(mtu.rawValue - 3)
+        let packetSize = Int(mtu.rawValue - 3)
         
         // Data may be sent in up-to-20-bytes packets (if MTU is 23)
-        var offset: UInt32 = 0
-        var bytesToSend = UInt32(data.count)
+        var offset: Int = 0
+        var bytesToSend = data.count
         
         repeat {
             
             let packetLength = min(bytesToSend, packetSize)
-            let packetData = data.subdataNoCopy(in: Int(offset) ..< Int(offset + packetLength))
+            let packetData = data.subdataNoCopy(in: offset ..< offset + packetLength)
             
             try writeValue(packetData, for: packet, withResponse: false, timeout: timeoutInterval)
             
@@ -231,5 +231,13 @@ fileprivate extension CentralProtocol {
             bytesToSend -= packetLength
             
         } while bytesToSend > 0
+    }
+    
+    func secureFirmwareDataUpload(_ data: Data,
+                                  controlPoint: SecureDFUService.ControlPointNotification<Self>,
+                                  packet: Characteristic<Peripheral>,
+                                  timeout timeoutInterval: TimeInterval) throws {
+        
+        
     }
 }
