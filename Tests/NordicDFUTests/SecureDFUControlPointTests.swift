@@ -85,10 +85,10 @@ final class SecureDFUControlPointTests: XCTestCase {
         guard let value = SecureDFUSetPacketReceiptNotification(data: data)
             else { XCTFail("Could not parse"); return }
         
-        let response: SecureDFUSetPacketReceiptNotification = 0x0000
+        let request: SecureDFUSetPacketReceiptNotification = 0x0000 // disable PRN
         
         XCTAssertEqual(value.data, data)
-        XCTAssertEqual(response.data, data)
+        XCTAssertEqual(request.data, data)
     }
     
     func testSetPRNValueResponse() {
@@ -105,5 +105,20 @@ final class SecureDFUControlPointTests: XCTestCase {
         
         XCTAssertEqual(value.data, data)
         XCTAssertEqual(response.data, data)
+    }
+    
+    func testCalculateChecksumInitPacket() {
+        
+        // 15:31:12.107 Writing to characteristic 8EC90001-F315-4F60-9FB8-838830DAEA50...
+        // 15:31:12.107 peripheral.writeValue(0x03, for: 8EC90001-F315-4F60-9FB8-838830DAEA50, type: .withResponse)
+        // 15:31:12.219 Data written to 8EC90001-F315-4F60-9FB8-838830DAEA50
+        
+        let data = Data([0x03])
+        
+        guard let value = SecureDFUCalculateChecksumCommand(data: data)
+            else { XCTFail("Could not parse"); return }
+        
+        XCTAssertEqual(value.data, data)
+        XCTAssertEqual(SecureDFURequest.calculateChecksum.data, data)
     }
 }
