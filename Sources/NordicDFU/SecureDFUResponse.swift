@@ -357,6 +357,12 @@ public struct SecureDFUCalculateChecksumResponse: SecureDFUResponseProtocol {
     
     public let crc: UInt32
     
+    public init(offset: UInt32, crc: UInt32) {
+        
+        self.offset = offset
+        self.crc = crc
+    }
+    
     public init?(data: Data) {
         
         guard data.count == type(of: self).length,

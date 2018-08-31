@@ -60,4 +60,49 @@ final class SecureDFUControlPointTests: XCTestCase {
         XCTAssertEqual(request.data, data)
         XCTAssertEqual(request.data, value.data)
     }
+    
+    func testCreateObjectCommandResponse() {
+        
+        // Notification received from 8EC90001-F315-4F60-9FB8-838830DAEA50, value (0x): 600101
+        
+        let data = Data([0x60, 0x01, 0x01])
+        
+        guard let value = SecureDFUResponse(data: data)
+            else { XCTFail("Could not parse"); return }
+        
+        let response = SecureDFUSuccessResponse(request: .createObject)
+        
+        XCTAssertEqual(value.data, data)
+        XCTAssertEqual(response.data, data)
+    }
+    
+    func testSetPRNValue() {
+        
+        // peripheral.writeValue(0x020000, for: 8EC90001-F315-4F60-9FB8-838830DAEA50, type: .withResponse)
+        
+        let data = Data([0x02, 0x00, 0x00])
+        
+        guard let value = SecureDFUSetPacketReceiptNotification(data: data)
+            else { XCTFail("Could not parse"); return }
+        
+        let response: SecureDFUSetPacketReceiptNotification = 0x0000
+        
+        XCTAssertEqual(value.data, data)
+        XCTAssertEqual(response.data, data)
+    }
+    
+    func testSetPRNValueResponse() {
+        
+        // Notification received from 8EC90001-F315-4F60-9FB8-838830DAEA50, value (0x): 600201
+        
+        let data = Data([0x60, 0x02, 0x01])
+        
+        guard let value = SecureDFUResponse(data: data)
+            else { XCTFail("Could not parse"); return }
+        
+        let response = SecureDFUSuccessResponse(request: .setPRNValue)
+        
+        XCTAssertEqual(value.data, data)
+        XCTAssertEqual(response.data, data)
+    }
 }
