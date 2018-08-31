@@ -291,6 +291,15 @@ public struct SecureDFUReadObjectInfoResponse: SecureDFUResponseProtocol {
     
     public let crc: UInt32
     
+    public init(maxSize: UInt32,
+                offset: UInt32,
+                crc: UInt32) {
+        
+        self.maxSize = maxSize
+        self.offset = offset
+        self.crc = crc
+    }
+    
     public init?(data: Data) {
         
         guard data.count == type(of: self).length,

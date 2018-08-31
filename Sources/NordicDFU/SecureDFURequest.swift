@@ -71,7 +71,7 @@ public struct SecureDFUCreateObject: SecureDFURequestProtocol {
             let type = SecureDFUProcedureType(rawValue: data[1])
             else { return nil }
         
-        let size = data.withUnsafeBytes { UInt32(littleEndian: $0.advanced(by: 2).pointee) }
+        let size = UInt32(littleEndian: UInt32(bytes: (data[2], data[3], data[4], data[5])))
         
         self.type = type
         self.size = size
@@ -79,17 +79,11 @@ public struct SecureDFUCreateObject: SecureDFURequestProtocol {
     
     public var data: Data {
         
-        let sizeBytes = size.littleEndian.bytes
-        
-        return Data([
-            type(of: self).opcode.rawValue,
-            type.rawValue,
-            sizeBytes.0,
-            sizeBytes.1,
-            sizeBytes.2,
-            sizeBytes.3,
-            ])
-        
+        var data = Data(capacity: type(of: self).length)
+        data += type(of: self).opcode.rawValue
+        data += type.rawValue
+        data += size.littleEndian
+        return data
     }
 }
 
