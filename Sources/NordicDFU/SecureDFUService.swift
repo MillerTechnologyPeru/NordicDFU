@@ -207,23 +207,14 @@ fileprivate extension CentralProtocol {
         // set chunk size
         let mtu = try maximumTransmissionUnit(for: packet.peripheral)
         
+        // Data may be sent in up-to-20-bytes packets (if MTU is 23)
         let packetSize = Int(mtu.rawValue - 3)
         
-        // Data may be sent in up-to-20-bytes packets (if MTU is 23)
-        var offset: Int = 0
-        var bytesToSend = data.count
-        
-        repeat {
-            
-            let packetLength = min(bytesToSend, packetSize)
-            let packetData = data.subdataNoCopy(in: offset ..< offset + packetLength)
-            
+        // send packets packets
+        try stride(from: 0, to: data.count, by: packetSize).forEach {
+            let packetData = data.subdataNoCopy(in: $0 ..< min($0 + packetSize, data.count))
             try writeValue(packetData, for: packet, withResponse: false, timeout: timeout)
-            
-            offset += packetLength
-            bytesToSend -= packetLength
-            
-        } while bytesToSend > 0
+        }
     }
     
     func secureInitPacketUpload(_ data: Data,
@@ -275,12 +266,11 @@ fileprivate extension CentralProtocol {
                                   packet: Characteristic<Peripheral>,
                                   timeout timeoutInterval: TimeInterval) throws {
         
-        let timeout = Timeout(timeout: timeoutInterval)
+        var timeout = Timeout(timeout: timeoutInterval)
         
         // start uploading command object
         let objectInfo = try controlPoint.readObjectInfo(type: .data,
                                                          timeout: try timeout.timeRemaining())
-        
         
         // enable PRN notifications
         try controlPoint.request(.setPRNValue(packetReceiptNotification),
@@ -292,6 +282,31 @@ fileprivate extension CentralProtocol {
             data.subdataNoCopy(in: $0 ..< min($0 + objectSize, data.count))
         }
         
-        
+        // create data objects on peripheral
+        for dataObject in dataObjects {
+            
+            timeout = Timeout(timeout: timeoutInterval)
+            
+            let createObject = SecureDFUCreateObject(type: .data, size: objectInfo.maxSize)
+            
+            // create data object
+            try controlPoint.request(.createObject(createObject), timeout: try timeout.timeRemaining())
+            
+            // upload packet
+            try secureDataPacketUpload(dataObject, packet: packet, timeout: timeoutInterval)
+            
+            timeout = Timeout(timeout: timeoutInterval)
+            
+            // validate checksum
+            let checksumResponse = try controlPoint.calculateChecksum(timeout: try timeout.timeRemaining())
+            
+            let expectedChecksum = CRC32(data: data).crc
+            
+            guard checksumResponse.crc == expectedChecksum
+                else { throw GATTError.invalidChecksum(checksumResponse.crc, expected: expectedChecksum) }
+            
+            // execute command
+            try controlPoint.request(.execute, timeout: try timeout.timeRemaining())
+        }
     }
 }
