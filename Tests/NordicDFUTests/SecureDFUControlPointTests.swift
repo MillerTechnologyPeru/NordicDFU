@@ -22,6 +22,7 @@ final class SecureDFUControlPointTests: XCTestCase {
         
         XCTAssertEqual(value.data, data)
         XCTAssertEqual(SecureDFUReadObjectInfo(type: .command).data, data)
+        XCTAssertEqual(SecureDFUControlPoint(data: data)?.data, data)
     }
     
     func testReadObjectInfoCommandResponse() {
@@ -40,6 +41,7 @@ final class SecureDFUControlPointTests: XCTestCase {
         
         XCTAssertEqual(value.data, data)
         XCTAssertEqual(SecureDFUResponse.readObject(response).data, data)
+        XCTAssertEqual(SecureDFUControlPoint(data: data)?.data, data)
     }
     
     func testCreateObjectCommand() {
@@ -59,6 +61,7 @@ final class SecureDFUControlPointTests: XCTestCase {
         
         XCTAssertEqual(request.data, data)
         XCTAssertEqual(request.data, value.data)
+        XCTAssertEqual(SecureDFUControlPoint(data: data)?.data, data)
     }
     
     func testCreateObjectCommandResponse() {
@@ -74,6 +77,7 @@ final class SecureDFUControlPointTests: XCTestCase {
         
         XCTAssertEqual(value.data, data)
         XCTAssertEqual(response.data, data)
+        XCTAssertEqual(SecureDFUControlPoint(data: data)?.data, data)
     }
     
     func testSetPRNValue() {
@@ -89,6 +93,7 @@ final class SecureDFUControlPointTests: XCTestCase {
         
         XCTAssertEqual(value.data, data)
         XCTAssertEqual(request.data, data)
+        XCTAssertEqual(SecureDFUControlPoint(data: data)?.data, data)
     }
     
     func testSetPRNValueResponse() {
@@ -105,6 +110,7 @@ final class SecureDFUControlPointTests: XCTestCase {
         
         XCTAssertEqual(value.data, data)
         XCTAssertEqual(response.data, data)
+        XCTAssertEqual(SecureDFUControlPoint(data: data)?.data, data)
     }
     
     func testCalculateChecksumInitPacket() {
@@ -120,5 +126,42 @@ final class SecureDFUControlPointTests: XCTestCase {
         
         XCTAssertEqual(value.data, data)
         XCTAssertEqual(SecureDFURequest.calculateChecksum.data, data)
+        XCTAssertEqual(SecureDFUControlPoint(data: data)?.data, data)
+    }
+    
+    func testCalculateChecksumInitPacketResponse() {
+        
+        // 15:31:12.220 Notification received from 8EC90001-F315-4F60-9FB8-838830DAEA50, value (0x): 600301870000003b9656e8
+        // 15:31:12.220 Checksum (Offset = 135, CRC = E856963B) received
+        
+        let data = hexData("0x600301870000003b9656e8")
+        
+        guard let value = SecureDFUCalculateChecksumResponse(data: data)
+            else { XCTFail("Could not parse"); return }
+        
+        let response = SecureDFUCalculateChecksumResponse(offset: 135,
+                                                          crc: 0xE856963B)
+        
+        XCTAssertEqual(value.data, data)
+        XCTAssertEqual(response.data, data)
+        XCTAssertEqual(value.offset, response.offset)
+        XCTAssertEqual(value.crc, response.crc)
+        XCTAssertEqual(SecureDFUControlPoint(data: data)?.data, data)
+    }
+    
+    func testExecuteCommand() {
+        
+        // 15:31:12.220 Writing to characteristic 8EC90001-F315-4F60-9FB8-838830DAEA50...
+        // 15:31:12.220 peripheral.writeValue(0x04, for: 8EC90001-F315-4F60-9FB8-838830DAEA50, type: .withResponse)
+        // 15:31:12.274 Data written to 8EC90001-F315-4F60-9FB8-838830DAEA50
+        
+        let data = Data([0x03])
+        
+        guard let value = SecureDFUExecuteCommand(data: data)
+            else { XCTFail("Could not parse"); return }
+        
+        XCTAssertEqual(value.data, data)
+        XCTAssertEqual(SecureDFURequest.execute.data, data)
+        XCTAssertEqual(SecureDFUControlPoint(data: data)?.data, data)
     }
 }

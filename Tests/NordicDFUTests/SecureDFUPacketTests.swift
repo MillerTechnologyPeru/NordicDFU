@@ -65,23 +65,3 @@ final class SecureDFUPacketTests: XCTestCase {
         XCTAssertEqual(CRC32(data: initPacket).crc, 0xE856963B)
     }
 }
-
-fileprivate func hexData(_ string: String) -> Data {
-    
-    var string = string
-    string.removeFirst(2) // remove '0x'
-    
-    var data = Data(capacity: string.count / 2)
-    
-    while string.count >= 2 {
-        
-        let hexString = string.prefix(2)
-        string.removeFirst(2)
-        
-        let byte = Int(hexString, radix: 16)!
-        
-        data.append(UInt8(byte))
-    }
-    
-    return data
-}
