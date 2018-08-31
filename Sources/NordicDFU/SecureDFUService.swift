@@ -172,6 +172,7 @@ fileprivate extension SecureDFUService {
 internal extension CentralProtocol {
     
     func secureFirmwareUpload(_ firmwareData: DFUFirmware.FirmwareData,
+                              packetReceiptNotification: SecureDFUSetPacketReceiptNotification,
                               for cache: GATTConnectionCache<Peripheral>,
                               timeout: TimeInterval) throws {
         
@@ -189,12 +190,41 @@ internal extension CentralProtocol {
         }
         
         // upload firmware data
-        
-        try secureFirmwareDataUpload(firmwareData.data, controlPoint: controlPointNotification, packet: packetCharacteristic, timeout: timeout)
+        try secureFirmwareDataUpload(firmwareData.data,
+                                     packetReceiptNotification: packetReceiptNotification,
+                                     controlPoint: controlPointNotification,
+                                     packet: packetCharacteristic,
+                                     timeout: timeout)
     }
 }
 
 fileprivate extension CentralProtocol {
+    
+    func secureDataPacketUpload(_ data: Data,
+                                packet: Characteristic<Peripheral>,
+                                timeout: TimeInterval) throws {
+        
+        // set chunk size
+        let mtu = try maximumTransmissionUnit(for: packet.peripheral)
+        
+        let packetSize = Int(mtu.rawValue - 3)
+        
+        // Data may be sent in up-to-20-bytes packets (if MTU is 23)
+        var offset: Int = 0
+        var bytesToSend = data.count
+        
+        repeat {
+            
+            let packetLength = min(bytesToSend, packetSize)
+            let packetData = data.subdataNoCopy(in: offset ..< offset + packetLength)
+            
+            try writeValue(packetData, for: packet, withResponse: false, timeout: timeout)
+            
+            offset += packetLength
+            bytesToSend -= packetLength
+            
+        } while bytesToSend > 0
+    }
     
     func secureInitPacketUpload(_ data: Data,
                                 controlPoint: SecureDFUService.ControlPointNotification<Self>,
@@ -223,27 +253,7 @@ fileprivate extension CentralProtocol {
                                  timeout: try timeout.timeRemaining())
         
         // send data...
-        
-        // set chunk size
-        let mtu = try maximumTransmissionUnit(for: packet.peripheral)
-        
-        let packetSize = Int(mtu.rawValue - 3)
-        
-        // Data may be sent in up-to-20-bytes packets (if MTU is 23)
-        var offset: Int = 0
-        var bytesToSend = data.count
-        
-        repeat {
-            
-            let packetLength = min(bytesToSend, packetSize)
-            let packetData = data.subdataNoCopy(in: offset ..< offset + packetLength)
-            
-            try writeValue(packetData, for: packet, withResponse: false, timeout: timeoutInterval)
-            
-            offset += packetLength
-            bytesToSend -= packetLength
-            
-        } while bytesToSend > 0
+        try secureDataPacketUpload(data, packet: packet, timeout: timeoutInterval)
         
         timeout = Timeout(timeout: timeoutInterval)
         
@@ -260,9 +270,27 @@ fileprivate extension CentralProtocol {
     }
     
     func secureFirmwareDataUpload(_ data: Data,
+                                  packetReceiptNotification: SecureDFUSetPacketReceiptNotification,
                                   controlPoint: SecureDFUService.ControlPointNotification<Self>,
                                   packet: Characteristic<Peripheral>,
                                   timeout timeoutInterval: TimeInterval) throws {
+        
+        let timeout = Timeout(timeout: timeoutInterval)
+        
+        // start uploading command object
+        let objectInfo = try controlPoint.readObjectInfo(type: .data,
+                                                         timeout: try timeout.timeRemaining())
+        
+        
+        // enable PRN notifications
+        try controlPoint.request(.setPRNValue(packetReceiptNotification),
+                                 timeout: try timeout.timeRemaining())
+        
+        // send packets
+        let objectSize = Int(objectInfo.maxSize)
+        let dataObjects: [Data] = stride(from: 0, to: data.count, by: objectSize).map {
+            data.subdataNoCopy(in: $0 ..< min($0 + objectSize, data.count))
+        }
         
         
     }
