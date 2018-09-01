@@ -141,7 +141,7 @@ public struct SecureDFUSetPacketReceiptNotification: SecureDFURequestProtocol {
             opcode == type(of: self).opcode
             else { return nil }
         
-        let rawValue = data.withUnsafeBytes { UInt16(littleEndian: $0.advanced(by: 1).pointee) }
+        let rawValue = UInt16(littleEndian: UInt16(bytes: (data[1], data[2])))
         
         self.init(rawValue: rawValue)
     }
