@@ -64,7 +64,7 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
     public func scan(duration: TimeInterval,
                      timeout: TimeInterval = .gattDefaultTimeout,
                      filterDuplicates: Bool = true,
-                     foundDevice: (NordicPeripheral<Peripheral>) -> (Bool)) throws {
+                     foundDevice: @escaping (NordicPeripheral<Peripheral>) -> (Bool)) throws {
         
         let scanResults = try central.scan(duration: duration, filterDuplicates: filterDuplicates)
         

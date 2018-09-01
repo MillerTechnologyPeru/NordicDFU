@@ -93,6 +93,16 @@ extension ButtonlessDFUSetName: ExpressibleByStringLiteral {
         
         self.init(rawValue: value)
     }
+    
+    public init(unicodeScalarLiteral value: String) {
+        
+        self.init(rawValue: value)
+    }
+    
+    public init(extendedGraphemeClusterLiteral value: String) {
+        
+        self.init(rawValue: value)
+    }
 }
 
 extension ButtonlessDFUSetName: CustomStringConvertible {
