@@ -37,14 +37,14 @@ func run(arguments: [String] = CommandLine.arguments) throws {
     
     let central = DarwinCentral()
     
-    central.log = { print("Central: \($0)") }
-    
     // wait till CoreBluetooth is ready
     try central.waitPowerOn()
     
     #endif
     
     let deviceManager = NordicDeviceManager(central: central)
+    
+    central.log = { print("DeviceManager: \($0)") }
     
     // execute command
     try command.execute(deviceManager)
