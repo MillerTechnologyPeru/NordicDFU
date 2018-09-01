@@ -14,7 +14,11 @@ public enum NordicGATTError: Error {
     /// Invalid data.
     case invalidData(Data?)
     
+    /// Invalid checksum for sent packet
     case invalidChecksum(UInt32, expected: UInt32)
+    
+    /// Not a Nordic Peripheral
+    case invalidPeripheral
 }
 
 internal typealias GATTError = NordicGATTError

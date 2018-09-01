@@ -82,6 +82,7 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
         }
     }
     
+    /// Jump to DFU
     public func enterBootloader(for peripheral: NordicPeripheral<Peripheral, Advertisement>, timeout: TimeInterval = .gattDefaultTimeout) throws {
         
         let timeout = Timeout(timeout: timeout)
@@ -98,6 +99,36 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
                 
                 // not supported
                 throw CentralError.invalidAttribute(SecureDFUService.uuid)
+            }
+        }
+    }
+    
+    /// Upload firmware.
+    public func uploadFirmware(_ firmware: DFUFirmware,
+                               for peripheral: NordicPeripheral<Peripheral, Advertisement>,
+                               timeout: TimeInterval = .gattDefaultTimeout) throws {
+        
+        let timeout = Timeout(timeout: timeout)
+        
+        let packetReceiptNotification = self.packetReceiptNotification
+        
+        try central.device(for: peripheral.scanData.peripheral, timeout: timeout) { [unowned self] (connectionCache) in
+            
+            guard let peripheral = self.peripheral(for: peripheral.scanData, cache: connectionCache)
+                else { throw GATTError.invalidPeripheral }
+            
+            for firmwareData in firmware.data {
+                
+                switch peripheral.type {
+                    
+                case .secure:
+                    
+                    try self.central.secureFirmwareUpload(firmwareData, packetReceiptNotification: packetReceiptNotification, for: connectionCache, timeout: timeout.timeout)
+                    
+                case .legacy:
+                    
+                    fatalError("Not implemented")
+                }
             }
         }
     }
