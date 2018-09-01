@@ -11,6 +11,10 @@ import XCTest
 
 final class SecureDFUPacketTests: XCTestCase {
     
+    static var allTests = [
+        ("testSendInitPacket", testSendInitPacket)
+    ]
+    
     func testSendInitPacket() {
         
         /**

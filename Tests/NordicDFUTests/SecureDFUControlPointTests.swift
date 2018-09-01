@@ -11,6 +11,19 @@ import XCTest
 
 final class SecureDFUControlPointTests: XCTestCase {
     
+    static var allTests = [
+        ("testReadObjectInfoCommand", testReadObjectInfoCommand),
+        ("testReadObjectInfoCommandResponse", testReadObjectInfoCommandResponse),
+        ("testCreateObjectCommand", testCreateObjectCommand),
+        ("testCreateObjectCommandResponse", testCreateObjectCommandResponse),
+        ("testSetPRNValue", testSetPRNValue),
+        ("testSetPRNValueResponse", testSetPRNValueResponse),
+        ("testCalculateChecksumInitPacket", testCalculateChecksumInitPacket),
+        ("testCalculateChecksumInitPacketResponse", testCalculateChecksumInitPacketResponse),
+        ("testExecuteCommand", testExecuteCommand),
+        ("testExecuteResponse", testExecuteResponse)
+    ]
+    
     func testReadObjectInfoCommand() {
         
         // peripheral.writeValue(0x0601, for: 8EC90001-F315-4F60-9FB8-838830DAEA50, type: .withResponse)

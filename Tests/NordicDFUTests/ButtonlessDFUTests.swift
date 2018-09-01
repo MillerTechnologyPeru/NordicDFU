@@ -11,6 +11,11 @@ import XCTest
 
 final class ButtonlessDFUTests: XCTestCase {
     
+    static var allTests = [
+        ("testEnterBootloaderRequest", testEnterBootloaderRequest),
+        ("testEnterBootloaderResponse", testEnterBootloaderResponse)
+    ]
+    
     func testEnterBootloaderRequest() {
         
         // peripheral.writeValue(0x01, for: 8EC90003-F315-4F60-9FB8-838830DAEA50, type: .withResponse)

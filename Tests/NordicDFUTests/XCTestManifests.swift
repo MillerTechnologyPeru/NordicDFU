@@ -6,6 +6,9 @@ public func allTests() -> [XCTestCaseEntry] {
         testCase(NordicDFUTests.allTests),
         testCase(ManifestTests.allTests),
         testCase(FirmwareTests.allTests),
+        testCase(ButtonlessDFUTests.allTests),
+        testCase(SecureDFUPacketTests.allTests),
+        testCase(SecureDFUControlPointTests.allTests),
     ]
 }
 #endif
