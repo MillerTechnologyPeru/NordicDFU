@@ -26,7 +26,7 @@ internal protocol DeviceCommand: ArgumentableCommand {
 
 extension DeviceCommand {
     
-    func scan <Central: CentralProtocol> (_ deviceManager: NordicDeviceManager<Central>) throws -> NordicPeripheral<Central.Peripheral, Central.Advertisement> {
+    func scan <Central: CentralProtocol> (_ deviceManager: NordicDeviceManager<Central>) throws -> NordicPeripheral<Central.Peripheral> {
         
         let peripheral = self.peripheral
         
@@ -34,15 +34,17 @@ extension DeviceCommand {
         
         let start = Date()
         
-        var foundDevice: NordicPeripheral<Central.Peripheral, Central.Advertisement>?
+        var foundDevice: NordicPeripheral<Central.Peripheral>?
         
         try deviceManager.scan(duration: self.scanTimeout, filterDuplicates: self.filterDuplicates, foundDevice: {
             
-            if $0.scanData.peripheral.identifier.description == peripheral {
+            // find matching peripheral by MAC address
+            if $0.peripheral.identifier.description == peripheral {
                 foundDevice = $0
                 return false
+            } else {
+                return true // keep searching
             }
-            else { return true } // keep searching
         })
         
         guard let device = foundDevice else { throw CommandError.notFound(peripheral) }

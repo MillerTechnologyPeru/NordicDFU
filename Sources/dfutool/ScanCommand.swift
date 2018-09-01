@@ -84,13 +84,9 @@ public struct ScanCommand: ArgumentableCommand {
         
         try deviceManager.scan(duration: duration, timeout: timeout) {
             
-            devices.insert($0.scanData.peripheral)
+            devices.insert($0.peripheral)
             
-            var deviceInformation = "[\($0.scanData.peripheral)] \($0.type) \($0.mode)"
-            
-            if let name = $0.scanData.advertisementData.localName {
-                deviceInformation += " - \(name)"
-            }
+            let deviceInformation = "[\($0.peripheral)] \($0.type) \($0.mode)"
             
             print(deviceInformation)
             

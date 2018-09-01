@@ -64,7 +64,7 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
     public func scan(duration: TimeInterval,
                      timeout: TimeInterval = .gattDefaultTimeout,
                      filterDuplicates: Bool = true,
-                     foundDevice: (NordicPeripheral<Peripheral, Advertisement>) -> (Bool)) throws {
+                     foundDevice: (NordicPeripheral<Peripheral>) -> (Bool)) throws {
         
         let scanResults = try central.scan(duration: duration, filterDuplicates: filterDuplicates)
         
@@ -81,7 +81,7 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
                 
                 try central.device(for: scanResult.peripheral, timeout: timeout) { [unowned self] (cache) in
                     
-                    guard let peripheral = self.peripheral(for: scanResult, cache: cache)
+                    guard let peripheral = self.peripheral(for: scanResult.peripheral, cache: cache)
                         else { return }
                     
                     continueScanning = foundDevice(peripheral)
@@ -96,11 +96,14 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
     }
     
     /// Jump to DFU
-    public func enterBootloader(for peripheral: NordicPeripheral<Peripheral, Advertisement>, timeout: TimeInterval = .gattDefaultTimeout) throws {
+    public func enterBootloader(for peripheral: Peripheral, timeout: TimeInterval = .gattDefaultTimeout) throws {
         
         let timeout = Timeout(timeout: timeout)
         
-        try central.device(for: peripheral.scanData.peripheral, timeout: timeout) { [unowned self] (connectionCache) in
+        try central.device(for: peripheral, timeout: timeout) { [unowned self] (connectionCache) in
+            
+            guard let peripheral = self.peripheral(for: peripheral, cache: connectionCache)
+                else { throw GATTError.invalidPeripheral }
             
             switch peripheral.type {
                 
@@ -118,16 +121,16 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
     
     /// Upload firmware.
     public func uploadFirmware(_ firmware: DFUFirmware,
-                               for peripheral: NordicPeripheral<Peripheral, Advertisement>,
+                               for peripheral: Peripheral,
                                timeout: TimeInterval = .gattDefaultTimeout) throws {
         
         let timeout = Timeout(timeout: timeout)
         
         let packetReceiptNotification = self.packetReceiptNotification
         
-        try central.device(for: peripheral.scanData.peripheral, timeout: timeout) { [unowned self] (connectionCache) in
+        try central.device(for: peripheral, timeout: timeout) { [unowned self] (connectionCache) in
             
-            guard let peripheral = self.peripheral(for: peripheral.scanData, cache: connectionCache)
+            guard let peripheral = self.peripheral(for: peripheral, cache: connectionCache)
                 else { throw GATTError.invalidPeripheral }
             
             for firmwareData in firmware.data {
@@ -148,8 +151,8 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
     
     // MARK: - Private Methods
     
-    func peripheral(for scanData: ScanData<Peripheral, Advertisement>,
-                    cache: GATTConnectionCache<Peripheral>) -> NordicPeripheral<Peripheral, Advertisement>? {
+    func peripheral(for peripheral: Peripheral,
+                    cache: GATTConnectionCache<Peripheral>) -> NordicPeripheral<Peripheral>? {
         
         let type: NordicPeripheralType
         let mode: NordicPeripheralMode
@@ -186,13 +189,13 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
             return nil
         }
         
-        return NordicPeripheral(scanData: scanData, type: type, mode: mode)
+        return NordicPeripheral(peripheral: peripheral, type: type, mode: mode)
     }
 }
 
-public struct NordicPeripheral <Peripheral: Peer, Advertisement: AdvertisementDataProtocol> {
+public struct NordicPeripheral <Peripheral: Peer> {
     
-    public let scanData: ScanData<Peripheral, Advertisement>
+    public let peripheral: Peripheral
     
     public let type: NordicPeripheralType
     
