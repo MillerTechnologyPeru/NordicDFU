@@ -40,7 +40,18 @@ public protocol GATTProfileCharacteristic: GATTCharacteristic {
     
     static var uuid: BluetoothUUID { get }
     
+    static var properies: BitMaskOptionSet<GATT.Characteristic.Property> { get }
+    
     init?(data: Data)
     
     var data: Data { get }
+}
+
+extension GATTProfileCharacteristic {
+    
+    static func matches <Peripheral: Peer> (_ characteristic: Characteristic<Peripheral>) -> Bool {
+        
+        return characteristic.uuid == uuid
+            && characteristic.properties.contains(properies)
+    }
 }

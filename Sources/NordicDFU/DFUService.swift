@@ -16,6 +16,7 @@ public struct DFUService: GATTProfileService {
     public static let isPrimary: Bool = true
     
     public static let characteristics: [GATTProfileCharacteristic.Type] = [
-        DFUControlPoint.self
+        DFUControlPoint.self,
+        DFUPacket.self
     ]
 }

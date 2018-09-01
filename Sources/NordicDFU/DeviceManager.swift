@@ -56,10 +56,6 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
      */
     public var packetReceiptNotification: SecureDFUSetPacketReceiptNotification = 12
     
-    internal let profiles: [NordicGATTProfile.Type] = [
-        NordicLegacyDFUProfile.self
-    ]
-    
     /// Scans for nearby devices.
     ///
     /// - Parameter duration: The duration of the scan.
@@ -67,44 +63,106 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
     /// - Parameter event: Callback for a found device.
     public func scan(duration: TimeInterval,
                      timeout: TimeInterval,
-                     filterDuplicates: Bool = true) throws -> [Peripheral: GATTProfile.Type] {
+                     filterDuplicates: Bool = true,
+                     foundDevice: (NordicPeripheral<Peripheral, Advertisement>) -> ()) throws {
         
         let scanResults = try central.scan(duration: duration, filterDuplicates: filterDuplicates)
         
-        let timeout = Timeout(timeout: timeout)
-        
-        var peripherals = [Peripheral: GATTProfile.Type]()
-        
         for scanResult in scanResults {
             
-            let peripheral = scanResult.peripheral
+            let timeout = Timeout(timeout: timeout)
             
-            try central.connect(to: peripheral, timeout: try timeout.timeRemaining())
-            
-            defer { central.disconnect(peripheral: peripheral) }
-            
-            // discover services
-            let services = try central.discoverServices([], for: peripheral, timeout: timeout.timeRemaining())
-            
-            for profile in profiles {
+            try central.device(for: scanResult.peripheral, timeout: timeout) { [unowned self] (cache) in
                 
-                for service in profile.services {
-                    
-                    // vreify service exists
-                    guard services.contains(where: { $0.uuid == service.uuid })
-                        else { break }
-                }
+                guard let peripheral = self.peripheral(for: scanResult, cache: cache)
+                    else { return }
                 
-                peripherals[peripheral] = profile
-                
-                break
+                foundDevice(peripheral)
             }
         }
+    }
+    
+    public func enterBootloader(for peripheral: NordicPeripheral<Peripheral, Advertisement>, timeout: TimeInterval = .gattDefaultTimeout) throws {
         
-        return peripherals
+        let timeout = Timeout(timeout: timeout)
+        
+        try central.device(for: peripheral.scanData.peripheral, timeout: timeout) { [unowned self] (connectionCache) in
+            
+            switch peripheral.type {
+                
+            case .secure:
+                
+                try self.central.buttonlessDFU(.enterBootloader, for: connectionCache, timeout: timeout)
+                
+            case .legacy:
+                
+                // not supported
+                throw CentralError.invalidAttribute(SecureDFUService.uuid)
+            }
+        }
     }
     
     // MARK: - Private Methods
     
+    func peripheral(for scanData: ScanData<Peripheral, Advertisement>,
+                    cache: GATTConnectionCache<Peripheral>) -> NordicPeripheral<Peripheral, Advertisement>? {
+        
+        let type: NordicPeripheralType
+        let mode: NordicPeripheralMode
+        
+        if cache.characteristics.contains(where: { ButtonlessDFUExperimental.matches($0) }) {
+            
+            type = .secure
+            mode = .enterBootloader
+            
+        } else if cache.characteristics.contains(where: { ButtonlessDFUWithBondSharing.matches($0) }) {
+            
+            type = .secure
+            mode = .enterBootloader
+            
+        } else if cache.characteristics.contains(where: { ButtonlessDFUWithoutBondSharing.matches($0) }) {
+            
+            type = .secure
+            mode = .enterBootloader
+            
+        } else if cache.characteristics.contains(where: { SecureDFUControlPoint.matches($0) }),
+            cache.characteristics.contains(where: { SecureDFUPacket.matches($0) }) {
+            
+            type = .secure
+            mode = .uploadFirmware
+            
+        } else if cache.characteristics.contains(where: { DFUControlPoint.matches($0) }),
+            cache.characteristics.contains(where: { DFUPacket.matches($0) }) {
+            
+            type = .legacy
+            mode = .uploadFirmware
+            
+        } else {
+            
+            return nil
+        }
+        
+        return NordicPeripheral(scanData: scanData, type: type, mode: mode)
+    }
+}
+
+public struct NordicPeripheral <Peripheral: Peer, Advertisement: AdvertisementDataProtocol> {
     
+    public let scanData: ScanData<Peripheral, Advertisement>
+    
+    public let type: NordicPeripheralType
+    
+    public let mode: NordicPeripheralMode
+}
+
+public enum NordicPeripheralType {
+    
+    case legacy
+    case secure
+}
+
+public enum NordicPeripheralMode {
+    
+    case enterBootloader
+    case uploadFirmware
 }

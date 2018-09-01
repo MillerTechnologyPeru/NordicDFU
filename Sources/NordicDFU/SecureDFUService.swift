@@ -21,31 +21,6 @@ public struct SecureDFUService: GATTProfileService {
     ]
 }
 
-internal extension SecureDFUService {
-    
-    static func calculateFirmwareRanges(_ data: Data, maxLen: Int) -> [Range<Int>] {
-        
-        var totalLength = data.count
-        var ranges = [Range<Int>]()
-        
-        var partIdx = 0
-        while (totalLength > 0) {
-            var range : Range<Int>
-            if totalLength > maxLen {
-                totalLength -= maxLen
-                range = (partIdx * maxLen) ..< maxLen + (partIdx * maxLen)
-            } else {
-                range = (partIdx * maxLen) ..< totalLength + (partIdx * maxLen)
-                totalLength = 0
-            }
-            ranges.append(range)
-            partIdx += 1
-        }
-        
-        return ranges
-    }
-}
-
 fileprivate extension SecureDFUService {
     
     fileprivate final class ControlPointNotification <Central: CentralProtocol> {
