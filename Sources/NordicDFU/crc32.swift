@@ -88,7 +88,7 @@ func crc32(_ crc: UInt32, data: Data?) -> UInt32 {
     guard let data = data else {
         return crc32(0, buffer: nil, length: 0)
     }
-    return crc32(crc, buffer: (data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count), length: data.count)
+    return data.withUnsafeBytes { crc32(crc, buffer: $0, length: data.count) }
 }
 
 /**
