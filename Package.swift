@@ -7,12 +7,20 @@ let package = Package(
     targets: [
         Target(
             name: "NordicDFU"
+        ),
+        Target(
+            name: "dfutool",
+            dependencies: [
+                "NordicDFU"
+            ]
         )
     ],
-    
     dependencies: [
         .Package(url: "https://github.com/PureSwift/GATT.git", majorVersion: 2),
         .Package(url: "https://github.com/PureSwift/Zip.git", majorVersion: 1)
+    ],
+    exclude: [
+        "Assets"
     ]
 )
 

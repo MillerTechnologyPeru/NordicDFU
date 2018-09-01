@@ -62,9 +62,9 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
     ///
     /// - Parameter event: Callback for a found device.
     public func scan(duration: TimeInterval,
-                     timeout: TimeInterval,
+                     timeout: TimeInterval = .gattDefaultTimeout,
                      filterDuplicates: Bool = true,
-                     foundDevice: (NordicPeripheral<Peripheral, Advertisement>) -> ()) throws {
+                     foundDevice: (NordicPeripheral<Peripheral, Advertisement>) -> (Bool)) throws {
         
         let scanResults = try central.scan(duration: duration, filterDuplicates: filterDuplicates)
         
@@ -72,13 +72,18 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
             
             let timeout = Timeout(timeout: timeout)
             
+            var continueScanning = true
+            
             try central.device(for: scanResult.peripheral, timeout: timeout) { [unowned self] (cache) in
                 
                 guard let peripheral = self.peripheral(for: scanResult, cache: cache)
                     else { return }
                 
-                foundDevice(peripheral)
+                continueScanning = foundDevice(peripheral)
             }
+            
+            guard continueScanning
+                else { return }
         }
     }
     
