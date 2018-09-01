@@ -57,6 +57,5 @@ func exit(_ error: Error) {
 }
 
 do { try run() }
-
     
 catch { exit(error) }

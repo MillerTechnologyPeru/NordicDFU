@@ -70,20 +70,28 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
         
         for scanResult in scanResults {
             
-            let timeout = Timeout(timeout: timeout)
+            guard scanResult.isConnectable
+                else { continue }
             
-            var continueScanning = true
-            
-            try central.device(for: scanResult.peripheral, timeout: timeout) { [unowned self] (cache) in
+            do {
                 
-                guard let peripheral = self.peripheral(for: scanResult, cache: cache)
+                let timeout = Timeout(timeout: timeout)
+                
+                var continueScanning = true
+                
+                try central.device(for: scanResult.peripheral, timeout: timeout) { [unowned self] (cache) in
+                    
+                    guard let peripheral = self.peripheral(for: scanResult, cache: cache)
+                        else { return }
+                    
+                    continueScanning = foundDevice(peripheral)
+                }
+                
+                guard continueScanning
                     else { return }
-                
-                continueScanning = foundDevice(peripheral)
             }
             
-            guard continueScanning
-                else { return }
+            catch { log?("Error validating \(scanResult.peripheral): \(error)") }
         }
     }
     
