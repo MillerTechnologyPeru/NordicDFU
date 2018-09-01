@@ -60,14 +60,14 @@ func loadAsset(name: String, fileExtension: String) -> Data {
 func hexData(_ string: String) -> Data {
     
     var string = string
-    string.removeFirst(2) // remove '0x'
+    string.removeSubrange(string.startIndex ... string.index(after: string.startIndex)) // remove '0x'
     
-    var data = Data(capacity: string.count / 2)
+    var data = Data(capacity: string.utf8.count / 2)
     
-    while string.count >= 2 {
+    while string.utf8.count >= 2 {
         
-        let hexString = string.prefix(2)
-        string.removeFirst(2)
+        let hexString = string[string.startIndex ... string.index(after: string.startIndex)]
+        string.removeSubrange(string.startIndex ... string.index(after: string.startIndex))
         
         let byte = Int(hexString, radix: 16)!
         

@@ -26,11 +26,11 @@ func run(arguments: [String] = CommandLine.arguments) throws {
     print("Bluetooth Controller: \(hostController.address)")
     
     let central = GATTCentral<HostController, L2CAPSocket>(hostController: hostController)
-    central.newConnection = {
+    central.newConnection = { (scanData, report) in
         return try L2CAPSocket.lowEnergyClient(controllerAddress: hostController.address,
-                                                 destination: (address: $0.address,
-                                                               type: AddressType(lowEnergy: $0.addressType)),
-                                                 securityLevel: .low)
+                                               destination: (address: scanData.peripheral.identifier,
+                                                             type: AddressType(lowEnergy: report.addressType)),
+                                               securityLevel: .low)
     }
     
     #elseif os(macOS)
