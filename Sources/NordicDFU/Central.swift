@@ -13,6 +13,7 @@ internal extension CentralProtocol {
     
     /// Connects to the device, fetches the data, performs the action, and disconnects.
     func device <T> (for peripheral: Peripheral,
+                     filterServices: [BluetoothUUID] = [],
                      timeout: Timeout,
                      _ action: (GATTConnectionCache<Peripheral>) throws -> (T)) throws -> T {
         
@@ -26,7 +27,18 @@ internal extension CentralProtocol {
         
         let foundServices = try discoverServices([], for: peripheral, timeout: try timeout.timeRemaining())
         
-        for service in foundServices {
+        let services: [Service<Peripheral>]
+        
+        if filterServices.isEmpty {
+            
+            services = foundServices
+            
+        } else {
+            
+            services = foundServices.filter { filterServices.contains($0.uuid) }
+        }
+        
+        for service in services {
             
             // validate characteristic exists
             let foundCharacteristics = try discoverCharacteristics([], for: service, timeout: try timeout.timeRemaining())

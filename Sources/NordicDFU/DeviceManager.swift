@@ -79,7 +79,9 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
                 
                 var continueScanning = true
                 
-                try central.device(for: scanResult.peripheral, timeout: timeout) { [unowned self] (cache) in
+                let services = [DFUService.uuid, SecureDFUService.uuid]
+                
+                try central.device(for: scanResult.peripheral, filterServices: services, timeout: timeout) { [unowned self] (cache) in
                     
                     guard let peripheral = self.peripheral(for: scanResult.peripheral, cache: cache)
                         else { return }
