@@ -17,11 +17,20 @@ internal protocol DeviceCommand: ArgumentableCommand {
     
     var peripheral: String { get }
     
-    var scanTimeout: TimeInterval { get }
+    var scanDuration: TimeInterval { get }
     
     var filterDuplicates: Bool { get }
     
     var timeout: TimeInterval { get }
+}
+
+internal extension DeviceCommand {
+    
+    static var defaultScanDuration: TimeInterval { return 3.0 }
+    
+    static var defaultFilterDuplicates: Bool { return false }
+    
+    static var defaultTimeout: TimeInterval { return 10.0 }
 }
 
 extension DeviceCommand {
@@ -30,13 +39,13 @@ extension DeviceCommand {
         
         let peripheral = self.peripheral
         
-        print("Searching for \(peripheral) (\(scanTimeout)s)")
+        print("Searching for \(peripheral) (\(scanDuration)s)")
         
         let start = Date()
         
         var foundDevice: NordicPeripheral<Central.Peripheral>?
         
-        try deviceManager.scan(duration: self.scanTimeout, filterDuplicates: self.filterDuplicates, filterPeripherals: { $0.filter({ $0.peripheral.identifier.description == peripheral }) }, foundDevice: {
+        try deviceManager.scan(duration: self.scanDuration, filterDuplicates: self.filterDuplicates, filterPeripherals: { $0.filter({ $0.peripheral.identifier.description == peripheral }) }, foundDevice: {
             
             // find matching peripheral by MAC address
             if $0.peripheral.identifier.description == peripheral {

@@ -21,7 +21,7 @@ public struct EnterBootloaderCommand: DeviceCommand {
     
     public let peripheral: String
     
-    public var scanTimeout: TimeInterval
+    public var scanDuration: TimeInterval
     
     public var filterDuplicates: Bool
     
@@ -34,16 +34,16 @@ public struct EnterBootloaderCommand: DeviceCommand {
         
         self.peripheral = deviceIdentifierString
         
-        if let stringValue = parameters.first(where: { $0.option == .scanTimeout })?.value {
+        if let stringValue = parameters.first(where: { $0.option == .scanDuration })?.value {
             
             guard let timeInterval = TimeInterval(stringValue)
-                else { throw CommandError.invalidOptionValue(option: Option.scanTimeout.rawValue, value: stringValue) }
+                else { throw CommandError.invalidOptionValue(option: Option.scanDuration.rawValue, value: stringValue) }
             
-            self.scanTimeout = timeInterval
+            self.scanDuration = timeInterval
             
         } else {
             
-            self.scanTimeout = 3
+            self.scanDuration = type(of: self).defaultScanDuration
         }
         
         if let stringValue = parameters.first(where: { $0.option == .filterDuplicates })?.value {
@@ -55,7 +55,7 @@ public struct EnterBootloaderCommand: DeviceCommand {
             
         } else {
             
-            self.filterDuplicates = false
+            self.filterDuplicates = type(of: self).defaultFilterDuplicates
         }
         
         if let stringValue = parameters.first(where: { $0.option == .timeout })?.value {
@@ -67,7 +67,7 @@ public struct EnterBootloaderCommand: DeviceCommand {
             
         } else {
             
-            self.timeout = .gattDefaultTimeout
+            self.timeout = type(of: self).defaultTimeout
         }
     }
     
@@ -86,12 +86,12 @@ public extension EnterBootloaderCommand {
     public enum Option: String, OptionProtocol {
         
         case peripheral
-        case scanTimeout
+        case scanDuration = "scan"
         case filterDuplicates = "filter"
         case timeout
         
         public static let all: Set<Option> = [.peripheral,
-                                              .scanTimeout,
+                                              .scanDuration,
                                               .filterDuplicates,
                                               .timeout]
     }
