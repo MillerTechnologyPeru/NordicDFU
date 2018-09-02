@@ -30,7 +30,7 @@ public struct EnterBootloaderCommand: DeviceCommand {
     public init(parameters: [Parameter<Option>]) throws {
         
         guard let deviceIdentifierString = parameters.first(where: { $0.option == .peripheral })?.value
-            else { throw CommandError.missingOption(Option.scanTimeout.rawValue) }
+            else { throw CommandError.missingOption(Option.peripheral.rawValue) }
         
         self.peripheral = deviceIdentifierString
         
@@ -73,7 +73,11 @@ public struct EnterBootloaderCommand: DeviceCommand {
     
     public func execute <Central: CentralProtocol> (_ deviceManager: NordicDeviceManager<Central>) throws {
         
+        let device = try self.scan(deviceManager)
         
+        try deviceManager.enterBootloader(for: device.peripheral, timeout: self.timeout)
+        
+        print("\(device.peripheral) now in DFU mode")
     }
 }
 
