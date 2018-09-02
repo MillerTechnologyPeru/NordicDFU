@@ -9,10 +9,6 @@ import Foundation
 import GATT
 import NordicDFU
 
-#if os(macOS)
-import DarwinGATT
-#endif
-
 public struct EnterBootloaderCommand: DeviceCommand {
     
     // MARK: - Properties
