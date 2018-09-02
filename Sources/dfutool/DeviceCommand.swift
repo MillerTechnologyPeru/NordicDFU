@@ -36,14 +36,11 @@ extension DeviceCommand {
         
         var foundDevice: NordicPeripheral<Central.Peripheral>?
         
-        try deviceManager.scan(duration: self.scanTimeout, filterDuplicates: self.filterDuplicates, foundDevice: {
+        try deviceManager.scan(duration: self.scanTimeout, filterDuplicates: self.filterDuplicates, filterPeripherals: { $0.filter({ $0.peripheral.identifier.description == peripheral }) }, foundDevice: {
             
             // find matching peripheral by MAC address
             if $0.peripheral.identifier.description == peripheral {
                 foundDevice = $0
-                return false
-            } else {
-                return true // keep searching
             }
         })
         

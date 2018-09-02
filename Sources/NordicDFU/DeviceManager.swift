@@ -64,9 +64,12 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
     public func scan(duration: TimeInterval,
                      timeout: TimeInterval = .gattDefaultTimeout,
                      filterDuplicates: Bool = true,
-                     foundDevice: @escaping (NordicPeripheral<Peripheral>) -> (Bool)) throws {
+                     filterPeripherals: ([ScanData<Peripheral, Advertisement>]) -> ([ScanData<Peripheral, Advertisement>]) = { return $0 },
+                     foundDevice: @escaping (NordicPeripheral<Peripheral>) -> ()) throws {
         
-        let scanResults = try central.scan(duration: duration, filterDuplicates: filterDuplicates)
+        var scanResults = try central.scan(duration: duration, filterDuplicates: filterDuplicates)
+        
+        scanResults = filterPeripherals(scanResults)
         
         for scanResult in scanResults {
             
@@ -77,8 +80,6 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
                 
                 let timeout = Timeout(timeout: timeout)
                 
-                var continueScanning = true
-                
                 let services = [DFUService.uuid, SecureDFUService.uuid]
                 
                 try central.device(for: scanResult.peripheral, filterServices: services, timeout: timeout) { [unowned self] (cache) in
@@ -86,11 +87,8 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
                     guard let peripheral = self.peripheral(for: scanResult.peripheral, cache: cache)
                         else { return }
                     
-                    continueScanning = foundDevice(peripheral)
+                    foundDevice(peripheral)
                 }
-                
-                guard continueScanning
-                    else { return }
             }
             
             catch { log?("Error validating \(scanResult.peripheral): \(error)") }

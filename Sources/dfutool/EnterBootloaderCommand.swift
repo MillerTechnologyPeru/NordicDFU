@@ -43,7 +43,7 @@ public struct EnterBootloaderCommand: DeviceCommand {
             
         } else {
             
-            self.scanTimeout = 10
+            self.scanTimeout = 3
         }
         
         if let stringValue = parameters.first(where: { $0.option == .filterDuplicates })?.value {

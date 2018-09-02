@@ -25,7 +25,7 @@ public struct ScanCommand: ArgumentableCommand {
     
     public static let `default` = ScanCommand()
     
-    public init(duration: TimeInterval = 4.0,
+    public init(duration: TimeInterval = 5.0,
                 filterDuplicates: Bool = false,
                 timeout: TimeInterval = .gattDefaultTimeout) {
         
@@ -89,8 +89,6 @@ public struct ScanCommand: ArgumentableCommand {
             let deviceInformation = "[\($0.peripheral)] \($0.type) \($0.mode)"
             
             print(deviceInformation)
-            
-            return true // keep scanning
         }
     }
 }
