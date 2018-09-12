@@ -29,12 +29,7 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
     public let central: Central
     
     /// The log message handler.
-    public var log: ((String) -> ())? {
-        
-        get { return central.log }
-        
-        set { central.log = newValue }
-    }
+    public var log: ((String) -> ())?
     
     /**
      The number of packets of firmware data to be received by the DFU target before sending

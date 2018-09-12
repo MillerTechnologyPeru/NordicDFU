@@ -45,7 +45,9 @@ func run(arguments: [String] = CommandLine.arguments) throws {
     
     let deviceManager = NordicDeviceManager(central: central)
     
-    central.log = { print("DeviceManager: \($0)") }
+    deviceManager.log = { print("DeviceManager: \($0)") }
+    
+    central.log = { print("Central: \($0)") }
     
     // execute command
     try command.execute(deviceManager)

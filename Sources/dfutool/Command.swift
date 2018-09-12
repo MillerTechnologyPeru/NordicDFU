@@ -25,7 +25,7 @@ public enum Command {
     
     case scan(ScanCommand)
     case enterBootloader(EnterBootloaderCommand)
-    case uploadFirmware(EnterBootloaderCommand)
+    case uploadFirmware(UploadFirmwareCommand)
 }
 
 public extension Command {
@@ -87,7 +87,7 @@ public extension Command {
             let command = try EnterBootloaderCommand(arguments: commandArguments)
             self = .enterBootloader(command)
         case .uploadFirmware:
-            let command = try EnterBootloaderCommand(arguments: commandArguments)
+            let command = try UploadFirmwareCommand(arguments: commandArguments)
             self = .uploadFirmware(command)
         }
     }
