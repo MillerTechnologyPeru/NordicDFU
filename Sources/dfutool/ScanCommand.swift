@@ -27,7 +27,7 @@ public struct ScanCommand: ArgumentableCommand {
     
     public init(duration: TimeInterval = 5.0,
                 filterDuplicates: Bool = false,
-                timeout: TimeInterval = .gattDefaultTimeout) {
+                timeout: TimeInterval = 4.0) {
         
         self.duration = duration
         self.filterDuplicates = filterDuplicates
