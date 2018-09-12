@@ -179,9 +179,6 @@ internal extension CentralProtocol {
             guard let response = notificationValue
                 else { usleep(100); continue }
             
-            // stop notifications
-            try self.notify(nil, for: foundCharacteristic, timeout: try timeout.timeRemaining())
-            
             switch response {
                 
             case let .error(error):

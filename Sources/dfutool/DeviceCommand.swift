@@ -26,11 +26,11 @@ internal protocol DeviceCommand: ArgumentableCommand {
 
 internal extension DeviceCommand {
     
-    static var defaultScanDuration: TimeInterval { return 3.0 }
+    static var defaultScanDuration: TimeInterval { return 5.0 }
     
     static var defaultFilterDuplicates: Bool { return false }
     
-    static var defaultTimeout: TimeInterval { return 10.0 }
+    static var defaultTimeout: TimeInterval { return .gattDefaultTimeout }
 }
 
 extension DeviceCommand {
