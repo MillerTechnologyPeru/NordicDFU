@@ -250,7 +250,7 @@ fileprivate extension CentralProtocol {
             
             timeout = Timeout(timeout: timeoutInterval)
             
-            let createObject = SecureDFUCreateObject(type: .data, size: objectInfo.maxSize)
+            let createObject = SecureDFUCreateObject(type: .data, size: UInt32(dataObject.count))
             
             // create data object
             try controlPoint.request(.createObject(createObject), timeout: try timeout.timeRemaining())
