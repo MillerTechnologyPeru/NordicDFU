@@ -68,9 +68,6 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
         
         for scanResult in scanResults {
             
-            guard scanResult.isConnectable
-                else { continue }
-            
             do {
                 
                 let timeout = Timeout(timeout: timeout)
