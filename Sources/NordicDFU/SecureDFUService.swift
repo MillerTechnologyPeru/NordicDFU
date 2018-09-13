@@ -74,6 +74,9 @@ fileprivate extension SecureDFUService {
                                    withResponse: true,
                                    timeout: try timeout.timeRemaining())
             
+            // clear stored value
+            notificationValue = nil
+            
             // wait for notification
             repeat {
                 
@@ -82,10 +85,7 @@ fileprivate extension SecureDFUService {
                 
                 // get notification response
                 guard let response = notificationValue
-                    else { usleep(100); continue }
-                
-                // clear stored value
-                notificationValue = nil
+                    else { usleep(10); continue }
                 
                 switch response {
                     
@@ -257,6 +257,8 @@ fileprivate extension CentralProtocol {
             data.subdataNoCopy(in: $0 ..< min($0 + objectSize, data.count))
         }
         
+        var offset = 0
+        
         // create data objects on peripheral
         for dataObject in dataObjects {
             
@@ -270,12 +272,16 @@ fileprivate extension CentralProtocol {
             // upload packet
             try secureDataPacketUpload(dataObject, packet: packet, timeout: timeoutInterval)
             
+            offset += dataObject.count
+            
             timeout = Timeout(timeout: timeoutInterval)
             
             // validate checksum
             let checksumResponse = try controlPoint.calculateChecksum(timeout: try timeout.timeRemaining())
             
-            let expectedChecksum = CRC32(data: dataObject).crc
+            let sentData = data.subdataNoCopy(in: 0 ..< offset)
+            
+            let expectedChecksum = CRC32(data: sentData).crc
             
             guard checksumResponse.crc == expectedChecksum
                 else { throw GATTError.invalidChecksum(checksumResponse.crc, expected: expectedChecksum) }
