@@ -275,7 +275,7 @@ fileprivate extension CentralProtocol {
             // validate checksum
             let checksumResponse = try controlPoint.calculateChecksum(timeout: try timeout.timeRemaining())
             
-            let expectedChecksum = CRC32(data: data).crc
+            let expectedChecksum = CRC32(data: dataObject).crc
             
             guard checksumResponse.crc == expectedChecksum
                 else { throw GATTError.invalidChecksum(checksumResponse.crc, expected: expectedChecksum) }
