@@ -33,20 +33,6 @@ fileprivate extension SecureDFUService {
         
         private var notificationValue: ErrorValue<SecureDFUControlPoint>?
         
-        deinit {
-            
-            do {
-                
-                // disable notifications
-                try central.notify(SecureDFUControlPoint.self,
-                                   for: characteristic,
-                                   timeout: Timeout(timeout: timeout),
-                                   notification: nil)
-            }
-            
-            catch { assertionFailure("Could not disable notification: \(error)") }
-        }
-        
         init(central: Central, cache: GATTConnectionCache<Central.Peripheral>, timeout: TimeInterval) throws {
             
             guard let characteristic = cache.characteristics.first(where: { $0.uuid == SecureDFUControlPoint.uuid })
@@ -188,7 +174,7 @@ fileprivate extension CentralProtocol {
         // send packets packets
         try stride(from: 0, to: data.count, by: packetSize).forEach {
             let packetData = data.subdataNoCopy(in: $0 ..< min($0 + packetSize, data.count))
-            try writeValue(packetData, for: packet, withResponse: false, timeout: timeout)
+            try writeValue(packetData, for: packet, withResponse: true, timeout: timeout)
         }
     }
     
