@@ -167,6 +167,30 @@ extension SecureDFUSetPacketReceiptNotification: ExpressibleByIntegerLiteral {
     }
 }
 
+extension SecureDFUSetPacketReceiptNotification: Equatable {
+    
+    public static func == (lhs: SecureDFUSetPacketReceiptNotification, rhs: SecureDFUSetPacketReceiptNotification) -> Bool {
+        
+        return lhs.rawValue == rhs.rawValue
+    }
+}
+
+extension SecureDFUSetPacketReceiptNotification: Hashable {
+    
+    public var hashValue: Int {
+        
+        return rawValue.hashValue
+    }
+}
+
+extension SecureDFUSetPacketReceiptNotification: Comparable {
+    
+    public static func < (lhs: SecureDFUSetPacketReceiptNotification, rhs: SecureDFUSetPacketReceiptNotification) -> Bool {
+        
+        return lhs.rawValue < rhs.rawValue
+    }
+}
+
 public struct SecureDFUCalculateChecksumCommand: SecureDFURequestProtocol {
     
     public static let opcode: SecureDFUOpcode = .calculateChecksum
