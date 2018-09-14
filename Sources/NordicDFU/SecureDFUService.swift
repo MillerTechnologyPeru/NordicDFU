@@ -118,7 +118,7 @@ internal extension SecureDFUService {
                             
                             let writtenBytes = offset + range.lowerBound + range.count
                             
-                            guard let notification = try? self.controlPoint.packetReceiptNotification(for: UInt32(writtenBytes), timeout: timeoutInterval)
+                            guard let notification = try? self.controlPoint.packetReceiptNotification(for: UInt32(writtenBytes), timeout: 5)
                                 else { return }
                             
                             let sentData = data.subdataNoCopy(in: 0 ..< writtenBytes)
@@ -193,7 +193,7 @@ internal extension SecureDFUService {
             // send packets
             try packetRanges.forEach { (range) in
                 let packetData = data.subdataNoCopy(in: range)
-                try central.writeValue(packetData, for: characteristic, withResponse: false, timeout: timeout)
+                try central.writeValue(packetData, for: characteristic, withResponse: true, timeout: timeout)
                 try didWrite?(range) // block or whatever here
             }
         }
