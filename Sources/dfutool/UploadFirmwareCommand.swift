@@ -80,6 +80,8 @@ public struct UploadFirmwareCommand: DeviceCommand {
         
         let device = try scan(deviceManager)
         
+        let start = Date()
+        
         try deviceManager.uploadFirmware(zip.firmware, for: device.peripheral, timeout: timeout) {
             switch $0 {
             case .write: break
@@ -95,7 +97,7 @@ public struct UploadFirmwareCommand: DeviceCommand {
             }
         }
         
-        print("Successfully uploaded firmware")
+        print("Successfully uploaded firmware (\(String(format: "%.2f", Date().timeIntervalSince(start)))s)")
     }
 }
 
