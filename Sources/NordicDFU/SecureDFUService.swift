@@ -81,15 +81,13 @@ internal extension SecureDFUService {
                     packetReceiptNotification: SecureDFUSetPacketReceiptNotification = 0,
                     timeout timeoutInterval: TimeInterval) throws {
             
-            var timeout = Timeout(timeout: timeoutInterval)
-            
             // start uploading command object
             let objectInfo = try controlPoint.readObjectInfo(type: type,
-                                                             timeout: try timeout.timeRemaining())
+                                                             timeout: timeoutInterval)
             
             // enable PRN notifications
             try controlPoint.request(.setPRNValue(packetReceiptNotification),
-                                     timeout: try timeout.timeRemaining())
+                                     timeout: timeoutInterval)
             
             // send packets
             let objectSize = Int(objectInfo.maxSize)
@@ -103,12 +101,9 @@ internal extension SecureDFUService {
             // create data objects on peripheral
             for dataObject in dataObjects {
                 
-                // timeout
-                timeout = Timeout(timeout: timeoutInterval)
-                
                 // create data object
                 let createObject = SecureDFUCreateObject(type: type, size: UInt32(dataObject.count))
-                try controlPoint.request(.createObject(createObject), timeout: try timeout.timeRemaining())
+                try controlPoint.request(.createObject(createObject), timeout: timeoutInterval)
                 
                 // upload packet
                 if packetReceiptNotification > 0 {
@@ -116,19 +111,23 @@ internal extension SecureDFUService {
                     // wait for PRN
                     try packet.upload(dataObject, timeout: timeoutInterval) { (range, data) in
                         
-                        let writtenBytes = offset + range.lowerBound + range.count
-                        
-                        let notificationTimeout = timeoutInterval * Double(packetReceiptNotification.rawValue)
-                        
-                        let notification = try self.controlPoint.waitForPacketReceiptNotification(timeout: notificationTimeout)
-                        
-                        let sentData = data.subdataNoCopy(in: 0 ..< writtenBytes)
-                        let expectedChecksum = CRC32(data: sentData).crc
-                        
-                        guard notification.crc == expectedChecksum
-                            else { throw GATTError.invalidChecksum(notification.crc, expected: expectedChecksum) }
-                        
                         writtenDataPackets += 1
+                        
+                        // every PRN value (e.g. 12) packets, wait for notification
+                        if writtenDataPackets % Int(packetReceiptNotification.rawValue) == 0 {
+                            
+                            let writtenBytes = offset + range.lowerBound + range.count
+                            
+                            let notificationTimeout = timeoutInterval * Double(packetReceiptNotification.rawValue)
+                            
+                            let notification = try self.controlPoint.waitForPacketReceiptNotification(timeout: notificationTimeout)
+                            
+                            let sentData = data.subdataNoCopy(in: 0 ..< writtenBytes)
+                            let expectedChecksum = CRC32(data: sentData).crc
+                            
+                            guard notification.crc == expectedChecksum
+                                else { throw GATTError.invalidChecksum(notification.crc, expected: expectedChecksum) }
+                        }
                     }
                     
                 } else {
@@ -140,10 +139,8 @@ internal extension SecureDFUService {
                 // send data object
                 offset += dataObject.count
                 
-                timeout = Timeout(timeout: timeoutInterval)
-                
                 // validate checksum for created object
-                let checksumResponse = try controlPoint.calculateChecksum(timeout: try timeout.timeRemaining())
+                let checksumResponse = try controlPoint.calculateChecksum(timeout: timeoutInterval)
                 let sentData = data.subdataNoCopy(in: 0 ..< offset)
                 let expectedChecksum = CRC32(data: sentData).crc
                 
@@ -151,7 +148,7 @@ internal extension SecureDFUService {
                     else { throw GATTError.invalidChecksum(checksumResponse.crc, expected: expectedChecksum) }
                 
                 // execute command
-                try controlPoint.request(.execute, timeout: try timeout.timeRemaining())
+                try controlPoint.request(.execute, timeout: timeoutInterval)
             }
         }
     }
