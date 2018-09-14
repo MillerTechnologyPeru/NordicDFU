@@ -96,7 +96,6 @@ internal extension SecureDFUService {
             }
             
             var offset = 0
-            var writtenDataPackets = 0
             var lastPRNOffset: UInt32 = 0
             
             // create data objects on peripheral
@@ -109,13 +108,13 @@ internal extension SecureDFUService {
                 // upload packet
                 try packet.upload(dataObject, timeout: timeoutInterval) { [unowned self] (range) in
                     
-                    writtenDataPackets += 1
+                    // bytes written so far
+                    let writtenBytes = offset + range.lowerBound + range.count
+                    
+                    self.log?(.write(type, offset: writtenBytes, total: data.count))
                     
                     // validate PRN
                     guard packetReceiptNotification > 0 else { return }
-                    
-                    // bytes written so far
-                    let writtenBytes = offset + range.lowerBound + range.count
                     
                     // every PRN value (e.g. 12) packets, verify checksum
                     if let checksum = self.controlPoint.lastChecksum,
@@ -129,6 +128,8 @@ internal extension SecureDFUService {
                         
                         guard checksum.crc == expectedChecksum
                             else { throw GATTError.invalidChecksum(checksum.crc, expected: expectedChecksum) }
+                        
+                         self.log?(.verify(type, offset: Int(checksum.offset), checksum: checksum.crc))
                     }
                 }
                 
@@ -145,6 +146,8 @@ internal extension SecureDFUService {
                 
                 // execute command
                 try controlPoint.request(.execute, timeout: timeoutInterval)
+                
+                
             }
         }
     }
@@ -355,5 +358,5 @@ private extension SecureDFUService.ControlPointNotification {
 public enum SecureDFUEvent {
     
     case write(SecureDFUProcedureType, offset: Int, total: Int)
-    case verify(SecureDFUProcedureType, offset: Int, checksum: Int)
+    case verify(SecureDFUProcedureType, offset: Int, checksum: UInt32)
 }

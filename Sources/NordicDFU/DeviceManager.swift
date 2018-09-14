@@ -114,7 +114,8 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
     /// Upload firmware.
     public func uploadFirmware(_ firmware: DFUFirmware,
                                for peripheral: Peripheral,
-                               timeout: TimeInterval = .gattDefaultTimeout) throws {
+                               timeout: TimeInterval = .gattDefaultTimeout,
+                               log: ((SecureDFUEvent) -> ())? = nil) throws {
         
         let timeout = Timeout(timeout: timeout)
         
@@ -131,7 +132,11 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
                     
                 case .secure:
                     
-                    try self.central.secureFirmwareUpload(firmwareData, packetReceiptNotification: packetReceiptNotification, for: connectionCache, timeout: timeout.timeout)
+                    try self.central.secureFirmwareUpload(firmwareData,
+                                                          packetReceiptNotification: packetReceiptNotification,
+                                                          for: connectionCache,
+                                                          timeout: timeout.timeout,
+                                                          log: log)
                     
                 case .legacy:
                     

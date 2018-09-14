@@ -80,7 +80,9 @@ public struct UploadFirmwareCommand: DeviceCommand {
         
         let device = try scan(deviceManager)
         
-        try deviceManager.uploadFirmware(zip.firmware, for: device.peripheral, timeout: timeout)
+        try deviceManager.uploadFirmware(zip.firmware, for: device.peripheral, timeout: timeout) {
+            print($0)
+        }
         
         print("Successfully uploaded firmware")
     }
