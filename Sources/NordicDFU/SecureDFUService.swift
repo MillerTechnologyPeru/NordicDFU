@@ -21,32 +21,265 @@ public struct SecureDFUService: GATTProfileService {
     ]
 }
 
-fileprivate extension SecureDFUService {
+internal extension CentralProtocol {
     
-    fileprivate final class ControlPointNotification <Central: CentralProtocol> {
+    func secureFirmwareUpload(_ firmwareData: DFUFirmware.FirmwareData,
+                              packetReceiptNotification: SecureDFUSetPacketReceiptNotification,
+                              for cache: GATTConnectionCache<Peripheral>,
+                              timeout: TimeInterval,
+                              log: ((SecureDFUEvent) -> ())? = nil) throws {
+        
+        let dfu = try SecureDFUService.DFUExecutor(central: self,
+                                                   cache: cache,
+                                                   timeout: timeout,
+                                                   log: log)
+        
+        // upload init packet
+        if let data = firmwareData.initPacket {
+            
+            try dfu.upload(data, type: .command, packetReceiptNotification: 0, timeout: timeout)
+        }
+        
+        // upload firmware data
+        try dfu.upload(firmwareData.data,
+                       type: .data,
+                       packetReceiptNotification: packetReceiptNotification,
+                       timeout: timeout)
+    }
+}
+
+internal extension SecureDFUService {
+    
+    internal final class DFUExecutor <Central: CentralProtocol> {
+        
+        let central: Central
+        
+        let controlPoint: ControlPointNotification<Central>
+        
+        let packet: Packet<Central>
+        
+        let log: ((SecureDFUEvent) -> ())?
+        
+        init(central: Central,
+             cache: GATTConnectionCache<Central.Peripheral>,
+             timeout: TimeInterval,
+             log: ((SecureDFUEvent) -> ())? = nil) throws {
+            
+            self.central = central
+            self.log = log
+            
+            self.controlPoint = try ControlPointNotification(central: central,
+                                                             cache: cache,
+                                                             timeout: timeout)
+            
+            self.packet = try Packet(central: central,
+                                     cache: cache)
+        }
+        
+        func upload(_ data: Data,
+                    type: SecureDFUProcedureType,
+                    packetReceiptNotification: SecureDFUSetPacketReceiptNotification = 0,
+                    timeout timeoutInterval: TimeInterval) throws {
+            
+            // reset notification queue for next history
+            defer { controlPoint.reset() }
+            
+            // start uploading command object
+            let objectInfo = try controlPoint.readObjectInfo(type: type,
+                                                             timeout: timeoutInterval)
+            
+            // enable PRN notifications
+            try controlPoint.request(.setPRNValue(packetReceiptNotification),
+                                     timeout: timeoutInterval)
+            
+            // send packets
+            let objectSize = Int(objectInfo.maxSize)
+            let dataObjects: [Data] = stride(from: 0, to: data.count, by: objectSize).map {
+                data.subdataNoCopy(in: $0 ..< min($0 + objectSize, data.count))
+            }
+            
+            var offset = 0
+            var lastPRNOffset: UInt32 = 0
+            
+            // create data objects on peripheral
+            for (objectIndex, dataObject) in dataObjects.enumerated() {
+                
+                // create data object
+                let createObject = SecureDFUCreateObject(type: type, size: UInt32(dataObject.count))
+                try controlPoint.request(.createObject(createObject), timeout: timeoutInterval)
+                
+                // upload packet
+                try packet.upload(dataObject, timeout: timeoutInterval) { [unowned self] (range) in
+                    
+                    // bytes written so far
+                    let writtenBytes = offset + range.lowerBound + range.count
+                    
+                    self.log?(.write(type, offset: writtenBytes, total: data.count))
+                    
+                    // validate PRN
+                    guard packetReceiptNotification > 0 else { return }
+                    
+                    // every PRN value (e.g. 12) packets, verify checksum
+                    if let checksum = self.controlPoint.lastChecksum,
+                        checksum.offset > lastPRNOffset,
+                        Int(checksum.offset) <= writtenBytes {
+                        
+                        lastPRNOffset = checksum.offset
+                        
+                        let sentData = data.subdataNoCopy(in: 0 ..< Int(checksum.offset))
+                        let expectedChecksum = CRC32(data: sentData).crc
+                        
+                        guard checksum.crc == expectedChecksum
+                            else { throw GATTError.invalidChecksum(checksum.crc, expected: expectedChecksum) }
+                        
+                         self.log?(.verify(type, offset: Int(checksum.offset), checksum: checksum.crc))
+                    }
+                }
+                
+                // send data object
+                offset += dataObject.count
+                
+                // validate checksum for created object
+                let checksum = try controlPoint.calculateChecksum(timeout: timeoutInterval)
+                let sentData = data.subdataNoCopy(in: 0 ..< offset)
+                let expectedChecksum = CRC32(data: sentData).crc
+                
+                guard checksum.crc == expectedChecksum
+                    else { throw GATTError.invalidChecksum(checksum.crc, expected: expectedChecksum) }
+                
+                lastPRNOffset = checksum.offset
+                
+                self.log?(.verify(type, offset: Int(checksum.offset), checksum: checksum.crc))
+                
+                // execute command
+                try controlPoint.request(.execute, timeout: timeoutInterval)
+                
+                self.log?(.execute(type, index: objectIndex, total: dataObjects.count))
+            }
+        }
+    }
+}
+
+internal extension SecureDFUService {
+    
+    final class Packet <Central: CentralProtocol> {
         
         let central: Central
         
         let characteristic: Characteristic<Central.Peripheral>
         
-        let timeout: TimeInterval
+        let log: ((SecureDFUEvent) -> ())?
         
-        private var notificationValue: ErrorValue<SecureDFUControlPoint>?
+        init(central: Central,
+             cache: GATTConnectionCache<Central.Peripheral>,
+             log: ((SecureDFUEvent) -> ())? = nil) throws {
+            
+            guard let characteristic = cache.characteristics.first(where: { $0.uuid == SecureDFUPacket.uuid })
+                else { throw CentralError.invalidAttribute(SecureDFUPacket.uuid) }
+            
+            self.central = central
+            self.characteristic = characteristic
+            self.log = log
+        }
         
-        init(central: Central, cache: GATTConnectionCache<Central.Peripheral>, timeout: TimeInterval) throws {
+        func upload(_ data: Data,
+                    timeout: TimeInterval,
+                    didWrite: ((CountableRange<Int>) throws -> ())) throws {
+            
+            // set chunk size
+            let mtu = try central.maximumTransmissionUnit(for: characteristic.peripheral)
+            
+            // Data may be sent in up-to-20-bytes packets (if MTU is 23)
+            let packetSize = Int(mtu.rawValue - 3)
+            
+            // calculate subranges
+            let packetRanges = stride(from: 0, to: data.count, by: packetSize).map {
+                $0 ..< min($0 + packetSize, data.count)
+            }
+            
+            // send packets
+            try packetRanges.forEach { (range) in
+                let packetData = data.subdataNoCopy(in: range)
+                try central.writeValue(packetData, for: characteristic, withResponse: true, timeout: timeout)
+                try didWrite(range)
+            }
+        }
+    }
+}
+
+internal extension SecureDFUService {
+    
+    final class ControlPointNotification <Central: CentralProtocol> {
+        
+        let central: Central
+        
+        let characteristic: Characteristic<Central.Peripheral>
+        
+        let log: ((SecureDFUEvent) -> ())?
+        
+        private var notifications = [Notification]()
+        
+        init(central: Central,
+             cache: GATTConnectionCache<Central.Peripheral>,
+             timeout: TimeInterval,
+             log: ((SecureDFUEvent) -> ())? = nil) throws {
             
             guard let characteristic = cache.characteristics.first(where: { $0.uuid == SecureDFUControlPoint.uuid })
                 else { throw CentralError.invalidAttribute(SecureDFUControlPoint.uuid) }
             
             self.central = central
-            self.timeout = timeout
             self.characteristic = characteristic
+            self.log = log
             
             // enable notifications
             try central.notify(SecureDFUControlPoint.self,
-                           for: characteristic,
-                           timeout: Timeout(timeout: timeout),
-                           notification: { [weak self] in self?.notificationValue = $0 })
+                               for: characteristic,
+                               timeout: Timeout(timeout: timeout),
+                               notification: { [weak self] in self?.notification($0) })
+        }
+        
+        private func notification(_ notification: ErrorValue<SecureDFUControlPoint>) {
+            
+            self.notifications.append(Notification(value: notification))
+        }
+        
+        func reset() {
+            
+            self.notifications = []
+        }
+        
+        var lastChecksum: SecureDFUCalculateChecksumResponse? {
+            
+            for notification in notifications.reversed() {
+                
+                guard case let .value(.response(.calculateChecksum(checksum))) = notification.value
+                    else { continue }
+                
+                return checksum
+            }
+            
+            return nil
+        }
+        
+        func waitForNotification(timeout: Timeout) throws -> SecureDFUResponse {
+            
+            // wait for notification
+            repeat {
+                
+                // attempt to timeout
+                try timeout.timeRemaining()
+                
+                // recent notifications
+                let newNotifications = notifications
+                    .filter { $0.date > timeout.start }
+                
+                // get notification response
+                guard let notification = newNotifications.first
+                    else { usleep(100); continue }
+                
+                return try notification.response()
+                
+            } while true // keep waiting
         }
         
         @discardableResult
@@ -60,44 +293,7 @@ fileprivate extension SecureDFUService {
                                    withResponse: true,
                                    timeout: try timeout.timeRemaining())
             
-            // clear stored value
-            notificationValue = nil
-            
-            // wait for notification
-            repeat {
-                
-                // attempt to timeout
-                try timeout.timeRemaining()
-                
-                // get notification response
-                guard let response = notificationValue
-                    else { usleep(10); continue }
-                
-                switch response {
-                    
-                case let .error(error):
-                    throw error
-                    
-                case let .value(value):
-                    
-                    switch value {
-                        
-                    case let .response(response):
-                        switch response {
-                        case let .error(error):
-                            throw error
-                        case let .extendedError(error):
-                            throw error
-                        default:
-                            return response
-                        }
-                        
-                    case .request:
-                        throw GATTError.invalidData(value.data)
-                    }
-                }
-                
-            } while true // keep waiting
+            return try waitForNotification(timeout: timeout)
         }
         
         func readObjectInfo(type: SecureDFUProcedureType, timeout: TimeInterval) throws -> SecureDFUReadObjectInfoResponse {
@@ -130,150 +326,50 @@ fileprivate extension SecureDFUService {
     }
 }
 
-internal extension CentralProtocol {
+private extension SecureDFUService.ControlPointNotification {
     
-    func secureFirmwareUpload(_ firmwareData: DFUFirmware.FirmwareData,
-                              packetReceiptNotification: SecureDFUSetPacketReceiptNotification,
-                              for cache: GATTConnectionCache<Peripheral>,
-                              timeout: TimeInterval) throws {
+    final class Notification {
         
-        let controlPointNotification = try SecureDFUService.ControlPointNotification(central: self,
-                                                                                      cache: cache,
-                                                                                      timeout: timeout)
+        let date: Date
         
-        guard let packetCharacteristic = cache.characteristics.first(where: { $0.uuid == SecureDFUPacket.uuid })
-            else { throw CentralError.invalidAttribute(SecureDFUPacket.uuid) }
+        let value: ErrorValue<SecureDFUControlPoint>
         
-        // upload init packet
-        if let data = firmwareData.initPacket {
+        init(date: Date = Date(),
+             value: ErrorValue<SecureDFUControlPoint>) {
             
-            try secureInitPacketUpload(data, controlPoint: controlPointNotification, packet: packetCharacteristic, timeout: timeout)
+            self.date = date
+            self.value = value
         }
         
-        // upload firmware data
-        try secureFirmwareDataUpload(firmwareData.data,
-                                     packetReceiptNotification: packetReceiptNotification,
-                                     controlPoint: controlPointNotification,
-                                     packet: packetCharacteristic,
-                                     timeout: timeout)
+        func response() throws -> SecureDFUResponse {
+            
+            switch value {
+            case let .error(error):
+                throw error
+                
+            case let .value(value):
+                switch value {
+                case let .response(response):
+                    switch response {
+                    case let .error(error):
+                        throw error
+                    case let .extendedError(error):
+                        throw error
+                    default:
+                        return response
+                    }
+                    
+                case .request:
+                    throw GATTError.invalidData(value.data)
+                }
+            }
+        }
     }
 }
 
-fileprivate extension CentralProtocol {
+public enum SecureDFUEvent {
     
-    func secureDataPacketUpload(_ data: Data,
-                                packet: Characteristic<Peripheral>,
-                                timeout: TimeInterval) throws {
-        
-        // set chunk size
-        let mtu = try maximumTransmissionUnit(for: packet.peripheral)
-        
-        // Data may be sent in up-to-20-bytes packets (if MTU is 23)
-        let packetSize = Int(mtu.rawValue - 3)
-        
-        // send packets packets
-        try stride(from: 0, to: data.count, by: packetSize).forEach {
-            let packetData = data.subdataNoCopy(in: $0 ..< min($0 + packetSize, data.count))
-            try writeValue(packetData, for: packet, withResponse: true, timeout: timeout)
-        }
-    }
-    
-    func secureInitPacketUpload(_ data: Data,
-                                controlPoint: SecureDFUService.ControlPointNotification<Self>,
-                                packet: Characteristic<Peripheral>,
-                                timeout timeoutInterval: TimeInterval) throws {
-        
-        var timeout = Timeout(timeout: timeoutInterval)
-        
-        // start uploading command object
-        let objectInfo = try controlPoint.readObjectInfo(type: .command,
-                                                         timeout: try timeout.timeRemaining())
-        
-        // verify object size
-        guard Int(objectInfo.maxSize) >= data.count else {
-            
-            assertionFailure("Data too big (\(data.count)) for \(objectInfo)")
-            throw GATTError.invalidData(data)
-        }
-        
-        // create object
-        try controlPoint.request(.createObject(SecureDFUCreateObject(type: .command, size: UInt32(data.count))),
-                                 timeout: try timeout.timeRemaining())
-        
-        // disable PRN
-        try controlPoint.request(.setPRNValue(0),
-                                 timeout: try timeout.timeRemaining())
-        
-        // send data...
-        try secureDataPacketUpload(data, packet: packet, timeout: timeoutInterval)
-        
-        timeout = Timeout(timeout: timeoutInterval)
-        
-        // calculate checksum
-        let checksumResponse = try controlPoint.calculateChecksum(timeout: try timeout.timeRemaining())
-        
-        let expectedChecksum = CRC32(data: data).crc
-        
-        guard checksumResponse.crc == expectedChecksum
-            else { throw GATTError.invalidChecksum(checksumResponse.crc, expected: expectedChecksum) }
-        
-        // execute command
-        try controlPoint.request(.execute, timeout: try timeout.timeRemaining())
-    }
-    
-    func secureFirmwareDataUpload(_ data: Data,
-                                  packetReceiptNotification: SecureDFUSetPacketReceiptNotification,
-                                  controlPoint: SecureDFUService.ControlPointNotification<Self>,
-                                  packet: Characteristic<Peripheral>,
-                                  timeout timeoutInterval: TimeInterval) throws {
-        
-        var timeout = Timeout(timeout: timeoutInterval)
-        
-        // start uploading command object
-        let objectInfo = try controlPoint.readObjectInfo(type: .data,
-                                                         timeout: try timeout.timeRemaining())
-        
-        // enable PRN notifications
-        try controlPoint.request(.setPRNValue(packetReceiptNotification),
-                                 timeout: try timeout.timeRemaining())
-        
-        // send packets
-        let objectSize = Int(objectInfo.maxSize)
-        let dataObjects: [Data] = stride(from: 0, to: data.count, by: objectSize).map {
-            data.subdataNoCopy(in: $0 ..< min($0 + objectSize, data.count))
-        }
-        
-        var offset = 0
-        
-        // create data objects on peripheral
-        for dataObject in dataObjects {
-            
-            timeout = Timeout(timeout: timeoutInterval)
-            
-            let createObject = SecureDFUCreateObject(type: .data, size: UInt32(dataObject.count))
-            
-            // create data object
-            try controlPoint.request(.createObject(createObject), timeout: try timeout.timeRemaining())
-            
-            // upload packet
-            try secureDataPacketUpload(dataObject, packet: packet, timeout: timeoutInterval)
-            
-            offset += dataObject.count
-            
-            timeout = Timeout(timeout: timeoutInterval)
-            
-            // validate checksum
-            let checksumResponse = try controlPoint.calculateChecksum(timeout: try timeout.timeRemaining())
-            
-            let sentData = data.subdataNoCopy(in: 0 ..< offset)
-            
-            let expectedChecksum = CRC32(data: sentData).crc
-            
-            guard checksumResponse.crc == expectedChecksum
-                else { throw GATTError.invalidChecksum(checksumResponse.crc, expected: expectedChecksum) }
-            
-            // execute command
-            try controlPoint.request(.execute, timeout: try timeout.timeRemaining())
-        }
-    }
+    case write(SecureDFUProcedureType, offset: Int, total: Int)
+    case verify(SecureDFUProcedureType, offset: Int, checksum: UInt32)
+    case execute(SecureDFUProcedureType, index: Int, total: Int)
 }

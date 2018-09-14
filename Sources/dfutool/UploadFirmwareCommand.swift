@@ -80,7 +80,17 @@ public struct UploadFirmwareCommand: DeviceCommand {
         
         let device = try scan(deviceManager)
         
-        try deviceManager.uploadFirmware(zip.firmware, for: device.peripheral, timeout: timeout)
+        try deviceManager.uploadFirmware(zip.firmware, for: device.peripheral, timeout: timeout) {
+            switch $0 {
+            case let .write(type, offset: offset, total: total):
+                let percentage = (Float(offset) / Float(total)) * 100
+                print("Wrote \(offset) bytes for \(type) object (\(String(format: "%.2f", percentage))%)")
+            case let .verify(type, offset: offset, checksum: checksum):
+                print("Verified \(offset) bytes for \(type) object (\(String(checksum, radix: 16)))")
+            case let .execute(type, index: index, total: total):
+                print("Executed \(type) object \(index + 1)/\(total)")
+            }
+        }
         
         print("Successfully uploaded firmware")
     }
