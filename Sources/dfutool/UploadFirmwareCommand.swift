@@ -87,6 +87,8 @@ public struct UploadFirmwareCommand: DeviceCommand {
                 print("Wrote \(offset) bytes for \(type) object (\(String(format: "%.2f", percentage))%)")
             case let .verify(type, offset: offset, checksum: checksum):
                 print("Verified \(offset) bytes for \(type) object (\(String(checksum, radix: 16)))")
+            case let .execute(type, index: index, total: total):
+                print("Executed \(type) object \(index + 1)/\(total)")
             }
         }
         

@@ -102,7 +102,7 @@ internal extension SecureDFUService {
             var lastPRNOffset: UInt32 = 0
             
             // create data objects on peripheral
-            for dataObject in dataObjects {
+            for (objectIndex, dataObject) in dataObjects.enumerated() {
                 
                 // create data object
                 let createObject = SecureDFUCreateObject(type: type, size: UInt32(dataObject.count))
@@ -140,15 +140,21 @@ internal extension SecureDFUService {
                 offset += dataObject.count
                 
                 // validate checksum for created object
-                let checksumResponse = try controlPoint.calculateChecksum(timeout: timeoutInterval)
+                let checksum = try controlPoint.calculateChecksum(timeout: timeoutInterval)
                 let sentData = data.subdataNoCopy(in: 0 ..< offset)
                 let expectedChecksum = CRC32(data: sentData).crc
                 
-                guard checksumResponse.crc == expectedChecksum
-                    else { throw GATTError.invalidChecksum(checksumResponse.crc, expected: expectedChecksum) }
+                guard checksum.crc == expectedChecksum
+                    else { throw GATTError.invalidChecksum(checksum.crc, expected: expectedChecksum) }
+                
+                lastPRNOffset = checksum.offset
+                
+                self.log?(.verify(type, offset: Int(checksum.offset), checksum: checksum.crc))
                 
                 // execute command
                 try controlPoint.request(.execute, timeout: timeoutInterval)
+                
+                self.log?(.execute(type, index: objectIndex, total: dataObjects.count))
             }
         }
     }
@@ -365,4 +371,5 @@ public enum SecureDFUEvent {
     
     case write(SecureDFUProcedureType, offset: Int, total: Int)
     case verify(SecureDFUProcedureType, offset: Int, checksum: UInt32)
+    case execute(SecureDFUProcedureType, index: Int, total: Int)
 }
