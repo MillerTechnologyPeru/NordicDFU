@@ -120,7 +120,7 @@ internal extension SecureDFUService {
                             
                             let notificationTimeout = timeoutInterval * Double(packetReceiptNotification.rawValue)
                             
-                            let notification = try self.controlPoint.waitForPacketReceiptNotification(timeout: notificationTimeout)
+                            let notification = try self.controlPoint.packetReceiptNotification(for: UInt32(writtenBytes), timeout: notificationTimeout)
                             
                             let sentData = data.subdataNoCopy(in: 0 ..< writtenBytes)
                             let expectedChecksum = CRC32(data: sentData).crc
@@ -317,7 +317,7 @@ internal extension SecureDFUService {
             }
         }
         
-        func waitForPacketReceiptNotification(timeout: TimeInterval) throws -> SecureDFUPacketReceiptNotification {
+        func packetReceiptNotification(for offset: UInt32, timeout: TimeInterval) throws -> SecureDFUPacketReceiptNotification {
             
             let timeout = Timeout(timeout: timeout)
             
@@ -332,7 +332,9 @@ internal extension SecureDFUService {
                     guard case let .value(.response(.calculateChecksum(checksum))) = notification.value
                         else { continue }
                     
-                    return checksum
+                    if checksum.offset == offset {
+                        
+                        
                 }
                 
                 // not found

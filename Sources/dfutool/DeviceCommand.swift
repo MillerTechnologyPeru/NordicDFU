@@ -53,7 +53,8 @@ extension DeviceCommand {
             }
         })
         
-        guard let device = foundDevice else { throw CommandError.notFound(peripheral) }
+        guard let device = foundDevice
+            else { throw CommandError.notFound(peripheral) }
         
         print("Found \(peripheral) (\(String(format: "%.2f", Date().timeIntervalSince(start)))s)")
         
