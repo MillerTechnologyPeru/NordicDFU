@@ -81,6 +81,9 @@ internal extension SecureDFUService {
                     packetReceiptNotification: SecureDFUSetPacketReceiptNotification = 0,
                     timeout timeoutInterval: TimeInterval) throws {
             
+            // reset notification queue for next history
+            defer { controlPoint.reset() }
+            
             // start uploading command object
             let objectInfo = try controlPoint.readObjectInfo(type: type,
                                                              timeout: timeoutInterval)
@@ -119,7 +122,7 @@ internal extension SecureDFUService {
                     // every PRN value (e.g. 12) packets, verify checksum
                     if let checksum = self.controlPoint.lastChecksum,
                         checksum.offset > lastPRNOffset,
-                        checksum.offset <= writtenBytes {
+                        Int(checksum.offset) <= writtenBytes {
                         
                         lastPRNOffset = checksum.offset
                         
@@ -146,8 +149,6 @@ internal extension SecureDFUService {
                 
                 // execute command
                 try controlPoint.request(.execute, timeout: timeoutInterval)
-                
-                
             }
         }
     }
@@ -234,6 +235,11 @@ internal extension SecureDFUService {
         private func notification(_ notification: ErrorValue<SecureDFUControlPoint>) {
             
             self.notifications.append(Notification(value: notification))
+        }
+        
+        func reset() {
+            
+            self.notifications = []
         }
         
         var lastChecksum: SecureDFUCalculateChecksumResponse? {
