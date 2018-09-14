@@ -109,7 +109,7 @@ internal extension SecureDFUService {
                 if packetReceiptNotification > 0 {
                     
                     // wait for PRN
-                    try packet.upload(dataObject, timeout: timeoutInterval) { (range, data) in
+                    try packet.upload(dataObject, timeout: timeoutInterval) { [unowned self] (range) in
                         
                         writtenDataPackets += 1
                         
@@ -118,9 +118,8 @@ internal extension SecureDFUService {
                             
                             let writtenBytes = offset + range.lowerBound + range.count
                             
-                            let notificationTimeout = timeoutInterval * Double(packetReceiptNotification.rawValue)
-                            
-                            let notification = try self.controlPoint.packetReceiptNotification(for: UInt32(writtenBytes), timeout: notificationTimeout)
+                            guard let notification = try? self.controlPoint.packetReceiptNotification(for: UInt32(writtenBytes), timeout: timeoutInterval)
+                                else { return }
                             
                             let sentData = data.subdataNoCopy(in: 0 ..< writtenBytes)
                             let expectedChecksum = CRC32(data: sentData).crc
@@ -178,7 +177,7 @@ internal extension SecureDFUService {
         
         func upload(_ data: Data,
                     timeout: TimeInterval,
-                    didWrite: ((CountableRange<Int>, Data) throws -> ())? = nil) throws {
+                    didWrite: ((CountableRange<Int>) throws -> ())? = nil) throws {
             
             // set chunk size
             let mtu = try central.maximumTransmissionUnit(for: characteristic.peripheral)
@@ -195,7 +194,7 @@ internal extension SecureDFUService {
             try packetRanges.forEach { (range) in
                 let packetData = data.subdataNoCopy(in: range)
                 try central.writeValue(packetData, for: characteristic, withResponse: false, timeout: timeout)
-                try didWrite?(range, packetData) // block or whatever here
+                try didWrite?(range) // block or whatever here
             }
         }
     }
@@ -246,7 +245,7 @@ internal extension SecureDFUService {
                 
                 // get notification response
                 guard let notification = newNotifications.first
-                    else { usleep(10); continue }
+                    else { usleep(100); continue }
                 
                 switch notification.value {
                     
@@ -334,11 +333,23 @@ internal extension SecureDFUService {
                     
                     if checksum.offset == offset {
                         
+                        // received required notification
+                        return checksum
                         
+                    } else if checksum.offset > offset {
+                        
+                        // recieved larger notification
+                        continue
+                        
+                    } else {
+                        
+                        // offset smaller, havent recieved notification yet
+                        break
+                    }
                 }
                 
                 // not found
-                usleep(100)
+                sleep(1)
                 
             } while true // keep waiting
         }
