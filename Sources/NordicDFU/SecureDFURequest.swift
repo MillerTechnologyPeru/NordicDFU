@@ -65,9 +65,9 @@ public struct SecureDFUCreateObject: SecureDFURequestProtocol {
     
     public init?(data: Data) {
         
-        guard data.count == type(of: self).length,
+        guard data.count == Swift.type(of: self).length,
             let opcode = SecureDFUOpcode(rawValue: data[0]),
-            opcode == type(of: self).opcode,
+            opcode == Swift.type(of: self).opcode,
             let type = SecureDFUProcedureType(rawValue: data[1])
             else { return nil }
         
@@ -79,8 +79,8 @@ public struct SecureDFUCreateObject: SecureDFURequestProtocol {
     
     public var data: Data {
         
-        var data = Data(capacity: type(of: self).length)
-        data += type(of: self).opcode.rawValue
+        var data = Data(capacity: Swift.type(of: self).length)
+        data += Swift.type(of: self).opcode.rawValue
         data += type.rawValue
         data += size.littleEndian
         return data
@@ -102,9 +102,9 @@ public struct SecureDFUReadObjectInfo: SecureDFURequestProtocol {
     
     public init?(data: Data) {
         
-        guard data.count == type(of: self).length,
+        guard data.count == Swift.type(of: self).length,
             let opcode = SecureDFUOpcode(rawValue: data[0]),
-            opcode == type(of: self).opcode,
+            opcode == Swift.type(of: self).opcode,
             let type = SecureDFUProcedureType(rawValue: data[1])
             else { return nil }
         
@@ -114,7 +114,7 @@ public struct SecureDFUReadObjectInfo: SecureDFURequestProtocol {
     public var data: Data {
         
         return Data([
-            type(of: self).opcode.rawValue,
+            Swift.type(of: self).opcode.rawValue,
             type.rawValue,
             ])
         
