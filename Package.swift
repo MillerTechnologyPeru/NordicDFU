@@ -4,7 +4,7 @@ import PackageDescription
 _ = Package(
     name: "NordicDFU",
     products: [
-        .executable(
+        .library(
             name: "NordicDFU",
             targets: ["NordicDFU"]
         ),
