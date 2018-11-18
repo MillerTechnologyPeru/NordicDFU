@@ -19,7 +19,7 @@ func run(arguments: [String] = CommandLine.arguments) throws {
     
     // initialize GATT Central
     #if os(Linux)
-        
+    
     guard let hostController = HostController.default
         else { throw CommandError.bluetoothUnavailible }
     
@@ -58,5 +58,4 @@ func exit(_ error: Error) {
 }
 
 do { try run() }
-    
 catch { exit(error) }
