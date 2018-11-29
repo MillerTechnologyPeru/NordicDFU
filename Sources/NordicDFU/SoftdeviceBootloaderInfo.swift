@@ -8,12 +8,7 @@
 
 import Foundation
 
-#if swift(>=3.2)
-#elseif swift(>=3.0)
-    import Codable
-#endif
-
-///
+/// Nordic DFU Softdevice Bootloader Information
 public struct DFUSoftdeviceBootloaderInfo: DFUManifestFirmwareInfoProtocol {
     
     public var binFile: String

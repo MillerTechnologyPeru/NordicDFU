@@ -9,11 +9,6 @@ import Foundation
 import Bluetooth
 import GATT
 
-#if swift(>=3.2)
-#elseif swift(>=3.0)
-    import Codable
-#endif
-
 /// DFU Version
 public struct DFUVersion {
     

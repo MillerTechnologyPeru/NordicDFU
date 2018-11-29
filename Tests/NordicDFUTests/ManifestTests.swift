@@ -9,11 +9,6 @@ import Foundation
 import XCTest
 @testable import NordicDFU
 
-#if swift(>=3.2)
-#elseif swift(>=3.0)
-    import Codable
-#endif
-
 final class ManifestTests: XCTestCase {
     
     static var allTests = [
