@@ -111,7 +111,7 @@ public extension UploadFirmwareCommand {
         case timeout
         case firmware
         
-        public static let all: Set<Option> = [.peripheral,
+        public static let allCases: Set<Option> = [.peripheral,
                                               .scanDuration,
                                               .filterDuplicates,
                                               .timeout,

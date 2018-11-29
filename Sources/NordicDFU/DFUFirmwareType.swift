@@ -19,7 +19,7 @@ public enum DFUFirmwareType: UInt8, BitMaskOption {
     case bootloader     = 0x02
     case application    = 0x04
     
-    public static let all: Set<DFUFirmwareType> = [
+    public static let allCases: Set<DFUFirmwareType> = [
         .softdevice,
         .bootloader,
         .application
