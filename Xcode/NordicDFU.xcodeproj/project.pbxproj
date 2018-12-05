@@ -1,0 +1,986 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6EFF0FD221B8966A003AC682 /* NordicDFU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EFF0FC821B8966A003AC682 /* NordicDFU.framework */; };
+		6EFF0FD921B8966A003AC682 /* NordicDFU.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EFF0FCB21B8966A003AC682 /* NordicDFU.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6EFF0FE421B89680003AC682 /* NordicDFU.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EFF0FCB21B8966A003AC682 /* NordicDFU.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6EFF103F21B89715003AC682 /* ButtonlessDFU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FFA21B896EC003AC682 /* ButtonlessDFU.swift */; };
+		6EFF104021B89715003AC682 /* ButtonlessDFUOpCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FFB21B896EC003AC682 /* ButtonlessDFUOpCode.swift */; };
+		6EFF104121B89715003AC682 /* ButtonlessDFURequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FFC21B896EC003AC682 /* ButtonlessDFURequest.swift */; };
+		6EFF104221B89715003AC682 /* ButtonlessDFUResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FFD21B896EC003AC682 /* ButtonlessDFUResponse.swift */; };
+		6EFF104321B89715003AC682 /* ButtonlessDFUResultCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FFE21B896EC003AC682 /* ButtonlessDFUResultCode.swift */; };
+		6EFF104421B89715003AC682 /* Central.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FFF21B896EC003AC682 /* Central.swift */; };
+		6EFF104521B89715003AC682 /* crc32.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100021B896EC003AC682 /* crc32.swift */; };
+		6EFF104621B89715003AC682 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100121B896EC003AC682 /* Data.swift */; };
+		6EFF104721B89715003AC682 /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100221B896EC003AC682 /* DeviceManager.swift */; };
+		6EFF104821B89715003AC682 /* DFUControlPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100321B896EC003AC682 /* DFUControlPoint.swift */; };
+		6EFF104921B89715003AC682 /* DFUFirmware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100421B896EC003AC682 /* DFUFirmware.swift */; };
+		6EFF104A21B89715003AC682 /* DFUFirmwareSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100521B896EC003AC682 /* DFUFirmwareSize.swift */; };
+		6EFF104B21B89715003AC682 /* DFUFirmwareType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100621B896EC003AC682 /* DFUFirmwareType.swift */; };
+		6EFF104C21B89715003AC682 /* DFUOpcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100721B896EC003AC682 /* DFUOpcode.swift */; };
+		6EFF104D21B89715003AC682 /* DFUPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100821B896EC003AC682 /* DFUPacket.swift */; };
+		6EFF104E21B89715003AC682 /* DFUPacketReceiptNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100921B896EC003AC682 /* DFUPacketReceiptNotification.swift */; };
+		6EFF104F21B89715003AC682 /* DFURequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100A21B896EC003AC682 /* DFURequest.swift */; };
+		6EFF105021B89715003AC682 /* DFUResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100B21B896EC003AC682 /* DFUResponse.swift */; };
+		6EFF105121B89715003AC682 /* DFUResultCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100C21B896EC003AC682 /* DFUResultCode.swift */; };
+		6EFF105221B89715003AC682 /* DFUService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100D21B896EC003AC682 /* DFUService.swift */; };
+		6EFF105321B89715003AC682 /* DFUStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100E21B896EC003AC682 /* DFUStream.swift */; };
+		6EFF105421B89715003AC682 /* DFUStreamZip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100F21B896EC003AC682 /* DFUStreamZip.swift */; };
+		6EFF105521B89715003AC682 /* DFUStreamZipError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101021B896EC003AC682 /* DFUStreamZipError.swift */; };
+		6EFF105621B89715003AC682 /* DFUVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101121B896EC003AC682 /* DFUVersion.swift */; };
+		6EFF105721B89715003AC682 /* DFUVersionCharacteristic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101221B896EC003AC682 /* DFUVersionCharacteristic.swift */; };
+		6EFF105821B89715003AC682 /* GATTError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101321B896EC003AC682 /* GATTError.swift */; };
+		6EFF105921B89715003AC682 /* GATTProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101421B896EC003AC682 /* GATTProfile.swift */; };
+		6EFF105A21B89715003AC682 /* Integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101521B896EC003AC682 /* Integer.swift */; };
+		6EFF105B21B89715003AC682 /* Manifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101621B896EC003AC682 /* Manifest.swift */; };
+		6EFF105C21B89715003AC682 /* ManifestFirmwareInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101721B896EC003AC682 /* ManifestFirmwareInfo.swift */; };
+		6EFF105D21B89715003AC682 /* SecureDFUControlPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101821B896EC003AC682 /* SecureDFUControlPoint.swift */; };
+		6EFF105E21B89715003AC682 /* SecureDFUExtendedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101921B896EC003AC682 /* SecureDFUExtendedError.swift */; };
+		6EFF105F21B89715003AC682 /* SecureDFUOpCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101A21B896EC003AC682 /* SecureDFUOpCode.swift */; };
+		6EFF106021B89715003AC682 /* SecureDFUPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101B21B896EC003AC682 /* SecureDFUPacket.swift */; };
+		6EFF106121B89715003AC682 /* SecureDFUProcedureType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101C21B896EC003AC682 /* SecureDFUProcedureType.swift */; };
+		6EFF106221B89715003AC682 /* SecureDFURequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101D21B896EC003AC682 /* SecureDFURequest.swift */; };
+		6EFF106321B89715003AC682 /* SecureDFUResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101E21B896EC003AC682 /* SecureDFUResponse.swift */; };
+		6EFF106421B89715003AC682 /* SecureDFUResultCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101F21B896EC003AC682 /* SecureDFUResultCode.swift */; };
+		6EFF106521B89715003AC682 /* SecureDFUService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF102021B896EC003AC682 /* SecureDFUService.swift */; };
+		6EFF106621B89715003AC682 /* SoftdeviceBootloaderInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF102121B896EC003AC682 /* SoftdeviceBootloaderInfo.swift */; };
+		6EFF106721B89715003AC682 /* UnsafeDataConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF102221B896EC003AC682 /* UnsafeDataConvertible.swift */; };
+		6EFF106821B89717003AC682 /* ButtonlessDFU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FFA21B896EC003AC682 /* ButtonlessDFU.swift */; };
+		6EFF106921B89717003AC682 /* ButtonlessDFUOpCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FFB21B896EC003AC682 /* ButtonlessDFUOpCode.swift */; };
+		6EFF106A21B89718003AC682 /* ButtonlessDFURequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FFC21B896EC003AC682 /* ButtonlessDFURequest.swift */; };
+		6EFF106B21B89718003AC682 /* ButtonlessDFUResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FFD21B896EC003AC682 /* ButtonlessDFUResponse.swift */; };
+		6EFF106C21B89718003AC682 /* ButtonlessDFUResultCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FFE21B896EC003AC682 /* ButtonlessDFUResultCode.swift */; };
+		6EFF106D21B89718003AC682 /* Central.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FFF21B896EC003AC682 /* Central.swift */; };
+		6EFF106E21B89718003AC682 /* crc32.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100021B896EC003AC682 /* crc32.swift */; };
+		6EFF106F21B89718003AC682 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100121B896EC003AC682 /* Data.swift */; };
+		6EFF107021B89718003AC682 /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100221B896EC003AC682 /* DeviceManager.swift */; };
+		6EFF107121B89718003AC682 /* DFUControlPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100321B896EC003AC682 /* DFUControlPoint.swift */; };
+		6EFF107221B89718003AC682 /* DFUFirmware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100421B896EC003AC682 /* DFUFirmware.swift */; };
+		6EFF107321B89718003AC682 /* DFUFirmwareSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100521B896EC003AC682 /* DFUFirmwareSize.swift */; };
+		6EFF107421B89718003AC682 /* DFUFirmwareType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100621B896EC003AC682 /* DFUFirmwareType.swift */; };
+		6EFF107521B89718003AC682 /* DFUOpcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100721B896EC003AC682 /* DFUOpcode.swift */; };
+		6EFF107621B89718003AC682 /* DFUPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100821B896EC003AC682 /* DFUPacket.swift */; };
+		6EFF107721B89718003AC682 /* DFUPacketReceiptNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100921B896EC003AC682 /* DFUPacketReceiptNotification.swift */; };
+		6EFF107821B89718003AC682 /* DFURequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100A21B896EC003AC682 /* DFURequest.swift */; };
+		6EFF107921B89718003AC682 /* DFUResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100B21B896EC003AC682 /* DFUResponse.swift */; };
+		6EFF107A21B89718003AC682 /* DFUResultCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100C21B896EC003AC682 /* DFUResultCode.swift */; };
+		6EFF107B21B89718003AC682 /* DFUService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100D21B896EC003AC682 /* DFUService.swift */; };
+		6EFF107C21B89718003AC682 /* DFUStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100E21B896EC003AC682 /* DFUStream.swift */; };
+		6EFF107D21B89718003AC682 /* DFUStreamZip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF100F21B896EC003AC682 /* DFUStreamZip.swift */; };
+		6EFF107E21B89718003AC682 /* DFUStreamZipError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101021B896EC003AC682 /* DFUStreamZipError.swift */; };
+		6EFF107F21B89718003AC682 /* DFUVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101121B896EC003AC682 /* DFUVersion.swift */; };
+		6EFF108021B89718003AC682 /* DFUVersionCharacteristic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101221B896EC003AC682 /* DFUVersionCharacteristic.swift */; };
+		6EFF108121B89718003AC682 /* GATTError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101321B896EC003AC682 /* GATTError.swift */; };
+		6EFF108221B89718003AC682 /* GATTProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101421B896EC003AC682 /* GATTProfile.swift */; };
+		6EFF108321B89718003AC682 /* Integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101521B896EC003AC682 /* Integer.swift */; };
+		6EFF108421B89718003AC682 /* Manifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101621B896EC003AC682 /* Manifest.swift */; };
+		6EFF108521B89718003AC682 /* ManifestFirmwareInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101721B896EC003AC682 /* ManifestFirmwareInfo.swift */; };
+		6EFF108621B89718003AC682 /* SecureDFUControlPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101821B896EC003AC682 /* SecureDFUControlPoint.swift */; };
+		6EFF108721B89718003AC682 /* SecureDFUExtendedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101921B896EC003AC682 /* SecureDFUExtendedError.swift */; };
+		6EFF108821B89718003AC682 /* SecureDFUOpCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101A21B896EC003AC682 /* SecureDFUOpCode.swift */; };
+		6EFF108921B89718003AC682 /* SecureDFUPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101B21B896EC003AC682 /* SecureDFUPacket.swift */; };
+		6EFF108A21B89718003AC682 /* SecureDFUProcedureType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101C21B896EC003AC682 /* SecureDFUProcedureType.swift */; };
+		6EFF108B21B89718003AC682 /* SecureDFURequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101D21B896EC003AC682 /* SecureDFURequest.swift */; };
+		6EFF108C21B89718003AC682 /* SecureDFUResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101E21B896EC003AC682 /* SecureDFUResponse.swift */; };
+		6EFF108D21B89718003AC682 /* SecureDFUResultCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF101F21B896EC003AC682 /* SecureDFUResultCode.swift */; };
+		6EFF108E21B89718003AC682 /* SecureDFUService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF102021B896EC003AC682 /* SecureDFUService.swift */; };
+		6EFF108F21B89718003AC682 /* SoftdeviceBootloaderInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF102121B896EC003AC682 /* SoftdeviceBootloaderInfo.swift */; };
+		6EFF109021B89718003AC682 /* UnsafeDataConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF102221B896EC003AC682 /* UnsafeDataConvertible.swift */; };
+		6EFF109121B897F5003AC682 /* ButtonlessDFUTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF102621B896EC003AC682 /* ButtonlessDFUTests.swift */; };
+		6EFF109221B897F5003AC682 /* FirmwareTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF102721B896EC003AC682 /* FirmwareTests.swift */; };
+		6EFF109321B897F5003AC682 /* ManifestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF102821B896EC003AC682 /* ManifestTests.swift */; };
+		6EFF109421B897F5003AC682 /* NordicDFUTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF102921B896EC003AC682 /* NordicDFUTests.swift */; };
+		6EFF109521B897F5003AC682 /* SecureDFUControlPointTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF102A21B896EC003AC682 /* SecureDFUControlPointTests.swift */; };
+		6EFF109621B897F5003AC682 /* SecureDFUPacketTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF102B21B896EC003AC682 /* SecureDFUPacketTests.swift */; };
+		6EFF109721B897F5003AC682 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF102C21B896EC003AC682 /* Utilities.swift */; };
+		6EFF109821B89841003AC682 /* manifest1.json in Resources */ = {isa = PBXBuildFile; fileRef = 6EFF102F21B896EC003AC682 /* manifest1.json */; };
+		6EFF109921B89841003AC682 /* manifest2.json in Resources */ = {isa = PBXBuildFile; fileRef = 6EFF103021B896EC003AC682 /* manifest2.json */; };
+		6EFF109A21B89841003AC682 /* nrf52832_sdk_12.2_all_in_one.hex in Resources */ = {isa = PBXBuildFile; fileRef = 6EFF103121B896ED003AC682 /* nrf52832_sdk_12.2_all_in_one.hex */; };
+		6EFF109B21B89841003AC682 /* nrf52832_sdk_12.2_app.zip in Resources */ = {isa = PBXBuildFile; fileRef = 6EFF103221B896ED003AC682 /* nrf52832_sdk_12.2_app.zip */; };
+		6EFF109C21B89841003AC682 /* nrf52832_sdk_12.2_to_13_all_in_one.zip in Resources */ = {isa = PBXBuildFile; fileRef = 6EFF103321B896ED003AC682 /* nrf52832_sdk_12.2_to_13_all_in_one.zip */; };
+		6EFF109D21B89841003AC682 /* nrf52832_sdk_13_app.zip in Resources */ = {isa = PBXBuildFile; fileRef = 6EFF103421B896ED003AC682 /* nrf52832_sdk_13_app.zip */; };
+		6EFF109E21B89841003AC682 /* nrf52832_sdk_13_to_14.1_all_in_one.zip in Resources */ = {isa = PBXBuildFile; fileRef = 6EFF103521B896ED003AC682 /* nrf52832_sdk_13_to_14.1_all_in_one.zip */; };
+		6EFF109F21B89841003AC682 /* nrf52832_sdk_14.1_app.zip in Resources */ = {isa = PBXBuildFile; fileRef = 6EFF103621B896ED003AC682 /* nrf52832_sdk_14.1_app.zip */; };
+		6EFF10A021B89841003AC682 /* nrf52832_sdk_14.1_bl_2.zip in Resources */ = {isa = PBXBuildFile; fileRef = 6EFF103721B896ED003AC682 /* nrf52832_sdk_14.1_bl_2.zip */; };
+		6EFF10A121B89841003AC682 /* nrf52832_sdk_14.1_sd.zip in Resources */ = {isa = PBXBuildFile; fileRef = 6EFF103821B896ED003AC682 /* nrf52832_sdk_14.1_sd.zip */; };
+		6EFF10A221B89841003AC682 /* nrf52832_sdk_14.1_sd_bl_1.zip in Resources */ = {isa = PBXBuildFile; fileRef = 6EFF103921B896ED003AC682 /* nrf52832_sdk_14.1_sd_bl_1.zip */; };
+		6EFF10A321B89841003AC682 /* nrf52832_sdk_14.1_sd_bl_app_3.zip in Resources */ = {isa = PBXBuildFile; fileRef = 6EFF103A21B896ED003AC682 /* nrf52832_sdk_14.1_sd_bl_app_3.zip */; };
+		6EFF10A421B89841003AC682 /* nrf52832_sdk_14_app.zip in Resources */ = {isa = PBXBuildFile; fileRef = 6EFF103B21B896ED003AC682 /* nrf52832_sdk_14_app.zip */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		6EFF0FD321B8966A003AC682 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6EFF0FBF21B89669003AC682 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6EFF0FC721B8966A003AC682;
+			remoteInfo = NordicDFU;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		6EFF0FC821B8966A003AC682 /* NordicDFU.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NordicDFU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6EFF0FCB21B8966A003AC682 /* NordicDFU.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NordicDFU.h; sourceTree = "<group>"; };
+		6EFF0FCC21B8966A003AC682 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6EFF0FD121B8966A003AC682 /* NordicDFUTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NordicDFUTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6EFF0FD821B8966A003AC682 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6EFF0FEB21B89680003AC682 /* NordicDFU.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NordicDFU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6EFF0FEF21B896EC003AC682 /* Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
+		6EFF0FF021B896EC003AC682 /* CommandLineBool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandLineBool.swift; sourceTree = "<group>"; };
+		6EFF0FF121B896EC003AC682 /* DarwinCentral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarwinCentral.swift; sourceTree = "<group>"; };
+		6EFF0FF221B896EC003AC682 /* DeviceCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceCommand.swift; sourceTree = "<group>"; };
+		6EFF0FF321B896EC003AC682 /* EnterBootloaderCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterBootloaderCommand.swift; sourceTree = "<group>"; };
+		6EFF0FF421B896EC003AC682 /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
+		6EFF0FF521B896EC003AC682 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		6EFF0FF621B896EC003AC682 /* Option.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Option.swift; sourceTree = "<group>"; };
+		6EFF0FF721B896EC003AC682 /* ScanCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanCommand.swift; sourceTree = "<group>"; };
+		6EFF0FF821B896EC003AC682 /* UploadFirmwareCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadFirmwareCommand.swift; sourceTree = "<group>"; };
+		6EFF0FFA21B896EC003AC682 /* ButtonlessDFU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonlessDFU.swift; sourceTree = "<group>"; };
+		6EFF0FFB21B896EC003AC682 /* ButtonlessDFUOpCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonlessDFUOpCode.swift; sourceTree = "<group>"; };
+		6EFF0FFC21B896EC003AC682 /* ButtonlessDFURequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonlessDFURequest.swift; sourceTree = "<group>"; };
+		6EFF0FFD21B896EC003AC682 /* ButtonlessDFUResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonlessDFUResponse.swift; sourceTree = "<group>"; };
+		6EFF0FFE21B896EC003AC682 /* ButtonlessDFUResultCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonlessDFUResultCode.swift; sourceTree = "<group>"; };
+		6EFF0FFF21B896EC003AC682 /* Central.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Central.swift; sourceTree = "<group>"; };
+		6EFF100021B896EC003AC682 /* crc32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = crc32.swift; sourceTree = "<group>"; };
+		6EFF100121B896EC003AC682 /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
+		6EFF100221B896EC003AC682 /* DeviceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceManager.swift; sourceTree = "<group>"; };
+		6EFF100321B896EC003AC682 /* DFUControlPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUControlPoint.swift; sourceTree = "<group>"; };
+		6EFF100421B896EC003AC682 /* DFUFirmware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUFirmware.swift; sourceTree = "<group>"; };
+		6EFF100521B896EC003AC682 /* DFUFirmwareSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUFirmwareSize.swift; sourceTree = "<group>"; };
+		6EFF100621B896EC003AC682 /* DFUFirmwareType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUFirmwareType.swift; sourceTree = "<group>"; };
+		6EFF100721B896EC003AC682 /* DFUOpcode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUOpcode.swift; sourceTree = "<group>"; };
+		6EFF100821B896EC003AC682 /* DFUPacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUPacket.swift; sourceTree = "<group>"; };
+		6EFF100921B896EC003AC682 /* DFUPacketReceiptNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUPacketReceiptNotification.swift; sourceTree = "<group>"; };
+		6EFF100A21B896EC003AC682 /* DFURequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFURequest.swift; sourceTree = "<group>"; };
+		6EFF100B21B896EC003AC682 /* DFUResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUResponse.swift; sourceTree = "<group>"; };
+		6EFF100C21B896EC003AC682 /* DFUResultCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUResultCode.swift; sourceTree = "<group>"; };
+		6EFF100D21B896EC003AC682 /* DFUService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUService.swift; sourceTree = "<group>"; };
+		6EFF100E21B896EC003AC682 /* DFUStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUStream.swift; sourceTree = "<group>"; };
+		6EFF100F21B896EC003AC682 /* DFUStreamZip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUStreamZip.swift; sourceTree = "<group>"; };
+		6EFF101021B896EC003AC682 /* DFUStreamZipError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUStreamZipError.swift; sourceTree = "<group>"; };
+		6EFF101121B896EC003AC682 /* DFUVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUVersion.swift; sourceTree = "<group>"; };
+		6EFF101221B896EC003AC682 /* DFUVersionCharacteristic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFUVersionCharacteristic.swift; sourceTree = "<group>"; };
+		6EFF101321B896EC003AC682 /* GATTError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GATTError.swift; sourceTree = "<group>"; };
+		6EFF101421B896EC003AC682 /* GATTProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GATTProfile.swift; sourceTree = "<group>"; };
+		6EFF101521B896EC003AC682 /* Integer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Integer.swift; sourceTree = "<group>"; };
+		6EFF101621B896EC003AC682 /* Manifest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Manifest.swift; sourceTree = "<group>"; };
+		6EFF101721B896EC003AC682 /* ManifestFirmwareInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManifestFirmwareInfo.swift; sourceTree = "<group>"; };
+		6EFF101821B896EC003AC682 /* SecureDFUControlPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureDFUControlPoint.swift; sourceTree = "<group>"; };
+		6EFF101921B896EC003AC682 /* SecureDFUExtendedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureDFUExtendedError.swift; sourceTree = "<group>"; };
+		6EFF101A21B896EC003AC682 /* SecureDFUOpCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureDFUOpCode.swift; sourceTree = "<group>"; };
+		6EFF101B21B896EC003AC682 /* SecureDFUPacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureDFUPacket.swift; sourceTree = "<group>"; };
+		6EFF101C21B896EC003AC682 /* SecureDFUProcedureType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureDFUProcedureType.swift; sourceTree = "<group>"; };
+		6EFF101D21B896EC003AC682 /* SecureDFURequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureDFURequest.swift; sourceTree = "<group>"; };
+		6EFF101E21B896EC003AC682 /* SecureDFUResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureDFUResponse.swift; sourceTree = "<group>"; };
+		6EFF101F21B896EC003AC682 /* SecureDFUResultCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureDFUResultCode.swift; sourceTree = "<group>"; };
+		6EFF102021B896EC003AC682 /* SecureDFUService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureDFUService.swift; sourceTree = "<group>"; };
+		6EFF102121B896EC003AC682 /* SoftdeviceBootloaderInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoftdeviceBootloaderInfo.swift; sourceTree = "<group>"; };
+		6EFF102221B896EC003AC682 /* UnsafeDataConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsafeDataConvertible.swift; sourceTree = "<group>"; };
+		6EFF102421B896EC003AC682 /* LinuxMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinuxMain.swift; sourceTree = "<group>"; };
+		6EFF102621B896EC003AC682 /* ButtonlessDFUTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonlessDFUTests.swift; sourceTree = "<group>"; };
+		6EFF102721B896EC003AC682 /* FirmwareTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirmwareTests.swift; sourceTree = "<group>"; };
+		6EFF102821B896EC003AC682 /* ManifestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManifestTests.swift; sourceTree = "<group>"; };
+		6EFF102921B896EC003AC682 /* NordicDFUTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NordicDFUTests.swift; sourceTree = "<group>"; };
+		6EFF102A21B896EC003AC682 /* SecureDFUControlPointTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureDFUControlPointTests.swift; sourceTree = "<group>"; };
+		6EFF102B21B896EC003AC682 /* SecureDFUPacketTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureDFUPacketTests.swift; sourceTree = "<group>"; };
+		6EFF102C21B896EC003AC682 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		6EFF102D21B896EC003AC682 /* XCTestManifests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTestManifests.swift; sourceTree = "<group>"; };
+		6EFF102F21B896EC003AC682 /* manifest1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = manifest1.json; sourceTree = "<group>"; };
+		6EFF103021B896EC003AC682 /* manifest2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = manifest2.json; sourceTree = "<group>"; };
+		6EFF103121B896ED003AC682 /* nrf52832_sdk_12.2_all_in_one.hex */ = {isa = PBXFileReference; lastKnownFileType = text; path = nrf52832_sdk_12.2_all_in_one.hex; sourceTree = "<group>"; };
+		6EFF103221B896ED003AC682 /* nrf52832_sdk_12.2_app.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = nrf52832_sdk_12.2_app.zip; sourceTree = "<group>"; };
+		6EFF103321B896ED003AC682 /* nrf52832_sdk_12.2_to_13_all_in_one.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = nrf52832_sdk_12.2_to_13_all_in_one.zip; sourceTree = "<group>"; };
+		6EFF103421B896ED003AC682 /* nrf52832_sdk_13_app.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = nrf52832_sdk_13_app.zip; sourceTree = "<group>"; };
+		6EFF103521B896ED003AC682 /* nrf52832_sdk_13_to_14.1_all_in_one.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = nrf52832_sdk_13_to_14.1_all_in_one.zip; sourceTree = "<group>"; };
+		6EFF103621B896ED003AC682 /* nrf52832_sdk_14.1_app.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = nrf52832_sdk_14.1_app.zip; sourceTree = "<group>"; };
+		6EFF103721B896ED003AC682 /* nrf52832_sdk_14.1_bl_2.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = nrf52832_sdk_14.1_bl_2.zip; sourceTree = "<group>"; };
+		6EFF103821B896ED003AC682 /* nrf52832_sdk_14.1_sd.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = nrf52832_sdk_14.1_sd.zip; sourceTree = "<group>"; };
+		6EFF103921B896ED003AC682 /* nrf52832_sdk_14.1_sd_bl_1.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = nrf52832_sdk_14.1_sd_bl_1.zip; sourceTree = "<group>"; };
+		6EFF103A21B896ED003AC682 /* nrf52832_sdk_14.1_sd_bl_app_3.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = nrf52832_sdk_14.1_sd_bl_app_3.zip; sourceTree = "<group>"; };
+		6EFF103B21B896ED003AC682 /* nrf52832_sdk_14_app.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = nrf52832_sdk_14_app.zip; sourceTree = "<group>"; };
+		6EFF103C21B89708003AC682 /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; name = Cartfile; path = ../Cartfile; sourceTree = "<group>"; };
+		6EFF103D21B8970A003AC682 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Package.swift; path = ../Package.swift; sourceTree = "<group>"; };
+		6EFF103E21B8970A003AC682 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6EFF0FC521B8966A003AC682 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6EFF0FCE21B8966A003AC682 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6EFF0FD221B8966A003AC682 /* NordicDFU.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6EFF0FE621B89680003AC682 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6EFF0FBE21B89669003AC682 = {
+			isa = PBXGroup;
+			children = (
+				6EFF103E21B8970A003AC682 /* README.md */,
+				6EFF103C21B89708003AC682 /* Cartfile */,
+				6EFF103D21B8970A003AC682 /* Package.swift */,
+				6EFF0FED21B896EC003AC682 /* Sources */,
+				6EFF102E21B896EC003AC682 /* Assets */,
+				6EFF102321B896EC003AC682 /* Tests */,
+				6EFF0FCA21B8966A003AC682 /* NordicDFU */,
+				6EFF0FD521B8966A003AC682 /* NordicDFUTests */,
+				6EFF0FC921B8966A003AC682 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6EFF0FC921B8966A003AC682 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6EFF0FC821B8966A003AC682 /* NordicDFU.framework */,
+				6EFF0FD121B8966A003AC682 /* NordicDFUTests.xctest */,
+				6EFF0FEB21B89680003AC682 /* NordicDFU.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6EFF0FCA21B8966A003AC682 /* NordicDFU */ = {
+			isa = PBXGroup;
+			children = (
+				6EFF0FCB21B8966A003AC682 /* NordicDFU.h */,
+				6EFF0FCC21B8966A003AC682 /* Info.plist */,
+			);
+			path = NordicDFU;
+			sourceTree = "<group>";
+		};
+		6EFF0FD521B8966A003AC682 /* NordicDFUTests */ = {
+			isa = PBXGroup;
+			children = (
+				6EFF0FD821B8966A003AC682 /* Info.plist */,
+			);
+			path = NordicDFUTests;
+			sourceTree = "<group>";
+		};
+		6EFF0FED21B896EC003AC682 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				6EFF0FEE21B896EC003AC682 /* dfutool */,
+				6EFF0FF921B896EC003AC682 /* NordicDFU */,
+			);
+			name = Sources;
+			path = ../Sources;
+			sourceTree = "<group>";
+		};
+		6EFF0FEE21B896EC003AC682 /* dfutool */ = {
+			isa = PBXGroup;
+			children = (
+				6EFF0FEF21B896EC003AC682 /* Command.swift */,
+				6EFF0FF021B896EC003AC682 /* CommandLineBool.swift */,
+				6EFF0FF121B896EC003AC682 /* DarwinCentral.swift */,
+				6EFF0FF221B896EC003AC682 /* DeviceCommand.swift */,
+				6EFF0FF321B896EC003AC682 /* EnterBootloaderCommand.swift */,
+				6EFF0FF421B896EC003AC682 /* Error.swift */,
+				6EFF0FF521B896EC003AC682 /* main.swift */,
+				6EFF0FF621B896EC003AC682 /* Option.swift */,
+				6EFF0FF721B896EC003AC682 /* ScanCommand.swift */,
+				6EFF0FF821B896EC003AC682 /* UploadFirmwareCommand.swift */,
+			);
+			path = dfutool;
+			sourceTree = "<group>";
+		};
+		6EFF0FF921B896EC003AC682 /* NordicDFU */ = {
+			isa = PBXGroup;
+			children = (
+				6EFF0FFA21B896EC003AC682 /* ButtonlessDFU.swift */,
+				6EFF0FFB21B896EC003AC682 /* ButtonlessDFUOpCode.swift */,
+				6EFF0FFC21B896EC003AC682 /* ButtonlessDFURequest.swift */,
+				6EFF0FFD21B896EC003AC682 /* ButtonlessDFUResponse.swift */,
+				6EFF0FFE21B896EC003AC682 /* ButtonlessDFUResultCode.swift */,
+				6EFF0FFF21B896EC003AC682 /* Central.swift */,
+				6EFF100021B896EC003AC682 /* crc32.swift */,
+				6EFF100121B896EC003AC682 /* Data.swift */,
+				6EFF100221B896EC003AC682 /* DeviceManager.swift */,
+				6EFF100321B896EC003AC682 /* DFUControlPoint.swift */,
+				6EFF100421B896EC003AC682 /* DFUFirmware.swift */,
+				6EFF100521B896EC003AC682 /* DFUFirmwareSize.swift */,
+				6EFF100621B896EC003AC682 /* DFUFirmwareType.swift */,
+				6EFF100721B896EC003AC682 /* DFUOpcode.swift */,
+				6EFF100821B896EC003AC682 /* DFUPacket.swift */,
+				6EFF100921B896EC003AC682 /* DFUPacketReceiptNotification.swift */,
+				6EFF100A21B896EC003AC682 /* DFURequest.swift */,
+				6EFF100B21B896EC003AC682 /* DFUResponse.swift */,
+				6EFF100C21B896EC003AC682 /* DFUResultCode.swift */,
+				6EFF100D21B896EC003AC682 /* DFUService.swift */,
+				6EFF100E21B896EC003AC682 /* DFUStream.swift */,
+				6EFF100F21B896EC003AC682 /* DFUStreamZip.swift */,
+				6EFF101021B896EC003AC682 /* DFUStreamZipError.swift */,
+				6EFF101121B896EC003AC682 /* DFUVersion.swift */,
+				6EFF101221B896EC003AC682 /* DFUVersionCharacteristic.swift */,
+				6EFF101321B896EC003AC682 /* GATTError.swift */,
+				6EFF101421B896EC003AC682 /* GATTProfile.swift */,
+				6EFF101521B896EC003AC682 /* Integer.swift */,
+				6EFF101621B896EC003AC682 /* Manifest.swift */,
+				6EFF101721B896EC003AC682 /* ManifestFirmwareInfo.swift */,
+				6EFF101821B896EC003AC682 /* SecureDFUControlPoint.swift */,
+				6EFF101921B896EC003AC682 /* SecureDFUExtendedError.swift */,
+				6EFF101A21B896EC003AC682 /* SecureDFUOpCode.swift */,
+				6EFF101B21B896EC003AC682 /* SecureDFUPacket.swift */,
+				6EFF101C21B896EC003AC682 /* SecureDFUProcedureType.swift */,
+				6EFF101D21B896EC003AC682 /* SecureDFURequest.swift */,
+				6EFF101E21B896EC003AC682 /* SecureDFUResponse.swift */,
+				6EFF101F21B896EC003AC682 /* SecureDFUResultCode.swift */,
+				6EFF102021B896EC003AC682 /* SecureDFUService.swift */,
+				6EFF102121B896EC003AC682 /* SoftdeviceBootloaderInfo.swift */,
+				6EFF102221B896EC003AC682 /* UnsafeDataConvertible.swift */,
+			);
+			path = NordicDFU;
+			sourceTree = "<group>";
+		};
+		6EFF102321B896EC003AC682 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				6EFF102421B896EC003AC682 /* LinuxMain.swift */,
+				6EFF102521B896EC003AC682 /* NordicDFUTests */,
+			);
+			name = Tests;
+			path = ../Tests;
+			sourceTree = "<group>";
+		};
+		6EFF102521B896EC003AC682 /* NordicDFUTests */ = {
+			isa = PBXGroup;
+			children = (
+				6EFF102621B896EC003AC682 /* ButtonlessDFUTests.swift */,
+				6EFF102721B896EC003AC682 /* FirmwareTests.swift */,
+				6EFF102821B896EC003AC682 /* ManifestTests.swift */,
+				6EFF102921B896EC003AC682 /* NordicDFUTests.swift */,
+				6EFF102A21B896EC003AC682 /* SecureDFUControlPointTests.swift */,
+				6EFF102B21B896EC003AC682 /* SecureDFUPacketTests.swift */,
+				6EFF102C21B896EC003AC682 /* Utilities.swift */,
+				6EFF102D21B896EC003AC682 /* XCTestManifests.swift */,
+			);
+			path = NordicDFUTests;
+			sourceTree = "<group>";
+		};
+		6EFF102E21B896EC003AC682 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				6EFF102F21B896EC003AC682 /* manifest1.json */,
+				6EFF103021B896EC003AC682 /* manifest2.json */,
+				6EFF103121B896ED003AC682 /* nrf52832_sdk_12.2_all_in_one.hex */,
+				6EFF103221B896ED003AC682 /* nrf52832_sdk_12.2_app.zip */,
+				6EFF103321B896ED003AC682 /* nrf52832_sdk_12.2_to_13_all_in_one.zip */,
+				6EFF103421B896ED003AC682 /* nrf52832_sdk_13_app.zip */,
+				6EFF103521B896ED003AC682 /* nrf52832_sdk_13_to_14.1_all_in_one.zip */,
+				6EFF103621B896ED003AC682 /* nrf52832_sdk_14.1_app.zip */,
+				6EFF103721B896ED003AC682 /* nrf52832_sdk_14.1_bl_2.zip */,
+				6EFF103821B896ED003AC682 /* nrf52832_sdk_14.1_sd.zip */,
+				6EFF103921B896ED003AC682 /* nrf52832_sdk_14.1_sd_bl_1.zip */,
+				6EFF103A21B896ED003AC682 /* nrf52832_sdk_14.1_sd_bl_app_3.zip */,
+				6EFF103B21B896ED003AC682 /* nrf52832_sdk_14_app.zip */,
+			);
+			name = Assets;
+			path = ../Assets;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		6EFF0FC321B8966A003AC682 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6EFF0FD921B8966A003AC682 /* NordicDFU.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6EFF0FE321B89680003AC682 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6EFF0FE421B89680003AC682 /* NordicDFU.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		6EFF0FC721B8966A003AC682 /* NordicDFU macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6EFF0FDC21B8966A003AC682 /* Build configuration list for PBXNativeTarget "NordicDFU macOS" */;
+			buildPhases = (
+				6EFF0FC321B8966A003AC682 /* Headers */,
+				6EFF0FC421B8966A003AC682 /* Sources */,
+				6EFF0FC521B8966A003AC682 /* Frameworks */,
+				6EFF0FC621B8966A003AC682 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "NordicDFU macOS";
+			productName = NordicDFU;
+			productReference = 6EFF0FC821B8966A003AC682 /* NordicDFU.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		6EFF0FD021B8966A003AC682 /* NordicDFUTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6EFF0FDF21B8966A003AC682 /* Build configuration list for PBXNativeTarget "NordicDFUTests" */;
+			buildPhases = (
+				6EFF0FCD21B8966A003AC682 /* Sources */,
+				6EFF0FCE21B8966A003AC682 /* Frameworks */,
+				6EFF0FCF21B8966A003AC682 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6EFF0FD421B8966A003AC682 /* PBXTargetDependency */,
+			);
+			name = NordicDFUTests;
+			productName = NordicDFUTests;
+			productReference = 6EFF0FD121B8966A003AC682 /* NordicDFUTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		6EFF0FE221B89680003AC682 /* NordicDFU iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6EFF0FE821B89680003AC682 /* Build configuration list for PBXNativeTarget "NordicDFU iOS" */;
+			buildPhases = (
+				6EFF0FE321B89680003AC682 /* Headers */,
+				6EFF0FE521B89680003AC682 /* Sources */,
+				6EFF0FE621B89680003AC682 /* Frameworks */,
+				6EFF0FE721B89680003AC682 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "NordicDFU iOS";
+			productName = NordicDFU;
+			productReference = 6EFF0FEB21B89680003AC682 /* NordicDFU.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6EFF0FBF21B89669003AC682 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1010;
+				LastUpgradeCheck = 1010;
+				ORGANIZATIONNAME = PureSwift;
+				TargetAttributes = {
+					6EFF0FC721B8966A003AC682 = {
+						CreatedOnToolsVersion = 10.1;
+					};
+					6EFF0FD021B8966A003AC682 = {
+						CreatedOnToolsVersion = 10.1;
+					};
+				};
+			};
+			buildConfigurationList = 6EFF0FC221B89669003AC682 /* Build configuration list for PBXProject "NordicDFU" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 6EFF0FBE21B89669003AC682;
+			productRefGroup = 6EFF0FC921B8966A003AC682 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6EFF0FC721B8966A003AC682 /* NordicDFU macOS */,
+				6EFF0FD021B8966A003AC682 /* NordicDFUTests */,
+				6EFF0FE221B89680003AC682 /* NordicDFU iOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6EFF0FC621B8966A003AC682 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6EFF0FCF21B8966A003AC682 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6EFF109821B89841003AC682 /* manifest1.json in Resources */,
+				6EFF109921B89841003AC682 /* manifest2.json in Resources */,
+				6EFF109A21B89841003AC682 /* nrf52832_sdk_12.2_all_in_one.hex in Resources */,
+				6EFF109B21B89841003AC682 /* nrf52832_sdk_12.2_app.zip in Resources */,
+				6EFF109C21B89841003AC682 /* nrf52832_sdk_12.2_to_13_all_in_one.zip in Resources */,
+				6EFF109D21B89841003AC682 /* nrf52832_sdk_13_app.zip in Resources */,
+				6EFF109E21B89841003AC682 /* nrf52832_sdk_13_to_14.1_all_in_one.zip in Resources */,
+				6EFF109F21B89841003AC682 /* nrf52832_sdk_14.1_app.zip in Resources */,
+				6EFF10A021B89841003AC682 /* nrf52832_sdk_14.1_bl_2.zip in Resources */,
+				6EFF10A121B89841003AC682 /* nrf52832_sdk_14.1_sd.zip in Resources */,
+				6EFF10A221B89841003AC682 /* nrf52832_sdk_14.1_sd_bl_1.zip in Resources */,
+				6EFF10A321B89841003AC682 /* nrf52832_sdk_14.1_sd_bl_app_3.zip in Resources */,
+				6EFF10A421B89841003AC682 /* nrf52832_sdk_14_app.zip in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6EFF0FE721B89680003AC682 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6EFF0FC421B8966A003AC682 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6EFF108D21B89718003AC682 /* SecureDFUResultCode.swift in Sources */,
+				6EFF107F21B89718003AC682 /* DFUVersion.swift in Sources */,
+				6EFF108221B89718003AC682 /* GATTProfile.swift in Sources */,
+				6EFF108021B89718003AC682 /* DFUVersionCharacteristic.swift in Sources */,
+				6EFF108521B89718003AC682 /* ManifestFirmwareInfo.swift in Sources */,
+				6EFF108921B89718003AC682 /* SecureDFUPacket.swift in Sources */,
+				6EFF106A21B89718003AC682 /* ButtonlessDFURequest.swift in Sources */,
+				6EFF107521B89718003AC682 /* DFUOpcode.swift in Sources */,
+				6EFF108121B89718003AC682 /* GATTError.swift in Sources */,
+				6EFF109021B89718003AC682 /* UnsafeDataConvertible.swift in Sources */,
+				6EFF108E21B89718003AC682 /* SecureDFUService.swift in Sources */,
+				6EFF106921B89717003AC682 /* ButtonlessDFUOpCode.swift in Sources */,
+				6EFF107B21B89718003AC682 /* DFUService.swift in Sources */,
+				6EFF107721B89718003AC682 /* DFUPacketReceiptNotification.swift in Sources */,
+				6EFF107921B89718003AC682 /* DFUResponse.swift in Sources */,
+				6EFF107821B89718003AC682 /* DFURequest.swift in Sources */,
+				6EFF106C21B89718003AC682 /* ButtonlessDFUResultCode.swift in Sources */,
+				6EFF107321B89718003AC682 /* DFUFirmwareSize.swift in Sources */,
+				6EFF108421B89718003AC682 /* Manifest.swift in Sources */,
+				6EFF108B21B89718003AC682 /* SecureDFURequest.swift in Sources */,
+				6EFF108C21B89718003AC682 /* SecureDFUResponse.swift in Sources */,
+				6EFF108621B89718003AC682 /* SecureDFUControlPoint.swift in Sources */,
+				6EFF108821B89718003AC682 /* SecureDFUOpCode.swift in Sources */,
+				6EFF107D21B89718003AC682 /* DFUStreamZip.swift in Sources */,
+				6EFF106821B89717003AC682 /* ButtonlessDFU.swift in Sources */,
+				6EFF106B21B89718003AC682 /* ButtonlessDFUResponse.swift in Sources */,
+				6EFF106D21B89718003AC682 /* Central.swift in Sources */,
+				6EFF107121B89718003AC682 /* DFUControlPoint.swift in Sources */,
+				6EFF108321B89718003AC682 /* Integer.swift in Sources */,
+				6EFF107E21B89718003AC682 /* DFUStreamZipError.swift in Sources */,
+				6EFF107A21B89718003AC682 /* DFUResultCode.swift in Sources */,
+				6EFF108721B89718003AC682 /* SecureDFUExtendedError.swift in Sources */,
+				6EFF107221B89718003AC682 /* DFUFirmware.swift in Sources */,
+				6EFF107421B89718003AC682 /* DFUFirmwareType.swift in Sources */,
+				6EFF107C21B89718003AC682 /* DFUStream.swift in Sources */,
+				6EFF107621B89718003AC682 /* DFUPacket.swift in Sources */,
+				6EFF108A21B89718003AC682 /* SecureDFUProcedureType.swift in Sources */,
+				6EFF108F21B89718003AC682 /* SoftdeviceBootloaderInfo.swift in Sources */,
+				6EFF106E21B89718003AC682 /* crc32.swift in Sources */,
+				6EFF107021B89718003AC682 /* DeviceManager.swift in Sources */,
+				6EFF106F21B89718003AC682 /* Data.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6EFF0FCD21B8966A003AC682 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6EFF109421B897F5003AC682 /* NordicDFUTests.swift in Sources */,
+				6EFF109321B897F5003AC682 /* ManifestTests.swift in Sources */,
+				6EFF109721B897F5003AC682 /* Utilities.swift in Sources */,
+				6EFF109221B897F5003AC682 /* FirmwareTests.swift in Sources */,
+				6EFF109121B897F5003AC682 /* ButtonlessDFUTests.swift in Sources */,
+				6EFF109621B897F5003AC682 /* SecureDFUPacketTests.swift in Sources */,
+				6EFF109521B897F5003AC682 /* SecureDFUControlPointTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6EFF0FE521B89680003AC682 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6EFF106421B89715003AC682 /* SecureDFUResultCode.swift in Sources */,
+				6EFF105621B89715003AC682 /* DFUVersion.swift in Sources */,
+				6EFF105921B89715003AC682 /* GATTProfile.swift in Sources */,
+				6EFF105721B89715003AC682 /* DFUVersionCharacteristic.swift in Sources */,
+				6EFF105C21B89715003AC682 /* ManifestFirmwareInfo.swift in Sources */,
+				6EFF106021B89715003AC682 /* SecureDFUPacket.swift in Sources */,
+				6EFF104121B89715003AC682 /* ButtonlessDFURequest.swift in Sources */,
+				6EFF104C21B89715003AC682 /* DFUOpcode.swift in Sources */,
+				6EFF105821B89715003AC682 /* GATTError.swift in Sources */,
+				6EFF106721B89715003AC682 /* UnsafeDataConvertible.swift in Sources */,
+				6EFF106521B89715003AC682 /* SecureDFUService.swift in Sources */,
+				6EFF104021B89715003AC682 /* ButtonlessDFUOpCode.swift in Sources */,
+				6EFF105221B89715003AC682 /* DFUService.swift in Sources */,
+				6EFF104E21B89715003AC682 /* DFUPacketReceiptNotification.swift in Sources */,
+				6EFF105021B89715003AC682 /* DFUResponse.swift in Sources */,
+				6EFF104F21B89715003AC682 /* DFURequest.swift in Sources */,
+				6EFF104321B89715003AC682 /* ButtonlessDFUResultCode.swift in Sources */,
+				6EFF104A21B89715003AC682 /* DFUFirmwareSize.swift in Sources */,
+				6EFF105B21B89715003AC682 /* Manifest.swift in Sources */,
+				6EFF106221B89715003AC682 /* SecureDFURequest.swift in Sources */,
+				6EFF106321B89715003AC682 /* SecureDFUResponse.swift in Sources */,
+				6EFF105D21B89715003AC682 /* SecureDFUControlPoint.swift in Sources */,
+				6EFF105F21B89715003AC682 /* SecureDFUOpCode.swift in Sources */,
+				6EFF105421B89715003AC682 /* DFUStreamZip.swift in Sources */,
+				6EFF103F21B89715003AC682 /* ButtonlessDFU.swift in Sources */,
+				6EFF104221B89715003AC682 /* ButtonlessDFUResponse.swift in Sources */,
+				6EFF104421B89715003AC682 /* Central.swift in Sources */,
+				6EFF104821B89715003AC682 /* DFUControlPoint.swift in Sources */,
+				6EFF105A21B89715003AC682 /* Integer.swift in Sources */,
+				6EFF105521B89715003AC682 /* DFUStreamZipError.swift in Sources */,
+				6EFF105121B89715003AC682 /* DFUResultCode.swift in Sources */,
+				6EFF105E21B89715003AC682 /* SecureDFUExtendedError.swift in Sources */,
+				6EFF104921B89715003AC682 /* DFUFirmware.swift in Sources */,
+				6EFF104B21B89715003AC682 /* DFUFirmwareType.swift in Sources */,
+				6EFF105321B89715003AC682 /* DFUStream.swift in Sources */,
+				6EFF104D21B89715003AC682 /* DFUPacket.swift in Sources */,
+				6EFF106121B89715003AC682 /* SecureDFUProcedureType.swift in Sources */,
+				6EFF106621B89715003AC682 /* SoftdeviceBootloaderInfo.swift in Sources */,
+				6EFF104521B89715003AC682 /* crc32.swift in Sources */,
+				6EFF104721B89715003AC682 /* DeviceManager.swift in Sources */,
+				6EFF104621B89715003AC682 /* Data.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		6EFF0FD421B8966A003AC682 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6EFF0FC721B8966A003AC682 /* NordicDFU macOS */;
+			targetProxy = 6EFF0FD321B8966A003AC682 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		6EFF0FDA21B8966A003AC682 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "-DXcode";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TVOS_DEPLOYMENT_TARGET = 11.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Debug;
+		};
+		6EFF0FDB21B8966A003AC682 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				OTHER_SWIFT_FLAGS = "-DXcode";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 4.2;
+				TVOS_DEPLOYMENT_TARGET = 11.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Release;
+		};
+		6EFF0FDD21B8966A003AC682 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = $SRCROOT/../Carthage/Build/Mac;
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = NordicDFU/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.pureswift.NordicDFU;
+				PRODUCT_NAME = "$(PROJECT_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		6EFF0FDE21B8966A003AC682 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = $SRCROOT/../Carthage/Build/Mac;
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = NordicDFU/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.pureswift.NordicDFU;
+				PRODUCT_NAME = "$(PROJECT_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		6EFF0FE021B8966A003AC682 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = $SRCROOT/../Carthage/Build/Mac;
+				INFOPLIST_FILE = NordicDFUTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+					$FRAMEWORK_SEARCH_PATHS,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.pureswift.NordicDFUTests;
+				PRODUCT_NAME = "$(PROJECT_NAME:c99extidentifier)Tests";
+			};
+			name = Debug;
+		};
+		6EFF0FE121B8966A003AC682 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = $SRCROOT/../Carthage/Build/Mac;
+				INFOPLIST_FILE = NordicDFUTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+					$FRAMEWORK_SEARCH_PATHS,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.pureswift.NordicDFUTests;
+				PRODUCT_NAME = "$(PROJECT_NAME:c99extidentifier)Tests";
+			};
+			name = Release;
+		};
+		6EFF0FE921B89680003AC682 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = $SRCROOT/../Carthage/Build/iOS;
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = NordicDFU/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.pureswift.NordicDFU;
+				PRODUCT_NAME = "$(PROJECT_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		6EFF0FEA21B89680003AC682 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = $SRCROOT/../Carthage/Build/iOS;
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = NordicDFU/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.pureswift.NordicDFU;
+				PRODUCT_NAME = "$(PROJECT_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6EFF0FC221B89669003AC682 /* Build configuration list for PBXProject "NordicDFU" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6EFF0FDA21B8966A003AC682 /* Debug */,
+				6EFF0FDB21B8966A003AC682 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6EFF0FDC21B8966A003AC682 /* Build configuration list for PBXNativeTarget "NordicDFU macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6EFF0FDD21B8966A003AC682 /* Debug */,
+				6EFF0FDE21B8966A003AC682 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6EFF0FDF21B8966A003AC682 /* Build configuration list for PBXNativeTarget "NordicDFUTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6EFF0FE021B8966A003AC682 /* Debug */,
+				6EFF0FE121B8966A003AC682 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6EFF0FE821B89680003AC682 /* Build configuration list for PBXNativeTarget "NordicDFU iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6EFF0FE921B89680003AC682 /* Debug */,
+				6EFF0FEA21B89680003AC682 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6EFF0FBF21B89669003AC682 /* Project object */;
+}

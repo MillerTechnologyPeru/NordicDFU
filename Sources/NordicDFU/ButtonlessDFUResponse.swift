@@ -17,14 +17,12 @@ public struct ButtonlessDFUResponse {
     public let request: ButtonlessDFUOpCode
     
     /// Status Code
-    @_versioned
     internal let status: ButtonlessDFUResultCode
     
     /// Error
     public var error: ButtonlessDFUError? {
         
-        @inline(__always)
-        get { return ButtonlessDFUError(code: status) }
+        return ButtonlessDFUError(code: status)
     }
     
     public init(request: ButtonlessDFUOpCode,
