@@ -86,9 +86,9 @@ public extension EnterBootloaderCommand {
         case filterDuplicates = "filter"
         case timeout
         
-        public static let allCases: Set<Option> = [.peripheral,
-                                              .scanDuration,
-                                              .filterDuplicates,
-                                              .timeout]
+        public static let all: Set<Option> = [.peripheral,
+                                                   .scanDuration,
+                                                   .filterDuplicates,
+                                                   .timeout]
     }
 }

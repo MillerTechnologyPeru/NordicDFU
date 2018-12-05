@@ -101,7 +101,7 @@ public extension ScanCommand {
         case filterDuplicates = "filter"
         case timeout
         
-        public static let allCases: Set<Option> = [.duration,
+        public static let all: Set<Option> = [.duration,
                                               .filterDuplicates,
                                               .timeout]
     }
