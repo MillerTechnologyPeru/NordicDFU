@@ -112,6 +112,16 @@
 		6EFF10A221B89841003AC682 /* nrf52832_sdk_14.1_sd_bl_1.zip in Resources */ = {isa = PBXBuildFile; fileRef = 6EFF103921B896ED003AC682 /* nrf52832_sdk_14.1_sd_bl_1.zip */; };
 		6EFF10A321B89841003AC682 /* nrf52832_sdk_14.1_sd_bl_app_3.zip in Resources */ = {isa = PBXBuildFile; fileRef = 6EFF103A21B896ED003AC682 /* nrf52832_sdk_14.1_sd_bl_app_3.zip */; };
 		6EFF10A421B89841003AC682 /* nrf52832_sdk_14_app.zip in Resources */ = {isa = PBXBuildFile; fileRef = 6EFF103B21B896ED003AC682 /* nrf52832_sdk_14_app.zip */; };
+		6EFF10B021B89AA9003AC682 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FEF21B896EC003AC682 /* Command.swift */; };
+		6EFF10B121B89AA9003AC682 /* CommandLineBool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FF021B896EC003AC682 /* CommandLineBool.swift */; };
+		6EFF10B221B89AA9003AC682 /* DarwinCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FF121B896EC003AC682 /* DarwinCentral.swift */; };
+		6EFF10B321B89AA9003AC682 /* DeviceCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FF221B896EC003AC682 /* DeviceCommand.swift */; };
+		6EFF10B421B89AA9003AC682 /* EnterBootloaderCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FF321B896EC003AC682 /* EnterBootloaderCommand.swift */; };
+		6EFF10B521B89AA9003AC682 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FF421B896EC003AC682 /* Error.swift */; };
+		6EFF10B621B89AA9003AC682 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FF521B896EC003AC682 /* main.swift */; };
+		6EFF10B721B89AA9003AC682 /* Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FF621B896EC003AC682 /* Option.swift */; };
+		6EFF10B821B89AA9003AC682 /* ScanCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FF721B896EC003AC682 /* ScanCommand.swift */; };
+		6EFF10B921B89AA9003AC682 /* UploadFirmwareCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFF0FF821B896EC003AC682 /* UploadFirmwareCommand.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -122,7 +132,26 @@
 			remoteGlobalIDString = 6EFF0FC721B8966A003AC682;
 			remoteInfo = NordicDFU;
 		};
+		6EFF10BA21B89ABA003AC682 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6EFF0FBF21B89669003AC682 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6EFF0FC721B8966A003AC682;
+			remoteInfo = "NordicDFU macOS";
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6EFF10A721B89A91003AC682 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		6EFF0FC821B8966A003AC682 /* NordicDFU.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NordicDFU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -207,6 +236,7 @@
 		6EFF103C21B89708003AC682 /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; name = Cartfile; path = ../Cartfile; sourceTree = "<group>"; };
 		6EFF103D21B8970A003AC682 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Package.swift; path = ../Package.swift; sourceTree = "<group>"; };
 		6EFF103E21B8970A003AC682 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		6EFF10A921B89A91003AC682 /* dfutool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = dfutool; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,6 +256,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		6EFF0FE621B89680003AC682 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6EFF10A621B89A91003AC682 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -256,6 +293,7 @@
 				6EFF0FC821B8966A003AC682 /* NordicDFU.framework */,
 				6EFF0FD121B8966A003AC682 /* NordicDFUTests.xctest */,
 				6EFF0FEB21B89680003AC682 /* NordicDFU.framework */,
+				6EFF10A921B89A91003AC682 /* dfutool */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -474,6 +512,24 @@
 			productReference = 6EFF0FEB21B89680003AC682 /* NordicDFU.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		6EFF10A821B89A91003AC682 /* dfutool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6EFF10AD21B89A91003AC682 /* Build configuration list for PBXNativeTarget "dfutool" */;
+			buildPhases = (
+				6EFF10A521B89A91003AC682 /* Sources */,
+				6EFF10A621B89A91003AC682 /* Frameworks */,
+				6EFF10A721B89A91003AC682 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6EFF10BB21B89ABA003AC682 /* PBXTargetDependency */,
+			);
+			name = dfutool;
+			productName = dfutool;
+			productReference = 6EFF10A921B89A91003AC682 /* dfutool */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -488,6 +544,9 @@
 						CreatedOnToolsVersion = 10.1;
 					};
 					6EFF0FD021B8966A003AC682 = {
+						CreatedOnToolsVersion = 10.1;
+					};
+					6EFF10A821B89A91003AC682 = {
 						CreatedOnToolsVersion = 10.1;
 					};
 				};
@@ -507,6 +566,7 @@
 				6EFF0FC721B8966A003AC682 /* NordicDFU macOS */,
 				6EFF0FD021B8966A003AC682 /* NordicDFUTests */,
 				6EFF0FE221B89680003AC682 /* NordicDFU iOS */,
+				6EFF10A821B89A91003AC682 /* dfutool */,
 			);
 		};
 /* End PBXProject section */
@@ -659,6 +719,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6EFF10A521B89A91003AC682 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6EFF10B721B89AA9003AC682 /* Option.swift in Sources */,
+				6EFF10B021B89AA9003AC682 /* Command.swift in Sources */,
+				6EFF10B821B89AA9003AC682 /* ScanCommand.swift in Sources */,
+				6EFF10B621B89AA9003AC682 /* main.swift in Sources */,
+				6EFF10B321B89AA9003AC682 /* DeviceCommand.swift in Sources */,
+				6EFF10B421B89AA9003AC682 /* EnterBootloaderCommand.swift in Sources */,
+				6EFF10B221B89AA9003AC682 /* DarwinCentral.swift in Sources */,
+				6EFF10B921B89AA9003AC682 /* UploadFirmwareCommand.swift in Sources */,
+				6EFF10B521B89AA9003AC682 /* Error.swift in Sources */,
+				6EFF10B121B89AA9003AC682 /* CommandLineBool.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -666,6 +743,11 @@
 			isa = PBXTargetDependency;
 			target = 6EFF0FC721B8966A003AC682 /* NordicDFU macOS */;
 			targetProxy = 6EFF0FD321B8966A003AC682 /* PBXContainerItemProxy */;
+		};
+		6EFF10BB21B89ABA003AC682 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6EFF0FC721B8966A003AC682 /* NordicDFU macOS */;
+			targetProxy = 6EFF10BA21B89ABA003AC682 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -941,6 +1023,28 @@
 			};
 			name = Release;
 		};
+		6EFF10AE21B89A91003AC682 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = $SRCROOT/../Carthage/Build/Mac;
+				LD_RUNPATH_SEARCH_PATHS = $FRAMEWORK_SEARCH_PATHS;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		6EFF10AF21B89A91003AC682 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = $SRCROOT/../Carthage/Build/Mac;
+				LD_RUNPATH_SEARCH_PATHS = $FRAMEWORK_SEARCH_PATHS;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -976,6 +1080,15 @@
 			buildConfigurations = (
 				6EFF0FE921B89680003AC682 /* Debug */,
 				6EFF0FEA21B89680003AC682 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6EFF10AD21B89A91003AC682 /* Build configuration list for PBXNativeTarget "dfutool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6EFF10AE21B89A91003AC682 /* Debug */,
+				6EFF10AF21B89A91003AC682 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
