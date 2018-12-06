@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6EFF0FE221B89680003AC682"
-               BuildableName = "NordicDFU iOS.framework"
+               BuildableName = "NordicDFU.framework"
                BlueprintName = "NordicDFU iOS"
                ReferencedContainer = "container:NordicDFU.xcodeproj">
             </BuildableReference>
@@ -46,7 +46,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6EFF0FE221B89680003AC682"
-            BuildableName = "NordicDFU iOS.framework"
+            BuildableName = "NordicDFU.framework"
             BlueprintName = "NordicDFU iOS"
             ReferencedContainer = "container:NordicDFU.xcodeproj">
          </BuildableReference>
@@ -64,7 +64,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6EFF0FE221B89680003AC682"
-            BuildableName = "NordicDFU iOS.framework"
+            BuildableName = "NordicDFU.framework"
             BlueprintName = "NordicDFU iOS"
             ReferencedContainer = "container:NordicDFU.xcodeproj">
          </BuildableReference>
