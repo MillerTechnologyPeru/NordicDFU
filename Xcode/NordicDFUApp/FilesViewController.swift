@@ -134,7 +134,7 @@ extension FilesViewController: UIDocumentPickerDelegate {
         
         for url in urls {
             
-            do { try fileManager.copyItem(at: url, to: documentsURL) }
+            do { try fileManager.copyItem(at: url, to: documentsURL.appendingPathComponent(url.lastPathComponent)) }
             catch { showErrorAlert(error.localizedDescription); return }
         }
         
