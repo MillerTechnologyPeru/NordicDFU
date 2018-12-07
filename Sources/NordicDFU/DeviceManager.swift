@@ -60,7 +60,7 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
                      timeout: TimeInterval = .gattDefaultTimeout,
                      filterDuplicates: Bool = true,
                      filterPeripherals: ([ScanData<Peripheral, Advertisement>]) -> ([ScanData<Peripheral, Advertisement>]) = { return $0 },
-                     foundDevice: @escaping (NordicPeripheral<Peripheral>) -> ()) throws {
+                     foundDevice: @escaping (NordicPeripheral<Peripheral, Advertisement>) -> ()) throws {
         
         var scanResults = try central.scan(duration: duration, filterDuplicates: filterDuplicates)
         
@@ -76,8 +76,10 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
                 
                 try central.device(for: scanResult.peripheral, filterServices: services, timeout: timeout) { [unowned self] (cache) in
                     
-                    guard let peripheral = self.peripheral(for: scanResult.peripheral, cache: cache)
+                    guard let (type, mode) = self.peripheral(for: cache)
                         else { return }
+                    
+                    let peripheral = NordicPeripheral(type: type, mode: mode, scanData: scanResult)
                     
                     foundDevice(peripheral)
                 }
@@ -94,10 +96,13 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
         
         try central.device(for: peripheral, timeout: timeout) { [unowned self] (connectionCache) in
             
-            guard let peripheral = self.peripheral(for: peripheral, cache: connectionCache)
+            guard let (type, mode) = self.peripheral(for: connectionCache)
                 else { throw GATTError.invalidPeripheral }
             
-            switch peripheral.type {
+            guard mode == .enterBootloader
+                else { throw GATTError.invalidPeripheral }
+            
+            switch type {
                 
             case .secure:
                 
@@ -123,12 +128,15 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
         
         try central.device(for: peripheral, timeout: timeout) { [unowned self] (connectionCache) in
             
-            guard let peripheral = self.peripheral(for: peripheral, cache: connectionCache)
+            guard let (type, mode) = self.peripheral(for: connectionCache)
+                else { throw GATTError.invalidPeripheral }
+            
+            guard mode == .uploadFirmware
                 else { throw GATTError.invalidPeripheral }
             
             for firmwareData in firmware.data {
                 
-                switch peripheral.type {
+                switch type {
                     
                 case .secure:
                     
@@ -148,8 +156,7 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
     
     // MARK: - Private Methods
     
-    func peripheral(for peripheral: Peripheral,
-                    cache: GATTConnectionCache<Peripheral>) -> NordicPeripheral<Peripheral>? {
+    private func peripheral(for cache: GATTConnectionCache<Peripheral>) -> (type: NordicPeripheralType, mode: NordicPeripheralMode)? {
         
         let type: NordicPeripheralType
         let mode: NordicPeripheralMode
@@ -186,17 +193,17 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
             return nil
         }
         
-        return NordicPeripheral(peripheral: peripheral, type: type, mode: mode)
+        return (type: type, mode: mode)
     }
 }
 
-public struct NordicPeripheral <Peripheral: Peer> {
-    
-    public let peripheral: Peripheral
+public struct NordicPeripheral <Peripheral: Peer, Advertisement: AdvertisementDataProtocol> {
     
     public let type: NordicPeripheralType
     
     public let mode: NordicPeripheralMode
+    
+    public let scanData: ScanData<Peripheral, Advertisement>
 }
 
 public enum NordicPeripheralType {
