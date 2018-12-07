@@ -88,7 +88,7 @@ internal extension SecureDFUService {
             let objectInfo = try controlPoint.readObjectInfo(type: type,
                                                              timeout: timeoutInterval)
             
-            // enable PRN notifications
+            // enable / disable PRN notifications
             try controlPoint.request(.setPRNValue(packetReceiptNotification),
                                      timeout: timeoutInterval)
             
@@ -98,7 +98,7 @@ internal extension SecureDFUService {
                 data.subdataNoCopy(in: $0 ..< min($0 + objectSize, data.count))
             }
             
-            var offset = 0
+            var dataObjectOffset = 0
             var lastPRNOffset: UInt32 = 0
             
             // create data objects on peripheral
@@ -108,16 +108,32 @@ internal extension SecureDFUService {
                 let createObject = SecureDFUCreateObject(type: type, size: UInt32(dataObject.count))
                 try controlPoint.request(.createObject(createObject), timeout: timeoutInterval)
                 
+                var packetsSincePRN = 0
+                
                 // upload packet
                 try packet.upload(dataObject, timeout: timeoutInterval) { [unowned self] (range) in
                     
+                    packetsSincePRN += 1
+                    
                     // bytes written so far
-                    let writtenBytes = offset + range.lowerBound + range.count
+                    let writtenBytes = dataObjectOffset + range.lowerBound + range.count
                     
                     self.log?(.write(type, offset: writtenBytes, total: data.count))
                     
                     // validate PRN
                     guard packetReceiptNotification > 0 else { return }
+                    
+                    // wait for PRN
+                    if packetsSincePRN == Int(packetReceiptNotification.rawValue) {
+                        
+                        while self.controlPoint.checksum(for: UInt32(writtenBytes)) == nil {
+                            
+                            // wait for PRN
+                            sleep(1)
+                        }
+                        
+                        packetsSincePRN = 0
+                    }
                     
                     // every PRN value (e.g. 12) packets, verify checksum
                     if let checksum = self.controlPoint.lastChecksum,
@@ -137,11 +153,11 @@ internal extension SecureDFUService {
                 }
                 
                 // send data object
-                offset += dataObject.count
+                dataObjectOffset += dataObject.count
                 
                 // validate checksum for created object
                 let checksum = try controlPoint.calculateChecksum(timeout: timeoutInterval)
-                let sentData = data.subdataNoCopy(in: 0 ..< offset)
+                let sentData = data.subdataNoCopy(in: 0 ..< dataObjectOffset)
                 let expectedChecksum = CRC32(data: sentData).crc
                 
                 guard checksum.crc == expectedChecksum
@@ -200,7 +216,7 @@ internal extension SecureDFUService {
             // send packets
             try packetRanges.forEach { (range) in
                 let packetData = data.subdataNoCopy(in: range)
-                try central.writeValue(packetData, for: characteristic, withResponse: true, timeout: timeout)
+                try central.writeValue(packetData, for: characteristic, withResponse: false, timeout: timeout)
                 try didWrite(range)
             }
         }
@@ -239,7 +255,7 @@ internal extension SecureDFUService {
         }
         
         private func notification(_ notification: ErrorValue<SecureDFUControlPoint>) {
-            
+                        
             self.notifications.append(Notification(value: notification))
         }
         
@@ -253,6 +269,22 @@ internal extension SecureDFUService {
             for notification in notifications.reversed() {
                 
                 guard case let .value(.response(.calculateChecksum(checksum))) = notification.value
+                    else { continue }
+                
+                return checksum
+            }
+            
+            return nil
+        }
+        
+        func checksum(for offset: UInt32) -> SecureDFUCalculateChecksumResponse? {
+            
+            for notification in notifications.reversed() {
+                
+                guard case let .value(.response(.calculateChecksum(checksum))) = notification.value
+                    else { continue }
+                
+                guard checksum.offset == offset
                     else { continue }
                 
                 return checksum
@@ -275,7 +307,7 @@ internal extension SecureDFUService {
                 
                 // get notification response
                 guard let notification = newNotifications.first
-                    else { usleep(100); continue }
+                    else { sleep(1); continue }
                 
                 return try notification.response()
                 
