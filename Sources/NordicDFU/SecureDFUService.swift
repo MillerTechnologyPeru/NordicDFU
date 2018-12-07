@@ -129,7 +129,7 @@ internal extension SecureDFUService {
                         while self.controlPoint.checksum(for: UInt32(writtenBytes)) == nil {
                             
                             // wait for PRN
-                            sleep(1)
+                            usleep(100)
                         }
                         
                         packetsSincePRN = 0
@@ -255,7 +255,7 @@ internal extension SecureDFUService {
         }
         
         private func notification(_ notification: ErrorValue<SecureDFUControlPoint>) {
-                        
+            
             self.notifications.append(Notification(value: notification))
         }
         
@@ -307,7 +307,7 @@ internal extension SecureDFUService {
                 
                 // get notification response
                 guard let notification = newNotifications.first
-                    else { sleep(1); continue }
+                    else { usleep(100); continue }
                 
                 return try notification.response()
                 
