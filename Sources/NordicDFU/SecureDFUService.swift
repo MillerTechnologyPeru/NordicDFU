@@ -266,6 +266,8 @@ internal extension SecureDFUService {
         
         var lastChecksum: SecureDFUCalculateChecksumResponse? {
             
+            let notifications = self.notifications
+            
             for notification in notifications.reversed() {
                 
                 guard case let .value(.response(.calculateChecksum(checksum))) = notification.value
@@ -278,6 +280,8 @@ internal extension SecureDFUService {
         }
         
         func checksum(for offset: UInt32) -> SecureDFUCalculateChecksumResponse? {
+            
+            let notifications = self.notifications
             
             for notification in notifications.reversed() {
                 
