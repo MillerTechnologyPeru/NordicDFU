@@ -21,6 +21,14 @@
 		6E3187AF21B9E01100AB0A0D /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E3187AE21B9E01100AB0A0D /* Log.swift */; };
 		6E3187B121B9F17F00AB0A0D /* FilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E3187B021B9F17F00AB0A0D /* FilesViewController.swift */; };
 		6E3187B321B9F87300AB0A0D /* PresentPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E3187B221B9F87300AB0A0D /* PresentPopover.swift */; };
+		6E3187F021BA15FA00AB0A0D /* ZIPFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E3187EF21BA15ED00AB0A0D /* ZIPFoundation.framework */; };
+		6E3187F121BA15FA00AB0A0D /* ZIPFoundation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6E3187EF21BA15ED00AB0A0D /* ZIPFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6E3187F421BA15FA00AB0A0D /* GATT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E3187D521BA15E200AB0A0D /* GATT.framework */; };
+		6E3187F521BA15FA00AB0A0D /* GATT.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6E3187D521BA15E200AB0A0D /* GATT.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6E3187F821BA15FA00AB0A0D /* DarwinGATT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E3187DF21BA15E200AB0A0D /* DarwinGATT.framework */; };
+		6E3187F921BA15FA00AB0A0D /* DarwinGATT.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6E3187DF21BA15E200AB0A0D /* DarwinGATT.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6E3187FC21BA15FA00AB0A0D /* Bluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E3187BF21BA15D400AB0A0D /* Bluetooth.framework */; };
+		6E3187FD21BA15FA00AB0A0D /* Bluetooth.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6E3187BF21BA15D400AB0A0D /* Bluetooth.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6EFF0FD221B8966A003AC682 /* NordicDFU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EFF0FC821B8966A003AC682 /* NordicDFU.framework */; };
 		6EFF0FD921B8966A003AC682 /* NordicDFU.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EFF0FCB21B8966A003AC682 /* NordicDFU.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6EFF0FE421B89680003AC682 /* NordicDFU.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EFF0FCB21B8966A003AC682 /* NordicDFU.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -146,6 +154,153 @@
 			remoteGlobalIDString = 6EFF0FE221B89680003AC682;
 			remoteInfo = "NordicDFU iOS";
 		};
+		6E3187BC21BA15D400AB0A0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3187B421BA15D100AB0A0D /* Bluetooth.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6EE84DB71CAF5C7C00A40C4D;
+			remoteInfo = "Bluetooth-macOS";
+		};
+		6E3187BE21BA15D400AB0A0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3187B421BA15D100AB0A0D /* Bluetooth.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6EF45FBD1CC6D04D001F7A39;
+			remoteInfo = "Bluetooth-iOS";
+		};
+		6E3187C021BA15D400AB0A0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3187B421BA15D100AB0A0D /* Bluetooth.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6EB2EA1D1CD5A8A7000CF975;
+			remoteInfo = "Bluetooth-watchOS";
+		};
+		6E3187C221BA15D400AB0A0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3187B421BA15D100AB0A0D /* Bluetooth.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6E49B26520532D45002EA5DC;
+			remoteInfo = "Bluetooth-tvOS";
+		};
+		6E3187C421BA15D400AB0A0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3187B421BA15D100AB0A0D /* Bluetooth.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6EE84DC11CAF5C7C00A40C4D;
+			remoteInfo = BluetoothTests;
+		};
+		6E3187D221BA15E200AB0A0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3187C621BA15E100AB0A0D /* GATT.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6EE84D841CAF419D00A40C4D;
+			remoteInfo = "GATT-macOS";
+		};
+		6E3187D421BA15E200AB0A0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3187C621BA15E100AB0A0D /* GATT.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6EF45FCF1CC6D355001F7A39;
+			remoteInfo = "GATT-iOS";
+		};
+		6E3187D621BA15E200AB0A0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3187C621BA15E100AB0A0D /* GATT.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6EE9103A1FDE5C17007AD3EA;
+			remoteInfo = "GATT-watchOS";
+		};
+		6E3187D821BA15E200AB0A0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3187C621BA15E100AB0A0D /* GATT.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6E49B23A20532A94002EA5DC;
+			remoteInfo = "GATT-tvOS";
+		};
+		6E3187DA21BA15E200AB0A0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3187C621BA15E100AB0A0D /* GATT.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6E0FC45A20F873B1009269B4;
+			remoteInfo = GATTTests;
+		};
+		6E3187DC21BA15E200AB0A0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3187C621BA15E100AB0A0D /* GATT.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6EA5D1562107DE66009998FD;
+			remoteInfo = "DarwinGATT-macOS";
+		};
+		6E3187DE21BA15E200AB0A0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3187C621BA15E100AB0A0D /* GATT.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6EA5D16D2107DE6A009998FD;
+			remoteInfo = "DarwinGATT-iOS";
+		};
+		6E3187E021BA15E200AB0A0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3187C621BA15E100AB0A0D /* GATT.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6EA5D1842107DE6D009998FD;
+			remoteInfo = "DarwinGATT-watchOS";
+		};
+		6E3187E221BA15E200AB0A0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3187C621BA15E100AB0A0D /* GATT.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6EA5D19B2107DE70009998FD;
+			remoteInfo = "DarwinGATT-tvOS";
+		};
+		6E3187EA21BA15ED00AB0A0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3187E421BA15EC00AB0A0D /* ZIPFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "ZIPFoundation::ZIPFoundation::Product";
+			remoteInfo = "ZIPFoundation macOS";
+		};
+		6E3187EC21BA15ED00AB0A0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3187E421BA15EC00AB0A0D /* ZIPFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = "ZIPFoundation::ZIPFoundationTests::Product";
+			remoteInfo = ZIPFoundationTests;
+		};
+		6E3187EE21BA15ED00AB0A0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3187E421BA15EC00AB0A0D /* ZIPFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6EFF111E21B97CCE003AC682;
+			remoteInfo = "ZIPFoundation iOS";
+		};
+		6E3187F221BA15FA00AB0A0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3187E421BA15EC00AB0A0D /* ZIPFoundation.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 6EFF111121B97CCE003AC682;
+			remoteInfo = "ZIPFoundation iOS";
+		};
+		6E3187F621BA15FA00AB0A0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3187C621BA15E100AB0A0D /* GATT.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 6EF45FBF1CC6D355001F7A39;
+			remoteInfo = "GATT-iOS";
+		};
+		6E3187FA21BA15FA00AB0A0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3187C621BA15E100AB0A0D /* GATT.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 6EA5D1582107DE6A009998FD;
+			remoteInfo = "DarwinGATT-iOS";
+		};
+		6E3187FE21BA15FA00AB0A0D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3187B421BA15D100AB0A0D /* Bluetooth.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 6EF45FA21CC6D04D001F7A39;
+			remoteInfo = "Bluetooth-iOS";
+		};
 		6EFF0FD321B8966A003AC682 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6EFF0FBF21B89669003AC682 /* Project object */;
@@ -170,6 +325,10 @@
 			dstSubfolderSpec = 10;
 			files = (
 				6E31879821B9DB0100AB0A0D /* NordicDFU.framework in Embed Frameworks */,
+				6E3187F921BA15FA00AB0A0D /* DarwinGATT.framework in Embed Frameworks */,
+				6E3187F521BA15FA00AB0A0D /* GATT.framework in Embed Frameworks */,
+				6E3187FD21BA15FA00AB0A0D /* Bluetooth.framework in Embed Frameworks */,
+				6E3187F121BA15FA00AB0A0D /* ZIPFoundation.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -200,6 +359,9 @@
 		6E3187AE21B9E01100AB0A0D /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		6E3187B021B9F17F00AB0A0D /* FilesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesViewController.swift; sourceTree = "<group>"; };
 		6E3187B221B9F87300AB0A0D /* PresentPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentPopover.swift; sourceTree = "<group>"; };
+		6E3187B421BA15D100AB0A0D /* Bluetooth.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Bluetooth.xcodeproj; path = ../../Carthage/Checkouts/Bluetooth/Xcode/Bluetooth.xcodeproj; sourceTree = "<group>"; };
+		6E3187C621BA15E100AB0A0D /* GATT.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GATT.xcodeproj; path = ../../Carthage/Checkouts/GATT/Xcode/GATT.xcodeproj; sourceTree = "<group>"; };
+		6E3187E421BA15EC00AB0A0D /* ZIPFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZIPFoundation.xcodeproj; path = ../../Carthage/Checkouts/Zip/ZIPFoundation.xcodeproj; sourceTree = "<group>"; };
 		6EFF0FC821B8966A003AC682 /* NordicDFU.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NordicDFU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6EFF0FCB21B8966A003AC682 /* NordicDFU.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NordicDFU.h; sourceTree = "<group>"; };
 		6EFF0FCC21B8966A003AC682 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -291,6 +453,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				6E31879721B9DB0100AB0A0D /* NordicDFU.framework in Frameworks */,
+				6E3187F821BA15FA00AB0A0D /* DarwinGATT.framework in Frameworks */,
+				6E3187F421BA15FA00AB0A0D /* GATT.framework in Frameworks */,
+				6E3187FC21BA15FA00AB0A0D /* Bluetooth.framework in Frameworks */,
+				6E3187F021BA15FA00AB0A0D /* ZIPFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,6 +495,9 @@
 		6E31878621B9DABB00AB0A0D /* NordicDFUApp */ = {
 			isa = PBXGroup;
 			children = (
+				6E3187E421BA15EC00AB0A0D /* ZIPFoundation.xcodeproj */,
+				6E3187C621BA15E100AB0A0D /* GATT.xcodeproj */,
+				6E3187B421BA15D100AB0A0D /* Bluetooth.xcodeproj */,
 				6E31878721B9DABC00AB0A0D /* AppDelegate.swift */,
 				6E31878921B9DABC00AB0A0D /* DevicesViewController.swift */,
 				6E3187B021B9F17F00AB0A0D /* FilesViewController.swift */,
@@ -344,6 +513,44 @@
 				6E31879321B9DABF00AB0A0D /* Info.plist */,
 			);
 			path = NordicDFUApp;
+			sourceTree = "<group>";
+		};
+		6E3187B521BA15D100AB0A0D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6E3187BD21BA15D400AB0A0D /* Bluetooth.framework */,
+				6E3187BF21BA15D400AB0A0D /* Bluetooth.framework */,
+				6E3187C121BA15D400AB0A0D /* Bluetooth.framework */,
+				6E3187C321BA15D400AB0A0D /* Bluetooth.framework */,
+				6E3187C521BA15D400AB0A0D /* BluetoothTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6E3187C721BA15E100AB0A0D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6E3187D321BA15E200AB0A0D /* GATT.framework */,
+				6E3187D521BA15E200AB0A0D /* GATT.framework */,
+				6E3187D721BA15E200AB0A0D /* GATT.framework */,
+				6E3187D921BA15E200AB0A0D /* GATT.framework */,
+				6E3187DB21BA15E200AB0A0D /* GATTTests.xctest */,
+				6E3187DD21BA15E200AB0A0D /* DarwinGATT.framework */,
+				6E3187DF21BA15E200AB0A0D /* DarwinGATT.framework */,
+				6E3187E121BA15E200AB0A0D /* DarwinGATT.framework */,
+				6E3187E321BA15E200AB0A0D /* DarwinGATT.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6E3187E521BA15EC00AB0A0D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6E3187EB21BA15ED00AB0A0D /* ZIPFoundation.framework */,
+				6E3187ED21BA15ED00AB0A0D /* ZIPFoundationTests.xctest */,
+				6E3187EF21BA15ED00AB0A0D /* ZIPFoundation.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		6EFF0FBE21B89669003AC682 = {
@@ -542,11 +749,14 @@
 				6E31878221B9DABB00AB0A0D /* Frameworks */,
 				6E31878321B9DABB00AB0A0D /* Resources */,
 				6E31879B21B9DB0200AB0A0D /* Embed Frameworks */,
-				6E31879C21B9DB0A00AB0A0D /* Carthage */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				6E3187FF21BA15FA00AB0A0D /* PBXTargetDependency */,
+				6E3187F721BA15FA00AB0A0D /* PBXTargetDependency */,
+				6E3187FB21BA15FA00AB0A0D /* PBXTargetDependency */,
+				6E3187F321BA15FA00AB0A0D /* PBXTargetDependency */,
 				6E31879A21B9DB0100AB0A0D /* PBXTargetDependency */,
 			);
 			name = NordicDFUApp;
@@ -661,6 +871,20 @@
 			mainGroup = 6EFF0FBE21B89669003AC682;
 			productRefGroup = 6EFF0FC921B8966A003AC682 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 6E3187B521BA15D100AB0A0D /* Products */;
+					ProjectRef = 6E3187B421BA15D100AB0A0D /* Bluetooth.xcodeproj */;
+				},
+				{
+					ProductGroup = 6E3187C721BA15E100AB0A0D /* Products */;
+					ProjectRef = 6E3187C621BA15E100AB0A0D /* GATT.xcodeproj */;
+				},
+				{
+					ProductGroup = 6E3187E521BA15EC00AB0A0D /* Products */;
+					ProjectRef = 6E3187E421BA15EC00AB0A0D /* ZIPFoundation.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				6EFF0FC721B8966A003AC682 /* NordicDFU macOS */,
@@ -671,6 +895,128 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		6E3187BD21BA15D400AB0A0D /* Bluetooth.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Bluetooth.framework;
+			remoteRef = 6E3187BC21BA15D400AB0A0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6E3187BF21BA15D400AB0A0D /* Bluetooth.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Bluetooth.framework;
+			remoteRef = 6E3187BE21BA15D400AB0A0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6E3187C121BA15D400AB0A0D /* Bluetooth.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Bluetooth.framework;
+			remoteRef = 6E3187C021BA15D400AB0A0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6E3187C321BA15D400AB0A0D /* Bluetooth.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Bluetooth.framework;
+			remoteRef = 6E3187C221BA15D400AB0A0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6E3187C521BA15D400AB0A0D /* BluetoothTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = BluetoothTests.xctest;
+			remoteRef = 6E3187C421BA15D400AB0A0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6E3187D321BA15E200AB0A0D /* GATT.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = GATT.framework;
+			remoteRef = 6E3187D221BA15E200AB0A0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6E3187D521BA15E200AB0A0D /* GATT.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = GATT.framework;
+			remoteRef = 6E3187D421BA15E200AB0A0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6E3187D721BA15E200AB0A0D /* GATT.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = GATT.framework;
+			remoteRef = 6E3187D621BA15E200AB0A0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6E3187D921BA15E200AB0A0D /* GATT.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = GATT.framework;
+			remoteRef = 6E3187D821BA15E200AB0A0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6E3187DB21BA15E200AB0A0D /* GATTTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = GATTTests.xctest;
+			remoteRef = 6E3187DA21BA15E200AB0A0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6E3187DD21BA15E200AB0A0D /* DarwinGATT.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = DarwinGATT.framework;
+			remoteRef = 6E3187DC21BA15E200AB0A0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6E3187DF21BA15E200AB0A0D /* DarwinGATT.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = DarwinGATT.framework;
+			remoteRef = 6E3187DE21BA15E200AB0A0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6E3187E121BA15E200AB0A0D /* DarwinGATT.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = DarwinGATT.framework;
+			remoteRef = 6E3187E021BA15E200AB0A0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6E3187E321BA15E200AB0A0D /* DarwinGATT.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = DarwinGATT.framework;
+			remoteRef = 6E3187E221BA15E200AB0A0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6E3187EB21BA15ED00AB0A0D /* ZIPFoundation.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ZIPFoundation.framework;
+			remoteRef = 6E3187EA21BA15ED00AB0A0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6E3187ED21BA15ED00AB0A0D /* ZIPFoundationTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ZIPFoundationTests.xctest;
+			remoteRef = 6E3187EC21BA15ED00AB0A0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6E3187EF21BA15ED00AB0A0D /* ZIPFoundation.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ZIPFoundation.framework;
+			remoteRef = 6E3187EE21BA15ED00AB0A0D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		6E31878321B9DABB00AB0A0D /* Resources */ = {
@@ -718,31 +1064,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		6E31879C21B9DB0A00AB0A0D /* Carthage */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/../Carthage/Build/iOS/Bluetooth.framework",
-				"$(SRCROOT)/../Carthage/Build/iOS/GATT.framework",
-				"$(SRCROOT)/../Carthage/Build/iOS/DarwinGATT.framework",
-				"$(SRCROOT)/../Carthage/Build/iOS/ZIPFoundation.framework",
-			);
-			name = Carthage;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		6E31878121B9DABB00AB0A0D /* Sources */ = {
@@ -896,6 +1217,26 @@
 			target = 6EFF0FE221B89680003AC682 /* NordicDFU iOS */;
 			targetProxy = 6E31879921B9DB0100AB0A0D /* PBXContainerItemProxy */;
 		};
+		6E3187F321BA15FA00AB0A0D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "ZIPFoundation iOS";
+			targetProxy = 6E3187F221BA15FA00AB0A0D /* PBXContainerItemProxy */;
+		};
+		6E3187F721BA15FA00AB0A0D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "GATT-iOS";
+			targetProxy = 6E3187F621BA15FA00AB0A0D /* PBXContainerItemProxy */;
+		};
+		6E3187FB21BA15FA00AB0A0D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "DarwinGATT-iOS";
+			targetProxy = 6E3187FA21BA15FA00AB0A0D /* PBXContainerItemProxy */;
+		};
+		6E3187FF21BA15FA00AB0A0D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Bluetooth-iOS";
+			targetProxy = 6E3187FE21BA15FA00AB0A0D /* PBXContainerItemProxy */;
+		};
 		6EFF0FD421B8966A003AC682 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 6EFF0FC721B8966A003AC682 /* NordicDFU macOS */;
@@ -936,7 +1277,6 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9K7CRQPNYD;
-				FRAMEWORK_SEARCH_PATHS = $SRCROOT/../Carthage/Build/iOS;
 				INFOPLIST_FILE = NordicDFUApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -959,7 +1299,6 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9K7CRQPNYD;
-				FRAMEWORK_SEARCH_PATHS = $SRCROOT/../Carthage/Build/iOS;
 				INFOPLIST_FILE = NordicDFUApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (

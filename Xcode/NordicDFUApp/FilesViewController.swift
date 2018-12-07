@@ -36,7 +36,7 @@ final class FilesViewController: UITableViewController {
         if didCancel != nil {
             
             // set cancel button
-            self.navigationItem.rightBarButtonItems?.append(UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel)))
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
         }
         
         refresh()
