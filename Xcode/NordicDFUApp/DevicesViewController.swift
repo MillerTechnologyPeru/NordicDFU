@@ -102,6 +102,27 @@ final class DevicesViewController: UITableViewController {
         self.devices = devices
     }
     
+    private func uploadFirmware(at url: URL, for device: Device) {
+        
+        performActivity({
+            let zip = try DFUStreamZip(url: url)
+            let start = Date()
+            try DeviceManager.shared.uploadFirmware(zip.firmware, for: device.scanData.peripheral, timeout: 30) {
+                switch $0 {
+                case let .write(type, offset: offset, total: total):
+                     let percentage = (Float(offset) / Float(total)) * 100
+                     log("Wrote \(offset) bytes for \(type) object (\(String(format: "%.2f", percentage))%)")
+                case let .verify(type, offset: offset, checksum: checksum):
+                    log("Verified \(offset) bytes for \(type) object (\(String(checksum, radix: 16)))")
+                case let .execute(type, index: index, total: total):
+                    log("Executed \(type) object \(index + 1)/\(total)")
+                }
+            }
+            let duration = Date().timeIntervalSince(start)
+            log("Successfully uploaded firmware (\(String(format: "%.2f", duration))s)")
+        })
+    }
+    
     private func configure(cell: UITableViewCell, at indexPath: IndexPath) {
         
         let device = self[indexPath]
@@ -157,7 +178,17 @@ final class DevicesViewController: UITableViewController {
         case .uploadFirmware:
             
             // select file to upload
-            break
+            let filesViewController = self.storyboard!.instantiateViewController(withIdentifier: "FilesViewController") as! FilesViewController
+            
+            filesViewController.didCancel = {
+                $0.dismiss(animated: true, completion: nil)
+            }
+            filesViewController.didSelect = { [unowned self] in
+                $0.dismiss(animated: true, completion: nil)
+                self.uploadFirmware(at: $1, for: device)
+            }
+            
+            present(UINavigationController(rootViewController: filesViewController), animated: true, completion: nil)
         }
     }
 }

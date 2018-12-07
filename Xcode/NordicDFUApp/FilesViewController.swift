@@ -13,6 +13,10 @@ final class FilesViewController: UITableViewController {
     
     // MARK: - Properties
     
+    var didSelect: ((FilesViewController, URL) -> ())?
+    
+    var didCancel: ((FilesViewController) -> ())?
+    
     private var files = [URL]() {
         
         didSet { tableView.reloadData() }
@@ -29,10 +33,21 @@ final class FilesViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if didCancel != nil {
+            
+            // set cancel button
+            self.navigationItem.rightBarButtonItems?.append(UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel)))
+        }
+        
         refresh()
     }
     
     // MARK: - Actions
+    
+    @IBAction func cancel(_ sender: Any? = nil) {
+        
+        didCancel?(self)
+    }
     
     @IBAction func refresh(_ sender: Any? = nil) {
         
@@ -103,6 +118,17 @@ final class FilesViewController: UITableViewController {
     }
     
     // MARK: - UITableViewDelegate
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        defer { tableView.deselectRow(at: indexPath, animated: true) }
+        
+        let fileURL = self[indexPath]
+        
+        if let didSelect = didSelect {
+            didSelect(self, fileURL)
+        }
+    }
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         

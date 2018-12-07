@@ -30,7 +30,7 @@
         <!--Devices-->
         <scene sceneID="324-m8-uvm">
             <objects>
-                <tableViewController id="sLn-P2-T2b" customClass="DevicesViewController" customModule="NordicDFUApp" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="DevicesViewController" id="sLn-P2-T2b" customClass="DevicesViewController" customModule="NordicDFUApp" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="TfI-9T-2yq">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -95,7 +95,7 @@
         <!--Firmware-->
         <scene sceneID="qe2-h7-PcG">
             <objects>
-                <tableViewController id="vWF-I2-ln6" customClass="FilesViewController" customModule="NordicDFUApp" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="FilesViewController" id="vWF-I2-ln6" customClass="FilesViewController" customModule="NordicDFUApp" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="LYg-Sw-395">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
