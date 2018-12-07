@@ -77,7 +77,21 @@
                             <outlet property="delegate" destination="sLn-P2-T2b" id="tXb-yh-W0k"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Devices" id="Xpg-nb-KBU"/>
+                    <navigationItem key="navigationItem" title="Devices" id="Xpg-nb-KBU">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="xhx-nt-5cW">
+                            <view key="customView" contentMode="scaleToFill" misplaced="YES" id="Qp7-mJ-Z2T">
+                                <rect key="frame" x="326" y="0.0" width="33" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="whh-St-G0y">
+                                        <rect key="frame" x="6.5" y="15" width="20" height="20"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                        </barButtonItem>
+                    </navigationItem>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="x3E-94-8wn">
                         <autoresizingMask key="autoresizingMask"/>
                         <connections>
@@ -85,6 +99,7 @@
                         </connections>
                     </refreshControl>
                     <connections>
+                        <outlet property="activityIndicator" destination="whh-St-G0y" id="ubm-uN-wg7"/>
                         <outlet property="searchBar" destination="VUK-Om-6ED" id="g40-QJ-YVu"/>
                     </connections>
                 </tableViewController>
@@ -147,7 +162,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="f2U-ih-KeG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-354" y="482"/>
+            <point key="canvasLocation" x="-407" y="482"/>
         </scene>
         <!--Firmware-->
         <scene sceneID="Wwx-oX-9VH">

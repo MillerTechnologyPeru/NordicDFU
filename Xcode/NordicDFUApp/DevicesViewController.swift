@@ -25,6 +25,8 @@ final class DevicesViewController: UITableViewController {
     
     @IBOutlet private(set) weak var searchBar: UISearchBar!
     
+    @IBOutlet private(set) weak var activityIndicator: UIActivityIndicatorView!
+    
     // MARK: - Properties
     
     private var devices = [Device]() {
@@ -215,11 +217,25 @@ extension DevicesViewController: ActivityIndicatorViewController {
     
     func showActivity() {
         
-        
+        if refreshControl?.isRefreshing ?? false {
+            
+            // refresh control animating
+            
+        } else {
+            
+            activityIndicator.startAnimating()
+        }
     }
     
     func hideActivity(animated: Bool) {
         
-        
+        if refreshControl?.isRefreshing ?? false {
+            
+            refreshControl?.endRefreshing()
+            
+        } else {
+            
+            activityIndicator.stopAnimating()
+        }
     }
 }
