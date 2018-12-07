@@ -51,6 +51,10 @@ final class DevicesViewController: UITableViewController {
         if let filter = UserDefaults.standard.string(forKey: DevicesViewController.filterDefaultsKey), filter.isEmpty == false {
             
             scan(filter: filter)
+            
+        } else {
+            
+            hideActivity(animated: false)
         }
     }
 
