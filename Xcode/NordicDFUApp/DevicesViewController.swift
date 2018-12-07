@@ -19,20 +19,37 @@ final class DevicesViewController: UITableViewController {
     
     typealias Device = NordicPeripheral<NativeCentral.Peripheral, NativeCentral.Advertisement>
     
+    private static let filterDefaultsKey = "DevicesFilter"
+    
+    // MARK: - IB Outlets
+    
+    @IBOutlet private(set) weak var searchBar: UISearchBar!
+    
     // MARK: - Properties
     
     private var devices = [Device]() {
         didSet { tableView.reloadData() }
     }
     
-    private var filter = ""
+    private var filter: String = "" {
+        
+        didSet {
+            UserDefaults.standard.set(filter, forKey: DevicesViewController.filterDefaultsKey)
+            guard UserDefaults.standard.synchronize()
+                else { assertionFailure("Could not save user defaults"); return }
+        }
+    }
     
     // MARK: - Loading
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        // load filter string
+        if let filter = UserDefaults.standard.string(forKey: DevicesViewController.filterDefaultsKey), filter.isEmpty == false {
+            
+            scan(filter: filter)
+        }
     }
 
     // MARK: - Actions
@@ -50,15 +67,24 @@ final class DevicesViewController: UITableViewController {
         }
         
         performActivity({
-            try DeviceManager.shared.scan(duration: 10, filterPeripherals: filterPeripherals) { (device) in
+            try DeviceManager.shared.scan(duration: 5, filterPeripherals: filterPeripherals) { (device) in
                 mainQueue { [weak self] in self?.foundDevice(device) }
             }
-        }, completion: { (viewController, value) in
+        }, completion: { (viewController, _) in
             viewController.refreshControl?.endRefreshing()
         })
     }
     
     // MARK: - Methods
+    
+    private func scan(filter: String) {
+        
+        self.filter = filter
+        if self.searchBar.text != filter {
+            self.searchBar.text = filter
+        }
+        self.scan()
+    }
     
     private subscript (indexPath: IndexPath) -> Device {
         
@@ -81,7 +107,11 @@ final class DevicesViewController: UITableViewController {
         let device = self[indexPath]
         
         cell.textLabel?.text = device.scanData.advertisementData.localName ?? device.scanData.peripheral.description
-        cell.detailTextLabel?.text = "Type: \(device.type)\nMode:\(device.mode)"
+        
+        cell.detailTextLabel?.text = """
+        Type: \(device.type)
+        Mode: \(device.mode)
+        """
     }
     
     // MARK: - UITableViewDataSource
@@ -104,7 +134,35 @@ final class DevicesViewController: UITableViewController {
         
         return cell
     }
+    
+    // MARK: - UITableViewDelegate
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        defer { tableView.deselectRow(at: indexPath, animated: true) }
+        
+        let device = self[indexPath]
+        
+        switch device.mode {
+            
+        case .enterBootloader:
+            
+            // enter bootloader mode
+            performActivity({
+                try DeviceManager.shared.enterBootloader(for: device.scanData.peripheral)
+            }, completion: { (viewController, _) in
+                viewController.scan(filter: "Dfu")
+            })
+            
+        case .uploadFirmware:
+            
+            // select file to upload
+            break
+        }
+    }
 }
+
+// MARK: - UISearchBarDelegate
 
 extension DevicesViewController: UISearchBarDelegate {
     

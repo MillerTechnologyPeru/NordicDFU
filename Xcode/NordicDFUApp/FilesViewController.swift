@@ -112,7 +112,6 @@ final class FilesViewController: UITableViewController {
             
             do { try self.fileManager.removeItem(at: fileURL) }
             catch {
-                log("Error: \(error)")
                 self.showErrorAlert(error.localizedDescription)
                 return
             }
@@ -134,8 +133,16 @@ extension FilesViewController: UIDocumentPickerDelegate {
         
         for url in urls {
             
-            do { try fileManager.copyItem(at: url, to: documentsURL.appendingPathComponent(url.lastPathComponent)) }
-            catch { showErrorAlert(error.localizedDescription); return }
+            do {
+                let newFileURL = documentsURL.appendingPathComponent(url.lastPathComponent)
+                try fileManager.copyItem(at: url,
+                                          to: newFileURL)
+            }
+            catch {
+                showErrorAlert(error.localizedDescription)
+                return
+                
+            }
         }
         
         refresh()

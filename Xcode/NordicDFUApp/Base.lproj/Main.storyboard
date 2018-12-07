@@ -84,6 +84,9 @@
                             <action selector="scan" destination="sLn-P2-T2b" eventType="valueChanged" id="etO-bz-w0v"/>
                         </connections>
                     </refreshControl>
+                    <connections>
+                        <outlet property="searchBar" destination="VUK-Om-6ED" id="g40-QJ-YVu"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mP6-Qg-2CE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

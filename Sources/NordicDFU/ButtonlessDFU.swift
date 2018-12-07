@@ -193,6 +193,9 @@ internal extension CentralProtocol {
                 } else {
                     
                     // success
+                    #if os(iOS) || os(macOS)
+                    sleep(2)
+                    #endif
                     return
                 }
             }
