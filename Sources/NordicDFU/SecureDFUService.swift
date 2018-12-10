@@ -403,7 +403,7 @@ private extension SecureDFUService.ControlPointNotification {
     }
 }
 
-public enum SecureDFUEvent {
+public enum SecureDFUEvent: Equatable, Hashable {
     
     case write(SecureDFUProcedureType, offset: Int, total: Int)
     case verify(SecureDFUProcedureType, offset: Int, checksum: UInt32)

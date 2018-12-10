@@ -21,7 +21,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        NativeCentral.shared.log = { log("Central: \($0)") }
         DeviceManager.shared.log = { log("NordicDFU: \($0)") }
         
         return true

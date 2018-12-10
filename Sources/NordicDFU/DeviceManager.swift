@@ -197,7 +197,7 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
     }
 }
 
-public struct NordicPeripheral <Peripheral: Peer, Advertisement: AdvertisementDataProtocol> {
+public struct NordicPeripheral <Peripheral: Peer, Advertisement: AdvertisementDataProtocol>: Equatable {
     
     public let type: NordicPeripheralType
     
@@ -206,13 +206,13 @@ public struct NordicPeripheral <Peripheral: Peer, Advertisement: AdvertisementDa
     public let scanData: ScanData<Peripheral, Advertisement>
 }
 
-public enum NordicPeripheralType {
+public enum NordicPeripheralType: Equatable, Hashable {
     
     case legacy
     case secure
 }
 
-public enum NordicPeripheralMode {
+public enum NordicPeripheralMode: Equatable, Hashable {
     
     case enterBootloader
     case uploadFirmware
