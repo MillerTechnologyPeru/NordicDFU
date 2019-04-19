@@ -6,7 +6,7 @@
         "repositoryURL": "https://github.com/PureSwift/Bluetooth.git",
         "state": {
           "branch": "master",
-          "revision": "7472f17ea0df34c85f6cc3a9dc4bc305889e77ac",
+          "revision": "a666bd86bb83a7161c9ec451e9801d55d3c3674c",
           "version": null
         }
       },
@@ -15,17 +15,8 @@
         "repositoryURL": "https://github.com/PureSwift/BluetoothLinux.git",
         "state": {
           "branch": "master",
-          "revision": "707c593b0b238168edea455312ef81e0dd7d324f",
+          "revision": "8be972044ebf59ddc35ad890d4cd3e99f7803a5c",
           "version": null
-        }
-      },
-      {
-        "package": "CZlib",
-        "repositoryURL": "https://github.com/IBM-Swift/CZlib.git",
-        "state": {
-          "branch": null,
-          "revision": "a781e6ef055fb8f0d608fe30a28e6a0f62ae498b",
-          "version": "0.1.2"
         }
       },
       {
@@ -33,7 +24,7 @@
         "repositoryURL": "https://github.com/PureSwift/GATT.git",
         "state": {
           "branch": "master",
-          "revision": "9205cd5541952cd0a79e5d3e6047ad87e72a5040",
+          "revision": "5c75c835c668468c49f373673b960ef6c23bd5ff",
           "version": null
         }
       },
@@ -42,7 +33,7 @@
         "repositoryURL": "https://github.com/PureSwift/Zip.git",
         "state": {
           "branch": "master",
-          "revision": "b5c53bef2deb7b20659b03b1223f0942599e5c41",
+          "revision": "edbeaa39b426e54702194b0a601342322f01e400",
           "version": null
         }
       }
