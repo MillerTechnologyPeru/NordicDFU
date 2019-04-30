@@ -142,9 +142,15 @@ final class CRC32: Hashable {
     fileprivate var initialized = false
     fileprivate(set) var crc: UInt32 = 0
     
+    #if swift(>=4.2)
+    func hash(into hasher: inout Hasher) {
+        crc.hash(into: &hasher)
+    }
+    #else
     var hashValue: Int {
         return Int(crc)
     }
+    #endif
     
     init() {}
     

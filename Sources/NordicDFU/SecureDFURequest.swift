@@ -121,7 +121,7 @@ public struct SecureDFUReadObjectInfo: SecureDFURequestProtocol {
     }
 }
 
-public struct SecureDFUSetPacketReceiptNotification: SecureDFURequestProtocol {
+public struct SecureDFUSetPacketReceiptNotification: SecureDFURequestProtocol, Equatable, Hashable {
     
     public static let opcode: SecureDFUOpcode = .setPRNValue
     
@@ -164,22 +164,6 @@ extension SecureDFUSetPacketReceiptNotification: ExpressibleByIntegerLiteral {
     public init(integerLiteral value: UInt16) {
         
         self.init(rawValue: value)
-    }
-}
-
-extension SecureDFUSetPacketReceiptNotification: Equatable {
-    
-    public static func == (lhs: SecureDFUSetPacketReceiptNotification, rhs: SecureDFUSetPacketReceiptNotification) -> Bool {
-        
-        return lhs.rawValue == rhs.rawValue
-    }
-}
-
-extension SecureDFUSetPacketReceiptNotification: Hashable {
-    
-    public var hashValue: Int {
-        
-        return rawValue.hashValue
     }
 }
 

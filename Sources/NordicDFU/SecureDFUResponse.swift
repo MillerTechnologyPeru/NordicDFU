@@ -21,7 +21,7 @@ public enum SecureDFUResponse {
 
 public extension SecureDFUResponse {
     
-    public var error: Error? {
+    var error: Error? {
         
         switch self {
         case let .error(response):
@@ -84,7 +84,7 @@ public extension SecureDFUResponse {
     
     internal static let length = 3
     
-    public init?(data: Data) {
+    init?(data: Data) {
         
         guard data.count >= type(of: self).length,
             let opcode = SecureDFUOpcode(rawValue: data[0]),
@@ -132,7 +132,7 @@ public extension SecureDFUResponse {
         }
     }
     
-    public var data: Data {
+    var data: Data {
         
         return rawValue.data
     }

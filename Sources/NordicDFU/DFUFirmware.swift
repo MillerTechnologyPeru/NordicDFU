@@ -16,7 +16,7 @@ public struct DFUFirmware {
 
 public extension DFUFirmware {
     
-    public struct FirmwareData {
+    struct FirmwareData {
         
         /// Firmware type.
         public let type: BitMaskOptionSet<DFUFirmwareType>

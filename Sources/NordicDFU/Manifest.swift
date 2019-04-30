@@ -34,7 +34,7 @@ public enum DFUManifestInfo {
 
 public extension DFUManifestInfo {
     
-    public var application: DFUManifestFirmwareInfo? {
+    var application: DFUManifestFirmwareInfo? {
         
         switch self {
         case let .softdevice(value): return value.application
@@ -44,7 +44,7 @@ public extension DFUManifestInfo {
         }
     }
     
-    public var version: DFUVersion? {
+    var version: DFUVersion? {
         
         switch self {
         case let .softdevice(value): return value.version

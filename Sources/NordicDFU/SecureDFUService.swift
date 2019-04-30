@@ -50,7 +50,7 @@ internal extension CentralProtocol {
 
 internal extension SecureDFUService {
     
-    internal final class DFUExecutor <Central: CentralProtocol> {
+    final class DFUExecutor <Central: CentralProtocol> {
         
         let central: Central
         
