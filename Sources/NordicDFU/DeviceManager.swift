@@ -62,9 +62,12 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
                      filterPeripherals: ([ScanData<Peripheral, Advertisement>]) -> ([ScanData<Peripheral, Advertisement>]) = { return $0 },
                      foundDevice: @escaping (NordicPeripheral<Peripheral, Advertisement>) -> ()) throws {
         
-        var scanResults = try central.scan(duration: duration, filterDuplicates: filterDuplicates)
+        var foundDevices = [Peripheral: ScanData<Peripheral, Advertisement>]()
+        try central.scan(duration: duration, filterDuplicates: filterDuplicates) {
+            foundDevices[$0.peripheral] = $0
+        }
         
-        scanResults = filterPeripherals(scanResults)
+        let scanResults = filterPeripherals(Array(foundDevices.values))
         
         for scanResult in scanResults {
             
