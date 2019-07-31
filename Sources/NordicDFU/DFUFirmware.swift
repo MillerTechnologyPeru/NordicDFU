@@ -9,14 +9,14 @@ import Foundation
 import Bluetooth
 
 /// Nordic DFU Firmware
-public struct DFUFirmware {
+public struct DFUFirmware: Equatable, Hashable {
     
     public let data: [FirmwareData]
 }
 
 public extension DFUFirmware {
     
-    struct FirmwareData {
+    struct FirmwareData: Equatable, Hashable {
         
         /// Firmware type.
         public let type: BitMaskOptionSet<DFUFirmwareType>
