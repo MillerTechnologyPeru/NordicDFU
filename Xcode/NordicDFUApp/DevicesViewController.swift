@@ -116,8 +116,27 @@ final class DevicesViewController: UITableViewController {
         
         self.present(alert, animated: true, completion: nil)
         
+        struct Progress {
+            var objectType: SecureDFUProcedureType = .command
+            var objectIndex: Int = 0
+            var objectTotal: Int = 0
+            var bytesOffset: Int = 0
+            var bytesTotal: Int = 0
+            var percentage: Float {
+                return (Float(bytesOffset) / Float(bytesTotal)) * 100
+            }
+        }
+        
         func printMessage(_ text: String) {
             log(text)
+            mainQueue { alert.message = text }
+        }
+        
+        var progress = Progress()
+        
+        func showProgress(_ updateProgress: (inout Progress) -> ()) {
+            updateProgress(&progress)
+            let text = "Executed \(progress.objectType) object \(progress.objectIndex + 1)/\(progress.objectTotal) (\(String(format: "%.1f", progress.percentage))%)"
             mainQueue { alert.message = text }
         }
         
@@ -127,12 +146,20 @@ final class DevicesViewController: UITableViewController {
             try DeviceManager.shared.uploadFirmware(zip.firmware, for: device.scanData.peripheral, timeout: 30) {
                 switch $0 {
                 case let .write(type, offset: offset, total: total):
-                     let percentage = (Float(offset) / Float(total)) * 100
-                     log("Wrote \(offset) bytes for \(type) object (\(String(format: "%.2f", percentage))%)")
+                     showProgress {
+                        $0.objectType = type
+                        $0.bytesOffset = offset
+                        $0.bytesTotal = total
+                    }
                 case let .verify(type, offset: offset, checksum: checksum):
-                     log("Verified \(offset) bytes for \(type) object (\(String(checksum, radix: 16)))")
+                    log("Verified \(offset) bytes for \(type) object (\(String(checksum, radix: 16)))")
                 case let .execute(type, index: index, total: total):
-                    printMessage("Executed \(type) object \(index + 1)/\(total)")
+                    log("Executed \(type) object \(index + 1)/\(total)")
+                    showProgress {
+                        $0.objectType = type
+                        $0.objectIndex = index
+                        $0.objectTotal = total
+                    }
                 }
             }
             let duration = Date().timeIntervalSince(start)
