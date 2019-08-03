@@ -110,6 +110,17 @@ final class DevicesViewController: UITableViewController {
     
     private func uploadFirmware(at url: URL, for device: Device) {
         
+        let alert = UIAlertController(title: NSLocalizedString("Updating", comment: "Updating"),
+                                      message: "Connecting...",
+                                      preferredStyle: .alert)
+        
+        self.present(alert, animated: true, completion: nil)
+        
+        func printMessage(_ text: String) {
+            log(text)
+            mainQueue { alert.message = text }
+        }
+        
         performActivity({
             let zip = try DFUStreamZip(url: url)
             let start = Date()
@@ -119,13 +130,28 @@ final class DevicesViewController: UITableViewController {
                      let percentage = (Float(offset) / Float(total)) * 100
                      log("Wrote \(offset) bytes for \(type) object (\(String(format: "%.2f", percentage))%)")
                 case let .verify(type, offset: offset, checksum: checksum):
-                    log("Verified \(offset) bytes for \(type) object (\(String(checksum, radix: 16)))")
+                     log("Verified \(offset) bytes for \(type) object (\(String(checksum, radix: 16)))")
                 case let .execute(type, index: index, total: total):
-                    log("Executed \(type) object \(index + 1)/\(total)")
+                    printMessage("Executed \(type) object \(index + 1)/\(total)")
                 }
             }
             let duration = Date().timeIntervalSince(start)
-            log("Successfully uploaded firmware (\(String(format: "%.2f", duration))s)")
+            printMessage("Successfully uploaded firmware (\(String(format: "%.2f", duration))s)")
+        }, error: { (viewController, error) in
+            alert.title = "⚠️ Unable to update"
+            alert.message = error.localizedDescription
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: { (UIAlertAction) in
+                alert.presentingViewController?.dismiss(animated: true, completion: nil)
+            }))
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Retry", comment: "Retry"), style: .`default`, handler: { (UIAlertAction) in
+                alert.presentingViewController?.dismiss(animated: false, completion: nil)
+                viewController.uploadFirmware(at: url, for: device)
+            }))
+            return false
+        }, completion: { (_, _) in
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Done", comment: "Done"), style: .`default`, handler: { (UIAlertAction) in
+                alert.presentingViewController?.dismiss(animated: true, completion: nil)
+            }))
         })
     }
     

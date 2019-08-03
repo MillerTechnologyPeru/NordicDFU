@@ -32,6 +32,7 @@ extension ActivityIndicatorViewController {
     
     func performActivity <T> (showActivity: Bool = true,
                               _ asyncOperation: @escaping () throws -> T,
+                              error errorBlock: ((Self, Error) -> Bool)? = nil,
                               completion: ((Self, T) -> ())? = nil) {
         
         if showActivity { self.showActivity() }
@@ -58,7 +59,8 @@ extension ActivityIndicatorViewController {
                 
                 mainQueue { [weak self] in
                     
-                    guard let controller = self as? (UIViewController & ActivityIndicatorViewController)
+                    guard let self = self,
+                        let controller = self as? (UIViewController & ActivityIndicatorViewController)
                         else { return }
                     
                     if showActivity { controller.hideActivity(animated: false) }
@@ -67,11 +69,16 @@ extension ActivityIndicatorViewController {
                     
                     log("⚠️ Error: \(error)")
                     
+                    let showError = errorBlock?(self, error) ?? true
+                    
+                    guard showError else { return }
+                    
                     if (controller as UIViewController).view.window != nil {
                         
                         controller.showErrorAlert(error.localizedDescription)
                         
                     } else {
+                        
                         AppDelegate.shared.window?.rootViewController?.showErrorAlert(error.localizedDescription)
                     }
                 }
