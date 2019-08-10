@@ -102,12 +102,14 @@ extension SettingsView {
         }
         
         var body: some View {
-            HStack {
-                title.lineLimit(2)
-                Spacer()
-                text(value.value)
+            VStack {
+                Spacer(minLength: 8)
+                HStack {
+                    title.lineLimit(1)
+                    Spacer(minLength: 20)
+                    text(value.value)
+                }
                 Slider(value: value, from: from, through: through, by: by)
-                    .frame(minWidth: 100, idealWidth: nil, maxWidth: nil, minHeight: nil, idealHeight: nil, maxHeight: nil, alignment: .trailing)
             }
         }
     }
