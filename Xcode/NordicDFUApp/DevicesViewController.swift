@@ -18,9 +18,7 @@ import UIKit
 final class DevicesViewController: UITableViewController {
     
     typealias Device = NordicPeripheral<NativeCentral.Peripheral, NativeCentral.Advertisement>
-    
-    private static let filterDefaultsKey = "DevicesFilter"
-    
+        
     // MARK: - IB Outlets
     
     @IBOutlet private(set) weak var searchBar: UISearchBar!

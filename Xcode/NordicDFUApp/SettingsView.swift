@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import UIKit
 import SwiftUI
 import Combine
 
@@ -16,10 +15,9 @@ struct SettingsView: View {
     
     // MARK: - Properties
         
-    //@Binding(getValue: { Preferences.shared.timeout },
-    //         setValue: { Preferences.shared.timeout = $0 })
-    @State
-    public var timeout: TimeInterval = 30
+    @Binding(getValue: { Preferences.shared.timeout },
+             setValue: { Preferences.shared.timeout = $0 })
+    public var timeout: TimeInterval
     
     //@Binding(getValue: { Preferences.shared.writeWithoutResponseTimeout },
     //         setValue: { Preferences.shared.writeWithoutResponseTimeout = $0 })
@@ -112,59 +110,6 @@ extension SettingsView {
                 Slider(value: value, from: from, through: through, by: by)
             }
         }
-    }
-}
-
-@available(iOS 13.0, *)
-public final class Preferences {
-    
-    public static let shared = Preferences()
-    
-    internal let userDefaults: UserDefaults
-    
-    public init(userDefaults: UserDefaults = .standard) {
-        self.userDefaults = userDefaults
-        _timeout.userDefaults = userDefaults
-        _writeWithoutResponseTimeout.userDefaults = userDefaults
-        _packetReceiptNotification.userDefaults = userDefaults
-        _showPowerAlert.userDefaults = userDefaults
-    }
-    
-    @UserDefault(.timeout, defaultValue: 30)
-    public var timeout: TimeInterval
-    
-    @UserDefault(.writeWithoutResponseTimeout, defaultValue: 3)
-    public var writeWithoutResponseTimeout: TimeInterval
-    
-    @UserDefault(.packetReceiptNotification, defaultValue: 12)
-    public var packetReceiptNotification: UInt16
-    
-    @UserDefault(.showPowerAlert, defaultValue: false)
-    public var showPowerAlert: Bool
-}
-
-@available(iOS 13.0, *)
-internal extension Preferences {
-    
-    enum Key: String {
-        
-        case timeout
-        case writeWithoutResponseTimeout
-        case packetReceiptNotification
-        case showPowerAlert
-    }
-}
-
-@available(iOS 13.0, *)
-internal extension UserDefault {
-    
-    init(_ key: Preferences.Key,
-         defaultValue: Value,
-         userDefaults: UserDefaults = .standard) {
-        
-        self.key = key.rawValue
-        self.defaultValue = defaultValue
-        self.userDefaults = userDefaults
     }
 }
 

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 /// A type safe property wrapper to set and get values from UserDefaults with support for defaults values.
 ///
@@ -16,12 +17,14 @@ import Foundation
 /// ```
 ///
 /// [Apple documentation on UserDefaults](https://developer.apple.com/documentation/foundation/userdefaults)
-@available(iOS 2.0, OSX 10.0, tvOS 9.0, watchOS 2.0, *)
+@available(iOS 13, *)
 @propertyWrapper
-public struct UserDefault<Value: PropertyListValue> {
+public final class UserDefault <Value: PropertyListValue> {
+    
     public let key: String
     public let defaultValue: Value
     public var userDefaults: UserDefaults
+    public let willChange = PassthroughSubject<Value, Never>()
     
     public init(_ key: String, defaultValue: Value, userDefaults: UserDefaults = .standard) {
         self.key = key
@@ -30,14 +33,20 @@ public struct UserDefault<Value: PropertyListValue> {
     }
     
     public var wrappedValue: Value {
-        get {
-            return userDefaults.object(forKey: key) as? Value ?? defaultValue
-        }
+        get { return userDefaults.object(forKey: key) as? Value ?? defaultValue }
         set {
             userDefaults.set(newValue, forKey: key)
+            willChange.send(newValue)
         }
     }
 }
+
+#if canImport(SwiftUI)
+import SwiftUI
+
+@available(iOS 13, *)
+extension UserDefault: BindableObject { }
+#endif
 
 /// A type than can be stored in `UserDefaults`.
 ///
