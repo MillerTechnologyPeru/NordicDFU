@@ -15,20 +15,20 @@ struct SettingsView: View {
     
     // MARK: - Properties
         
-    @Binding(getValue: { Preferences.shared.timeout.value },
-             setValue: { Preferences.shared.timeout.value = $0 })
+    @Binding(getValue: { Preferences.shared.timeout },
+             setValue: { Preferences.shared.timeout = $0 })
     public var timeout: TimeInterval
     
-    @Binding(getValue: { Preferences.shared.writeWithoutResponseTimeout.value },
-             setValue: { Preferences.shared.writeWithoutResponseTimeout.value = $0 })
+    @Binding(getValue: { Preferences.shared.writeWithoutResponseTimeout },
+             setValue: { Preferences.shared.writeWithoutResponseTimeout = $0 })
     public var writeWithoutResponseTimeout: TimeInterval
     
-    @Binding(getValue: { Float(Preferences.shared.packetReceiptNotification.value) },
-             setValue: { Preferences.shared.packetReceiptNotification.value = UInt16($0) })
+    @Binding(getValue: { Float(Preferences.shared.packetReceiptNotification) },
+             setValue: { Preferences.shared.packetReceiptNotification = UInt16($0) })
     public var packetReceiptNotification: Float
     
-    @Binding(getValue: { Preferences.shared.showPowerAlert.value },
-             setValue: { Preferences.shared.showPowerAlert.value = $0 })
+    @Binding(getValue: { Preferences.shared.showPowerAlert },
+             setValue: { Preferences.shared.showPowerAlert = $0 })
     public var showPowerAlert: Bool
     
     // MARK: - View
@@ -55,16 +55,23 @@ public final class Preferences {
     
     public init(userDefaults: UserDefaults = .standard) {
         self.userDefaults = userDefaults
+        _timeout.userDefaults = userDefaults
+        _writeWithoutResponseTimeout.userDefaults = userDefaults
+        _packetReceiptNotification.userDefaults = userDefaults
+        _showPowerAlert.userDefaults = userDefaults
     }
     
-    public var timeout = CurrentValueSubject<TimeInterval, Never>(30.0)
+    @UserDefault(.timeout, defaultValue: 30)
+    public var timeout: TimeInterval
     
-    //@UserDefault("writeWithoutResponseTimeout", defaultValue: 3)
-    public var writeWithoutResponseTimeout = CurrentValueSubject<TimeInterval, Never>(3.0) // : TimeInterval = 3.0
+    @UserDefault(.writeWithoutResponseTimeout, defaultValue: 3)
+    public var writeWithoutResponseTimeout: TimeInterval
     
-    public var packetReceiptNotification = CurrentValueSubject<UInt16, Never>(12)
+    @UserDefault(.packetReceiptNotification, defaultValue: 12)
+    public var packetReceiptNotification: UInt16
     
-    public var showPowerAlert = CurrentValueSubject<Bool, Never>(false)
+    @UserDefault(.showPowerAlert, defaultValue: false)
+    public var showPowerAlert: Bool
 }
 
 @available(iOS 13.0, *)
@@ -77,11 +84,18 @@ internal extension Preferences {
         case packetReceiptNotification
         case showPowerAlert
     }
+}
+
+@available(iOS 13.0, *)
+internal extension UserDefault {
     
-    subscript (key: Key) -> Any? {
+    init(_ key: Preferences.Key,
+         defaultValue: Value,
+         userDefaults: UserDefaults = .standard) {
         
-        get { userDefaults.object(forKey: key.rawValue) }
-        set { userDefaults.set(newValue, forKey: key.rawValue) }
+        self.key = key.rawValue
+        self.defaultValue = defaultValue
+        self.userDefaults = userDefaults
     }
 }
 
