@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 import SwiftUI
 import Combine
 
@@ -15,33 +16,99 @@ struct SettingsView: View {
     
     // MARK: - Properties
         
-    @Binding(getValue: { Preferences.shared.timeout },
-             setValue: { Preferences.shared.timeout = $0 })
-    public var timeout: TimeInterval
+    //@Binding(getValue: { Preferences.shared.timeout },
+    //         setValue: { Preferences.shared.timeout = $0 })
+    @State
+    public var timeout: TimeInterval = 30
     
-    @Binding(getValue: { Preferences.shared.writeWithoutResponseTimeout },
-             setValue: { Preferences.shared.writeWithoutResponseTimeout = $0 })
-    public var writeWithoutResponseTimeout: TimeInterval
+    //@Binding(getValue: { Preferences.shared.writeWithoutResponseTimeout },
+    //         setValue: { Preferences.shared.writeWithoutResponseTimeout = $0 })
+    @State
+    public var writeWithoutResponseTimeout: TimeInterval = 3
     
-    @Binding(getValue: { Float(Preferences.shared.packetReceiptNotification) },
-             setValue: { Preferences.shared.packetReceiptNotification = UInt16($0) })
-    public var packetReceiptNotification: Float
+    //@Binding(getValue: { .init(Preferences.shared.packetReceiptNotification) },
+    //         setValue: { Preferences.shared.packetReceiptNotification = .init($0) })
+    @State
+    public var packetReceiptNotification: Double = 12
     
-    @Binding(getValue: { Preferences.shared.showPowerAlert },
-             setValue: { Preferences.shared.showPowerAlert = $0 })
-    public var showPowerAlert: Bool
+    //@Binding(getValue: { Preferences.shared.showPowerAlert },
+    //         setValue: { Preferences.shared.showPowerAlert = $0 })
+    @State
+    public var showPowerAlert: Bool = false
     
     // MARK: - View
     
     var body: some View {
-        NavigationView {
-            List {
-                Slider(value: $timeout, from: 1.0, through: 30.0, by: 0.1)
-                Slider(value: $writeWithoutResponseTimeout, from: 1.0, through: 30.0, by: 0.1)
-                Slider(value: $packetReceiptNotification, from: 0.0, through: 22.0, by: 1.0)
-                Toggle("Show Power Alert", isOn: $showPowerAlert)
+        List {
+            SliderCell(
+                title: Text("Timeout"),
+                value: $timeout,
+                from: 1.0,
+                through: 30.0,
+                by: 0.1,
+                text: { Text(verbatim: "\(String(format: "%.1f", $0))s") }
+            )
+            SliderCell(
+                title: Text("Write without Response Timeout"),
+                value: $writeWithoutResponseTimeout,
+                from: 1.0,
+                through: 30.0,
+                by: 0.1,
+                text: { Text(verbatim: "\(String(format: "%.1f", $0))s") }
+            )
+            SliderCell(
+                title: Text("Packet Reciept Notification"),
+                value: $packetReceiptNotification,
+                from: 0.0,
+                through: 25.0,
+                by: 1.0,
+                text: { $0 > 0 ? Text(verbatim: "\(Int($0))") : Text("Disabled") }
+            )
+            Toggle("Show Power Alert", isOn: $showPowerAlert)
+        }
+    }
+}
+
+@available(iOS 13, *)
+extension SettingsView {
+    
+    struct SliderCell: View {
+        
+        let title: Text
+        
+        let value: Binding<Double>
+        
+        let text: (Double) -> (Text)
+        
+        let from: Double
+        
+        let through: Double
+        
+        let by: Double
+        
+        init(title: Text,
+             value: Binding<Double>,
+             from: Double,
+             through: Double,
+             by: Double = 1.0,
+             text: @escaping (Double) -> (Text)) {
+            
+            self.title = title
+            self.value = value
+            self.text = text
+            self.from = from
+            self.through = through
+            self.by = by
+        }
+        
+        var body: some View {
+            HStack {
+                title
+                Spacer()
+                text(value.value)
+                Slider(value: value, from: from, through: through, by: by)
+                    .frame(minWidth: 150, idealWidth: nil, maxWidth: nil, minHeight: nil, idealHeight: nil, maxHeight: nil, alignment: .trailing)
             }
-            navigationBarTitle(Text("Settings"), displayMode: .large)
         }
     }
 }
