@@ -30,7 +30,6 @@
 		6E3187FC21BA15FA00AB0A0D /* Bluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E3187BF21BA15D400AB0A0D /* Bluetooth.framework */; };
 		6E3187FD21BA15FA00AB0A0D /* Bluetooth.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6E3187BF21BA15D400AB0A0D /* Bluetooth.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6EFD2E9B22FE06C600980A56 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFD2E9A22FE06C600980A56 /* SettingsView.swift */; };
-		6EFD2EAA22FE0EEA00980A56 /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFD2EA922FE0EE900980A56 /* UserDefault.swift */; };
 		6EFD2EAC22FE613400980A56 /* SwiftUINavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFD2EAB22FE613400980A56 /* SwiftUINavigationViewController.swift */; };
 		6EFD2EAE22FF36DF00980A56 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFD2EAD22FF36DF00980A56 /* Preferences.swift */; };
 		6EFD2EB222FF370500980A56 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EFD2EB122FF370500980A56 /* Store.swift */; };
@@ -368,7 +367,6 @@
 		6E3187C621BA15E100AB0A0D /* GATT.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GATT.xcodeproj; path = ../../Carthage/Checkouts/GATT/Xcode/GATT.xcodeproj; sourceTree = "<group>"; };
 		6E3187E421BA15EC00AB0A0D /* ZIPFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZIPFoundation.xcodeproj; path = ../../Carthage/Checkouts/Zip/ZIPFoundation.xcodeproj; sourceTree = "<group>"; };
 		6EFD2E9A22FE06C600980A56 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		6EFD2EA922FE0EE900980A56 /* UserDefault.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefault.swift; sourceTree = "<group>"; };
 		6EFD2EAB22FE613400980A56 /* SwiftUINavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUINavigationViewController.swift; sourceTree = "<group>"; };
 		6EFD2EAD22FF36DF00980A56 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		6EFD2EB122FF370500980A56 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
@@ -520,7 +518,6 @@
 				6EFD2E9A22FE06C600980A56 /* SettingsView.swift */,
 				6EFD2EAD22FF36DF00980A56 /* Preferences.swift */,
 				6EFD2EB122FF370500980A56 /* Store.swift */,
-				6EFD2EA922FE0EE900980A56 /* UserDefault.swift */,
 				6EFD2EAB22FE613400980A56 /* SwiftUINavigationViewController.swift */,
 				6E31878E21B9DABF00AB0A0D /* Assets.xcassets */,
 				6E31878B21B9DABC00AB0A0D /* Main.storyboard */,
@@ -1088,7 +1085,6 @@
 				6E31878A21B9DABC00AB0A0D /* DevicesViewController.swift in Sources */,
 				6E3187AF21B9E01100AB0A0D /* Log.swift in Sources */,
 				6E3187AD21B9E00400AB0A0D /* ErrorAlert.swift in Sources */,
-				6EFD2EAA22FE0EEA00980A56 /* UserDefault.swift in Sources */,
 				6E3187A221B9DDDD00AB0A0D /* Central.swift in Sources */,
 				6E31879E21B9DD5000AB0A0D /* Async.swift in Sources */,
 				6EFD2E9B22FE06C600980A56 /* SettingsView.swift in Sources */,

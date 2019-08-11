@@ -29,16 +29,25 @@ final class Store: BindableObject {
         self.deviceManager.central.stateChanged = { [weak self] in
             guard let self = self else { return }
             self.willChange.send(self)
-            print("Bluetooth State changed: \($0)")
+            self.log?("Bluetooth State changed: \($0)")
             if $0 == .poweredOn {
                 //scan()
             }
         }
+        
+        // configure preferences
+        self.preferences.didChange = { [weak self] in
+            guard let self = self else { return }
+            self.preferencesChanged(key: $0)
+        }
+        self.applyPreferences()
     }
     
     // MARK: - Properties
     
     let willChange = PassthroughSubject<Store, Never>()
+    
+    var log: ((String) -> ())?
     
     let deviceManager: DeviceManager
     
@@ -46,13 +55,34 @@ final class Store: BindableObject {
     
     private let queue = DispatchQueue(label: "Store Queue")
     
+    // MARK: - Methods
     
-}
-
-@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
-public final class BindingWrapper: BindableObject {
+    private func applyPreferences() {
+        Preferences.Key.allCases.forEach {
+            self.preferencesChanged(key: $0)
+        }
+    }
     
-    public let willChange = PassthroughSubject<Void, Never>()
-    
-    
+    private func preferencesChanged(key: Preferences.Key) {
+        
+        // inform observers
+        self.willChange.send(self)
+        
+        switch key {
+        case .showPowerAlert:
+            break //deviceManager.central.options.showPowerAlert = preferences.showPowerAlert
+        case .packetReceiptNotification:
+            deviceManager.packetReceiptNotification.rawValue = preferences.packetReceiptNotification
+        case .writeWithoutResponseTimeout:
+            deviceManager.central.writeWithoutResponseTimeout = preferences.writeWithoutResponseTimeout
+        case .timeout:
+            break
+        case .devicesFilter:
+            break
+        case .filterDuplicates:
+            break
+        case .scanDuration:
+            break
+        }
+    }
 }

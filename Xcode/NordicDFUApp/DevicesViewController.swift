@@ -7,13 +7,10 @@
 //
 
 import Foundation
+import UIKit
 import Bluetooth
 import GATT
 import NordicDFU
-
-#if os(iOS)
-import UIKit
-#endif
 
 final class DevicesViewController: UITableViewController {
     
@@ -32,24 +29,9 @@ final class DevicesViewController: UITableViewController {
     }
     
     private var filter: String {
-        
-        get {
-            if #available(iOS 13.0, *) {
-                return Preferences.shared.devicesFilter
-            } else {
-                return _filter
-            }
-        }
-        set {
-            if #available(iOS 13.0, *) {
-                Preferences.shared.devicesFilter = newValue
-            } else {
-                _filter = newValue
-            }
-        }
+        get { Preferences.shared.devicesFilter }
+        set { Preferences.shared.devicesFilter = newValue }
     }
-    
-    private var _filter: String = ""
     
     // MARK: - Loading
 
@@ -79,7 +61,10 @@ final class DevicesViewController: UITableViewController {
         }
         
         performActivity({
-            try DeviceManager.shared.scan(duration: 5, filterPeripherals: filterPeripherals) { (device) in
+            try DeviceManager.shared.scan(
+                duration: Preferences.shared.scanDuration,
+                filterDuplicates: Preferences.shared.filterDuplicates,
+                filterPeripherals: filterPeripherals) { (device) in
                 mainQueue { [weak self] in self?.foundDevice(device) }
             }
         }, completion: { (viewController, _) in

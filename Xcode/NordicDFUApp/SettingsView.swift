@@ -7,33 +7,60 @@
 //
 
 import Foundation
-import SwiftUI
 import Combine
+import SwiftUI
 
 @available(iOS 13, *)
 struct SettingsView: View {
     
     // MARK: - Properties
-        
-    @ObjectBinding
-    var timeout = Bind(Preferences.shared, keyPath: \.timeout)
     
     @ObjectBinding
-    var writeWithoutResponseTimeout = Bind(Preferences.shared, keyPath: \.writeWithoutResponseTimeout)
+    var store: Store = .shared
     
-    @ObjectBinding
-    var packetReceiptNotification = Bind(Preferences.shared, keyPath: \.packetReceiptNotification)
+    var scanDuration: Binding<TimeInterval> {
+        Binding(store.preferences, keyPath: \.scanDuration)
+    }
     
-    @ObjectBinding
-    var showPowerAlert = Bind(Preferences.shared, keyPath: \.showPowerAlert)
+    var timeout: Binding<TimeInterval> {
+        Binding(store.preferences, keyPath: \.timeout)
+    }
+    
+    var writeWithoutResponseTimeout: Binding<TimeInterval> {
+        Binding(store.preferences, keyPath: \.writeWithoutResponseTimeout)
+    }
+    
+    var packetReceiptNotification: Binding<Double> {
+        let preferences = self.store.preferences
+        return .init(
+            getValue: { .init(preferences.packetReceiptNotification) },
+            setValue: { preferences.packetReceiptNotification = .init($0) }
+        )
+    }
+    
+    var showPowerAlert: Binding<Bool> {
+        Binding(store.preferences, keyPath: \.showPowerAlert)
+    }
+    
+    var filterDuplicates: Binding<Bool> {
+        Binding(store.preferences, keyPath: \.filterDuplicates)
+    }
     
     // MARK: - View
     
     var body: some View {
         List {
             SliderCell(
+                title: Text("Scan Duration"),
+                value: scanDuration,
+                from: 1.0,
+                through: 10.0,
+                by: 0.1,
+                text: { Text(verbatim: "\(String(format: "%.1f", $0))s") }
+            )
+            SliderCell(
                 title: Text("Timeout"),
-                value: timeout.binding,
+                value: timeout,
                 from: 1.0,
                 through: 30.0,
                 by: 0.1,
@@ -41,88 +68,39 @@ struct SettingsView: View {
             )
             SliderCell(
                 title: Text("Write without Response Timeout"),
-                value: writeWithoutResponseTimeout.binding,
+                value: writeWithoutResponseTimeout,
                 from: 1.0,
                 through: 30.0,
                 by: 0.1,
                 text: { Text(verbatim: "\(String(format: "%.1f", $0))s") }
             )
-            /*
             SliderCell(
                 title: Text("Packet Reciept Notification"),
-                value: packetReceiptNotification.binding,
+                value: packetReceiptNotification,
                 from: 0.0,
                 through: 25.0,
                 by: 1.0,
                 text: { $0 > 0 ? Text(verbatim: "\(Int($0))") : Text("Disabled") }
-            )*/
-            Toggle("Show Power Alert", isOn: showPowerAlert.binding)
+            )
+            Toggle("Show Power Alert", isOn: showPowerAlert)
+            Toggle("Filter Duplicates", isOn: filterDuplicates)
         }
     }
 }
 
-@available(iOS 13, *)
-extension SettingsView {
+@available(iOS 13.0, *)
+extension Binding {
     
-    final class Bind <Root, Value> : BindableObject, BindingConvertible {
+    init <T: AnyObject> (_ root: T, keyPath: ReferenceWritableKeyPath<T, Value>) {
         
-        var root: Root
-        let keyPath: WritableKeyPath<Root, Value>
-        let willChange = PassthroughSubject<Bind<Root, Value>, Never>()
-        
-        init(_ root: Root, keyPath: WritableKeyPath<Root, Value>) {
-            self.root = root
-            self.keyPath = keyPath
-        }
-        
-        var binding: Binding<Value> {
-            return Binding(
-                getValue: { self.root[keyPath: self.keyPath] },
-                setValue: {
-                    self.root[keyPath: self.keyPath] = $0
-                    self.willChange.send(self)
-                }
-            )
-        }
+        self.init(
+            getValue: { root[keyPath: keyPath] },
+            setValue: { root[keyPath: keyPath] = $0 }
+        )
     }
-    /*
-    final class ViewModel: BindableObject {
-        
-        let preferences: Preferences
-        
-        var willChange = PassthroughSubject<ViewModel, Never>()
-        
-        init(preferences: Preferences = .shared) {
-            self.preferences = preferences
-        }
-        
-        var timeout: TimeInterval
-        
-        var writeWithoutResponseTimeout: TimeInterval {
-            get { preferences.writeWithoutResponseTimeout }
-            set {
-                preferences.writeWithoutResponseTimeout = newValue
-                willChange.send(self)
-            }
-        }
-        
-        var packetReceiptNotification: Double {
-            get { .init(preferences.writeWithoutResponseTimeout) }
-            set {
-                preferences.writeWithoutResponseTimeout = .init(newValue)
-                willChange.send(self)
-            }
-        }
-        
-        var showPowerAlert: Bool {
-            get { preferences.showPowerAlert }
-            set {
-                preferences.showPowerAlert = newValue
-                willChange.send(self)
-            }
-        }
-    }*/
 }
+
+// MARK: - Supporting Types
 
 @available(iOS 13, *)
 extension SettingsView {
@@ -169,6 +147,8 @@ extension SettingsView {
         }
     }
 }
+
+// MARK: - Preview
 
 #if DEBUG
 @available(iOS 13, *)

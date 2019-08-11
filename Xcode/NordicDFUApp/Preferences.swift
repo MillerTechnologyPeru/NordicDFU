@@ -37,6 +37,16 @@ public extension Preferences {
         set { self[.timeout] = newValue }
     }
     
+    var scanDuration: TimeInterval {
+        get { return self[.scanDuration] ?? 5.0 }
+        set { self[.scanDuration] = newValue }
+    }
+    
+    var filterDuplicates: Bool {
+        get { return self[.filterDuplicates] ?? true }
+        set { self[.filterDuplicates] = newValue }
+    }
+    
     var writeWithoutResponseTimeout: TimeInterval {
         get { return self[.writeWithoutResponseTimeout] ?? 3.0 }
         set { self[.writeWithoutResponseTimeout] = newValue }
@@ -60,23 +70,14 @@ public extension Preferences {
 
 public extension Preferences {
     
-    enum Key: String {
+    enum Key: String, CaseIterable {
         
         case timeout
+        case filterDuplicates
+        case showPowerAlert
         case writeWithoutResponseTimeout
         case packetReceiptNotification
-        case showPowerAlert
+        case scanDuration
         case devicesFilter
-    }
-}
-
-@available(iOS 13.0, *)
-internal extension UserDefault {
-    
-    convenience init(_ key: Preferences.Key,
-                     defaultValue: Value,
-                     userDefaults: UserDefaults = .standard) {
-        
-        self.init(key.rawValue, defaultValue: defaultValue, userDefaults: userDefaults)
     }
 }

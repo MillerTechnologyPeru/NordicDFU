@@ -11,6 +11,7 @@ import UIKit
 import Bluetooth
 import GATT
 import NordicDFU
+import SwiftUI
 
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,6 +23,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         DeviceManager.shared.log = { log("NordicDFU: \($0)") }
+        
+        if #available(iOS 13.0, *) {
+            Store.shared.log = { print($0) }
+        }
         
         return true
     }
