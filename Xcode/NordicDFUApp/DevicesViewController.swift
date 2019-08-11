@@ -31,14 +31,25 @@ final class DevicesViewController: UITableViewController {
         didSet { tableView.reloadData() }
     }
     
-    private var filter: String = "" {
+    private var filter: String {
         
-        didSet {
-            UserDefaults.standard.set(filter, forKey: DevicesViewController.filterDefaultsKey)
-            guard UserDefaults.standard.synchronize()
-                else { assertionFailure("Could not save user defaults"); return }
+        get {
+            if #available(iOS 13.0, *) {
+                return Preferences.shared.devicesFilter
+            } else {
+                return _filter
+            }
+        }
+        set {
+            if #available(iOS 13.0, *) {
+                Preferences.shared.devicesFilter = newValue
+            } else {
+                _filter = newValue
+            }
         }
     }
+    
+    private var _filter: String = ""
     
     // MARK: - Loading
 
@@ -46,12 +57,9 @@ final class DevicesViewController: UITableViewController {
         super.viewDidLoad()
         
         // load filter string
-        if let filter = UserDefaults.standard.string(forKey: DevicesViewController.filterDefaultsKey), filter.isEmpty == false {
-            
+        if filter.isEmpty == false {
             scan(filter: filter)
-            
         } else {
-            
             hideActivity(animated: false)
         }
     }

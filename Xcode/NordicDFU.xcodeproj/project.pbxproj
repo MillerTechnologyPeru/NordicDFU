@@ -522,8 +522,8 @@
 				6EFD2EB122FF370500980A56 /* Store.swift */,
 				6EFD2EA922FE0EE900980A56 /* UserDefault.swift */,
 				6EFD2EAB22FE613400980A56 /* SwiftUINavigationViewController.swift */,
-				6E31878B21B9DABC00AB0A0D /* Main.storyboard */,
 				6E31878E21B9DABF00AB0A0D /* Assets.xcassets */,
+				6E31878B21B9DABC00AB0A0D /* Main.storyboard */,
 				6E31879021B9DABF00AB0A0D /* LaunchScreen.storyboard */,
 				6E31879321B9DABF00AB0A0D /* Info.plist */,
 			);

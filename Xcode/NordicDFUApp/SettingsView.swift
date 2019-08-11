@@ -14,25 +14,27 @@ import Combine
 struct SettingsView: View {
     
     // MARK: - Properties
-        
-    @Binding(getValue: { Preferences.shared.timeout },
-             setValue: { Preferences.shared.timeout = $0 })
-    public var timeout: TimeInterval
+    
+    //@ObjectBinding
+    //var preferences: Preferences = .shared
+    
+    @State
+    var timeout: TimeInterval = 30.0
     
     //@Binding(getValue: { Preferences.shared.writeWithoutResponseTimeout },
     //         setValue: { Preferences.shared.writeWithoutResponseTimeout = $0 })
     @State
-    public var writeWithoutResponseTimeout: TimeInterval = 3
+    var writeWithoutResponseTimeout: TimeInterval = 3
     
     //@Binding(getValue: { .init(Preferences.shared.packetReceiptNotification) },
     //         setValue: { Preferences.shared.packetReceiptNotification = .init($0) })
     @State
-    public var packetReceiptNotification: Double = 12
+    var packetReceiptNotification: Double = 12
     
     //@Binding(getValue: { Preferences.shared.showPowerAlert },
     //         setValue: { Preferences.shared.showPowerAlert = $0 })
     @State
-    public var showPowerAlert: Bool = false
+    var showPowerAlert: Bool = false
     
     // MARK: - View
     

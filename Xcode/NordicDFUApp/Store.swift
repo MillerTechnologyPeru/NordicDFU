@@ -9,6 +9,7 @@
 import Foundation
 import Combine
 import SwiftUI
+import NordicDFU
 import DarwinGATT
 
 @available(iOS 13.0, *)
@@ -18,14 +19,14 @@ final class Store: BindableObject {
     
     static let shared = Store()
     
-    init(central: NativeCentral = .shared,
+    init(deviceManager: DeviceManager = .shared,
          preferences: Preferences = .shared) {
         
-        self.central = central
+        self.deviceManager = deviceManager
         self.preferences = preferences
         
         // configure central
-        self.central.stateChanged = { [weak self] in
+        self.deviceManager.central.stateChanged = { [weak self] in
             guard let self = self else { return }
             self.willChange.send(self)
             print("Bluetooth State changed: \($0)")
@@ -39,7 +40,7 @@ final class Store: BindableObject {
     
     let willChange = PassthroughSubject<Store, Never>()
     
-    let central: NativeCentral
+    let deviceManager: DeviceManager
     
     let preferences: Preferences
     

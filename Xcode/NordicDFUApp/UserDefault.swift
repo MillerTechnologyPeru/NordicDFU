@@ -46,6 +46,17 @@ import SwiftUI
 
 @available(iOS 13, *)
 extension UserDefault: BindableObject { }
+
+@available(iOS 13, *)
+extension UserDefault: BindingConvertible {
+    
+    public var binding: Binding<Value> {
+        return Binding<Value>(
+            getValue: { [unowned self] in self.wrappedValue },
+            setValue: { [unowned self] in self.wrappedValue = $0 }
+        )
+    }
+}
 #endif
 
 /// A type than can be stored in `UserDefaults`.

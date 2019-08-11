@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Combine
 
 @available(iOS 13.0, *)
 public final class Preferences {
@@ -14,6 +15,8 @@ public final class Preferences {
     public static let shared = Preferences()
     
     internal let userDefaults: UserDefaults
+    
+    //public let willChange = PassthroughSubject<Preferences, Never>()
     
     public init(userDefaults: UserDefaults = .standard) {
         self.userDefaults = userDefaults
