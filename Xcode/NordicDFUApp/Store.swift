@@ -45,4 +45,14 @@ final class Store: BindableObject {
     let preferences: Preferences
     
     private let queue = DispatchQueue(label: "Store Queue")
+    
+    
+}
+
+@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
+public final class BindingWrapper: BindableObject {
+    
+    public let willChange = PassthroughSubject<Void, Never>()
+    
+    
 }

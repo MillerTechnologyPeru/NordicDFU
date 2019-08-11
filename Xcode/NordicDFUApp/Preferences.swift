@@ -7,43 +7,58 @@
 //
 
 import Foundation
-import Combine
 
-@available(iOS 13.0, *)
+/// Preferences
 public final class Preferences {
     
     public static let shared = Preferences()
     
     internal let userDefaults: UserDefaults
     
-    //public let willChange = PassthroughSubject<Preferences, Never>()
+    public var didChange: ((Key) -> ())?
     
     public init(userDefaults: UserDefaults = .standard) {
         self.userDefaults = userDefaults
-        _timeout.userDefaults = userDefaults
-        _writeWithoutResponseTimeout.userDefaults = userDefaults
-        _packetReceiptNotification.userDefaults = userDefaults
-        _showPowerAlert.userDefaults = userDefaults
     }
     
-    @UserDefault(.timeout, defaultValue: 30)
-    public var timeout: TimeInterval
-    
-    @UserDefault(.writeWithoutResponseTimeout, defaultValue: 3)
-    public var writeWithoutResponseTimeout: TimeInterval
-    
-    @UserDefault(.packetReceiptNotification, defaultValue: 12)
-    public var packetReceiptNotification: UInt16
-    
-    @UserDefault(.showPowerAlert, defaultValue: false)
-    public var showPowerAlert: Bool
-    
-    @UserDefault(.showPowerAlert, defaultValue: "")
-    public var devicesFilter: String
+    private subscript <T> (key: Key) -> T? {
+        get { userDefaults.value(forKey: key.rawValue) as? T }
+        set {
+            userDefaults.set(newValue, forKey: key.rawValue)
+            didChange?(key)
+        }
+    }
 }
 
-@available(iOS 13.0, *)
-internal extension Preferences {
+public extension Preferences {
+    
+    var timeout: TimeInterval {
+        get { return self[.timeout] ?? 30.0 }
+        set { self[.timeout] = newValue }
+    }
+    
+    var writeWithoutResponseTimeout: TimeInterval {
+        get { return self[.writeWithoutResponseTimeout] ?? 3.0 }
+        set { self[.writeWithoutResponseTimeout] = newValue }
+    }
+    
+    var packetReceiptNotification: UInt16 {
+        get { return self[.packetReceiptNotification] ?? 12 }
+        set { self[.packetReceiptNotification] = newValue }
+    }
+    
+    var showPowerAlert: Bool {
+        get { return self[.showPowerAlert] ?? false }
+        set { self[.showPowerAlert] = newValue }
+    }
+    
+    var devicesFilter: String {
+        get { return self[.devicesFilter] ?? "" }
+        set { self[.devicesFilter] = newValue }
+    }
+}
+
+public extension Preferences {
     
     enum Key: String {
         

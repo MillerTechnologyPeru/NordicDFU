@@ -14,27 +14,18 @@ import Combine
 struct SettingsView: View {
     
     // MARK: - Properties
+        
+    @ObjectBinding
+    var timeout = Bind(Preferences.shared, keyPath: \.timeout)
     
-    //@ObjectBinding
-    //var preferences: Preferences = .shared
+    @ObjectBinding
+    var writeWithoutResponseTimeout = Bind(Preferences.shared, keyPath: \.writeWithoutResponseTimeout)
     
-    @State
-    var timeout: TimeInterval = 30.0
+    @ObjectBinding
+    var packetReceiptNotification = Bind(Preferences.shared, keyPath: \.packetReceiptNotification)
     
-    //@Binding(getValue: { Preferences.shared.writeWithoutResponseTimeout },
-    //         setValue: { Preferences.shared.writeWithoutResponseTimeout = $0 })
-    @State
-    var writeWithoutResponseTimeout: TimeInterval = 3
-    
-    //@Binding(getValue: { .init(Preferences.shared.packetReceiptNotification) },
-    //         setValue: { Preferences.shared.packetReceiptNotification = .init($0) })
-    @State
-    var packetReceiptNotification: Double = 12
-    
-    //@Binding(getValue: { Preferences.shared.showPowerAlert },
-    //         setValue: { Preferences.shared.showPowerAlert = $0 })
-    @State
-    var showPowerAlert: Bool = false
+    @ObjectBinding
+    var showPowerAlert = Bind(Preferences.shared, keyPath: \.showPowerAlert)
     
     // MARK: - View
     
@@ -42,7 +33,7 @@ struct SettingsView: View {
         List {
             SliderCell(
                 title: Text("Timeout"),
-                value: $timeout,
+                value: timeout.binding,
                 from: 1.0,
                 through: 30.0,
                 by: 0.1,
@@ -50,23 +41,87 @@ struct SettingsView: View {
             )
             SliderCell(
                 title: Text("Write without Response Timeout"),
-                value: $writeWithoutResponseTimeout,
+                value: writeWithoutResponseTimeout.binding,
                 from: 1.0,
                 through: 30.0,
                 by: 0.1,
                 text: { Text(verbatim: "\(String(format: "%.1f", $0))s") }
             )
+            /*
             SliderCell(
                 title: Text("Packet Reciept Notification"),
-                value: $packetReceiptNotification,
+                value: packetReceiptNotification.binding,
                 from: 0.0,
                 through: 25.0,
                 by: 1.0,
                 text: { $0 > 0 ? Text(verbatim: "\(Int($0))") : Text("Disabled") }
-            )
-            Toggle("Show Power Alert", isOn: $showPowerAlert)
+            )*/
+            Toggle("Show Power Alert", isOn: showPowerAlert.binding)
         }
     }
+}
+
+@available(iOS 13, *)
+extension SettingsView {
+    
+    final class Bind <Root, Value> : BindableObject, BindingConvertible {
+        
+        var root: Root
+        let keyPath: WritableKeyPath<Root, Value>
+        let willChange = PassthroughSubject<Bind<Root, Value>, Never>()
+        
+        init(_ root: Root, keyPath: WritableKeyPath<Root, Value>) {
+            self.root = root
+            self.keyPath = keyPath
+        }
+        
+        var binding: Binding<Value> {
+            return Binding(
+                getValue: { self.root[keyPath: self.keyPath] },
+                setValue: {
+                    self.root[keyPath: self.keyPath] = $0
+                    self.willChange.send(self)
+                }
+            )
+        }
+    }
+    /*
+    final class ViewModel: BindableObject {
+        
+        let preferences: Preferences
+        
+        var willChange = PassthroughSubject<ViewModel, Never>()
+        
+        init(preferences: Preferences = .shared) {
+            self.preferences = preferences
+        }
+        
+        var timeout: TimeInterval
+        
+        var writeWithoutResponseTimeout: TimeInterval {
+            get { preferences.writeWithoutResponseTimeout }
+            set {
+                preferences.writeWithoutResponseTimeout = newValue
+                willChange.send(self)
+            }
+        }
+        
+        var packetReceiptNotification: Double {
+            get { .init(preferences.writeWithoutResponseTimeout) }
+            set {
+                preferences.writeWithoutResponseTimeout = .init(newValue)
+                willChange.send(self)
+            }
+        }
+        
+        var showPowerAlert: Bool {
+            get { preferences.showPowerAlert }
+            set {
+                preferences.showPowerAlert = newValue
+                willChange.send(self)
+            }
+        }
+    }*/
 }
 
 @available(iOS 13, *)
@@ -105,7 +160,7 @@ extension SettingsView {
             VStack {
                 Spacer(minLength: 8)
                 HStack {
-                    title.lineLimit(1)
+                    title.lineLimit(2)
                     Spacer(minLength: 20)
                     text(value.value)
                 }
