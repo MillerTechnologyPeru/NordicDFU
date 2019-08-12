@@ -7,25 +7,31 @@
 //
 
 import Foundation
+import Combine
 
 /// Preferences
 public final class Preferences {
     
     public static let shared = Preferences()
     
-    internal let userDefaults: UserDefaults
+    private let userDefaults: UserDefaults
     
-    public var didChange: ((Key) -> ())?
-    
+    private var userInfo = [UserInfoKey: Any]()
+        
     public init(userDefaults: UserDefaults = .standard) {
         self.userDefaults = userDefaults
+        if #available(iOS 13.0, *) {
+            objectWillChange = ObservableObjectPublisher()
+        }
     }
     
     private subscript <T> (key: Key) -> T? {
         get { userDefaults.value(forKey: key.rawValue) as? T }
         set {
+            if #available(iOS 13.0, *) {
+                objectWillChange.send()
+            }
             userDefaults.set(newValue, forKey: key.rawValue)
-            didChange?(key)
         }
     }
 }
@@ -79,5 +85,54 @@ public extension Preferences {
         case packetReceiptNotification
         case scanDuration
         case devicesFilter
+    }
+}
+
+private extension Preferences {
+    
+    enum UserInfoKey {
+        case objectWillChange
+    }
+}
+
+@available(iOS 13.0, *)
+extension Preferences: ObservableObject {
+    
+    public private(set) var objectWillChange: ObservableObjectPublisher {
+        get { userInfo[.objectWillChange] as! ObservableObjectPublisher }
+        set { userInfo[.objectWillChange] = newValue }
+    }
+}
+
+@available(iOS 13, *)
+extension DeviceManager {
+    
+    func observe(preferences: Preferences) {
+        
+        apply(preferences: preferences)
+        let _ = preferences.objectWillChange.receive(on: DispatchQueue.main).sink { [weak self] in
+            self?.apply(preferences: preferences)
+        }
+    }
+    
+    func apply(preferences: Preferences) {
+        self.packetReceiptNotification.rawValue = preferences.packetReceiptNotification
+    }
+}
+
+@available(iOS 13, *)
+extension NativeCentral {
+    
+    func observe(preferences: Preferences) {
+        
+        apply(preferences: preferences)
+        let _ = preferences.objectWillChange.receive(on: DispatchQueue.main).sink { [weak self] in
+            self?.apply(preferences: preferences)
+        }
+    }
+    
+    func apply(preferences: Preferences) {
+        self.writeWithoutResponseTimeout = preferences.writeWithoutResponseTimeout
+        //self.options.showPowerAlert = preferences.showPowerAlert
     }
 }

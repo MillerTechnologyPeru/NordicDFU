@@ -9,41 +9,20 @@
 import Foundation
 import Bluetooth
 import GATT
-import NordicDFU
-
-#if os(iOS)
-
 import DarwinGATT
+import NordicDFU
 
 typealias NativeCentral = DarwinCentral
 
 private enum CentralCache {
     
-    static let options = DarwinCentral.Options(showPowerAlert: false, restoreIdentifier: nil)
+    static let options = DarwinCentral.Options(
+        showPowerAlert: false,
+        restoreIdentifier: nil
+    )
     
     static let central = DarwinCentral(options: options)
 }
-
-#elseif os(Android) || os(macOS)
-
-import Android
-import AndroidBluetooth
-import AndroidUIKit
-
-typealias NativeCentral = AndroidCentral
-
-private enum CentralCache {
-    
-    static let hostController = Android.Bluetooth.Adapter.default!
-    
-    static let context = UIApplication.shared.androidActivity
-    
-    static let options = AndroidCentral.Options()
-    
-    static let central = AndroidCentral(hostController: hostController, context: context, options: options)
-}
-
-#endif
 
 private extension CentralCache {
     

@@ -8,7 +8,10 @@
 
 import Foundation
 import UIKit
+
+#if canImport(SwiftUI)
 import SwiftUI
+#endif
 
 class SwiftUINavigationViewController: UINavigationController { }
 

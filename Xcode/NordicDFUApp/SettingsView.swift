@@ -15,44 +15,16 @@ struct SettingsView: View {
     
     // MARK: - Properties
     
-    @ObjectBinding
-    var store: Store = .shared
-    
-    var scanDuration: Binding<TimeInterval> {
-        Binding(store.preferences, keyPath: \.scanDuration)
-    }
-    
-    var timeout: Binding<TimeInterval> {
-        Binding(store.preferences, keyPath: \.timeout)
-    }
-    
-    var writeWithoutResponseTimeout: Binding<TimeInterval> {
-        Binding(store.preferences, keyPath: \.writeWithoutResponseTimeout)
-    }
-    
-    var packetReceiptNotification: Binding<Double> {
-        let preferences = self.store.preferences
-        return .init(
-            getValue: { .init(preferences.packetReceiptNotification) },
-            setValue: { preferences.packetReceiptNotification = .init($0) }
-        )
-    }
-    
-    var showPowerAlert: Binding<Bool> {
-        Binding(store.preferences, keyPath: \.showPowerAlert)
-    }
-    
-    var filterDuplicates: Binding<Bool> {
-        Binding(store.preferences, keyPath: \.filterDuplicates)
-    }
+    @ObservedObject
+    var preferences: Preferences = .shared
     
     // MARK: - View
     
     var body: some View {
         List {
             SliderCell(
-                title: Text("Scan Duration"),
-                value: scanDuration,
+                title: Text(verbatim: "Scan Duration"),
+                value: $preferences.scanDuration,
                 from: 1.0,
                 through: 10.0,
                 by: 0.1,
@@ -60,7 +32,7 @@ struct SettingsView: View {
             )
             SliderCell(
                 title: Text("Timeout"),
-                value: timeout,
+                value: $preferences.timeout,
                 from: 1.0,
                 through: 30.0,
                 by: 0.1,
@@ -68,7 +40,7 @@ struct SettingsView: View {
             )
             SliderCell(
                 title: Text("Write without Response Timeout"),
-                value: writeWithoutResponseTimeout,
+                value: $preferences.writeWithoutResponseTimeout,
                 from: 1.0,
                 through: 30.0,
                 by: 0.1,
@@ -76,27 +48,18 @@ struct SettingsView: View {
             )
             SliderCell(
                 title: Text("Packet Reciept Notification"),
-                value: packetReceiptNotification,
+                value: Binding(
+                    get: { .init(self.preferences.packetReceiptNotification) },
+                    set: { self.preferences.packetReceiptNotification = .init($0) }
+                ),
                 from: 0.0,
                 through: 25.0,
                 by: 1.0,
                 text: { $0 > 0 ? Text(verbatim: "\(Int($0))") : Text("Disabled") }
             )
-            Toggle("Show Power Alert", isOn: showPowerAlert)
-            Toggle("Filter Duplicates", isOn: filterDuplicates)
+            Toggle("Show Power Alert", isOn: $preferences.showPowerAlert)
+            Toggle("Filter Duplicates", isOn: $preferences.filterDuplicates)
         }
-    }
-}
-
-@available(iOS 13.0, *)
-extension Binding {
-    
-    init <T: AnyObject> (_ root: T, keyPath: ReferenceWritableKeyPath<T, Value>) {
-        
-        self.init(
-            getValue: { root[keyPath: keyPath] },
-            setValue: { root[keyPath: keyPath] = $0 }
-        )
     }
 }
 
@@ -142,7 +105,7 @@ extension SettingsView {
                     Spacer(minLength: 20)
                     text(value.value)
                 }
-                Slider(value: value, from: from, through: through, by: by)
+                Slider(value: value, in: from ... through, step: by)
             }
         }
     }
