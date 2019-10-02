@@ -1,8 +1,11 @@
-// swift-tools-version:4.1
+// swift-tools-version:5.0
 import PackageDescription
 
 _ = Package(
     name: "NordicDFU",
+    platforms: [
+        .macOS(.v10_11), .iOS(.v9), .tvOS(.v9), .watchOS(.v2)
+    ],
     products: [
         .library(
             name: "NordicDFU",
@@ -50,5 +53,5 @@ _ = Package(
             ]
         )
     ],
-    swiftLanguageVersions: [4]
+    swiftLanguageVersions: [.v5]
 )
