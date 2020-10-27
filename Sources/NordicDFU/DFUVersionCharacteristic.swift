@@ -16,7 +16,7 @@ public struct DFUVersionCharacteristic: GATTProfileCharacteristic, RawRepresenta
     
     public static let service: GATTProfileService.Type = DFUService.self
     
-    public static let properies: BitMaskOptionSet<GATT.Characteristic.Property> = [.read]
+    public static let properties: BitMaskOptionSet<GATT.CharacteristicProperty> = [.read]
     
     internal static let length = 2
     

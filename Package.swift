@@ -1,7 +1,7 @@
-// swift-tools-version:5.0
+// swift-tools-version:5.1
 import PackageDescription
 
-_ = Package(
+let package = Package(
     name: "NordicDFU",
     platforms: [
         .macOS(.v10_11), .iOS(.v9), .tvOS(.v9), .watchOS(.v2)

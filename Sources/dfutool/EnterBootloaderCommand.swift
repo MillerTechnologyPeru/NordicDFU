@@ -71,15 +71,15 @@ public struct EnterBootloaderCommand: DeviceCommand {
         
         let device = try self.scan(deviceManager)
         
-        try deviceManager.enterBootloader(for: device.peripheral, timeout: self.timeout)
+        try deviceManager.enterBootloader(for: device.scanData.peripheral, timeout: self.timeout)
         
-        print("\(device.peripheral) now in DFU mode")
+        print("\(device.scanData.peripheral) now in DFU mode")
     }
 }
 
 public extension EnterBootloaderCommand {
     
-    public enum Option: String, OptionProtocol {
+    enum Option: String, OptionProtocol {
         
         case peripheral
         case scanDuration = "scan"

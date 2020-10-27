@@ -84,9 +84,9 @@ public struct ScanCommand: ArgumentableCommand {
         
         try deviceManager.scan(duration: duration, timeout: timeout) {
             
-            devices.insert($0.peripheral)
+            devices.insert($0.scanData.peripheral)
             
-            let deviceInformation = "[\($0.peripheral)] \($0.type) \($0.mode)"
+            let deviceInformation = "[\($0.scanData.peripheral)] \($0.type) \($0.mode)"
             
             print(deviceInformation)
         }
@@ -95,7 +95,7 @@ public struct ScanCommand: ArgumentableCommand {
 
 public extension ScanCommand {
     
-    public enum Option: String, OptionProtocol {
+    enum Option: String, OptionProtocol {
         
         case duration
         case filterDuplicates = "filter"

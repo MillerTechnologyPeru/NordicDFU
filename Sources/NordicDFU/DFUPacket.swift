@@ -7,6 +7,7 @@
 
 import Foundation
 import Bluetooth
+import GATT
 
 /// DFU Packet
 public struct DFUPacket: GATTProfileCharacteristic {
@@ -15,7 +16,7 @@ public struct DFUPacket: GATTProfileCharacteristic {
     
     public static let service: GATTProfileService.Type = DFUService.self
     
-    public static let properies: BitMaskOptionSet<GATT.Characteristic.Property> = [.writeWithoutResponse]
+    public static let properties: BitMaskOptionSet<GATT.CharacteristicProperty> = [.writeWithoutResponse]
     
     internal let packetSize: UInt32 = 20 // Legacy DFU does not support higher MTUs
     

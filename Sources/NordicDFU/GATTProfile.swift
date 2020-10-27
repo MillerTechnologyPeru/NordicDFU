@@ -34,13 +34,13 @@ public protocol GATTProfileService {
 }
 
 /// GATT Service Characteristic
-public protocol GATTProfileCharacteristic: GATTCharacteristic {
+public protocol GATTProfileCharacteristic {
     
     static var service: GATTProfileService.Type { get }
     
     static var uuid: BluetoothUUID { get }
     
-    static var properies: BitMaskOptionSet<GATT.Characteristic.Property> { get }
+    static var properties: BitMaskOptionSet<GATT.CharacteristicProperty> { get }
     
     init?(data: Data)
     
@@ -52,6 +52,6 @@ extension GATTProfileCharacteristic {
     static func matches <Peripheral: Peer> (_ characteristic: Characteristic<Peripheral>) -> Bool {
         
         return characteristic.uuid == uuid
-            && characteristic.properties.contains(properies)
+            && characteristic.properties.contains(properties)
     }
 }

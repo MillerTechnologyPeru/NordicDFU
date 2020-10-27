@@ -82,7 +82,7 @@ public struct UploadFirmwareCommand: DeviceCommand {
         
         let start = Date()
         
-        try deviceManager.uploadFirmware(zip.firmware, for: device.peripheral, timeout: timeout) {
+        try deviceManager.uploadFirmware(zip.firmware, for: device.scanData.peripheral, timeout: timeout) {
             switch $0 {
             case .write: break
             /*
@@ -103,7 +103,7 @@ public struct UploadFirmwareCommand: DeviceCommand {
 
 public extension UploadFirmwareCommand {
     
-    public enum Option: String, OptionProtocol {
+    enum Option: String, OptionProtocol {
         
         case peripheral
         case scanDuration = "scan"

@@ -35,7 +35,7 @@ internal extension DeviceCommand {
 
 extension DeviceCommand {
     
-    func scan <Central: CentralProtocol> (_ deviceManager: NordicDeviceManager<Central>) throws -> NordicPeripheral<Central.Peripheral> {
+    func scan <Central: CentralProtocol> (_ deviceManager: NordicDeviceManager<Central>) throws -> NordicPeripheral<Central.Peripheral, Central.Advertisement> {
         
         let peripheral = self.peripheral
         
@@ -43,12 +43,12 @@ extension DeviceCommand {
         
         let start = Date()
         
-        var foundDevice: NordicPeripheral<Central.Peripheral>?
+        var foundDevice: NordicPeripheral<Central.Peripheral, Central.Advertisement>?
         
         try deviceManager.scan(duration: self.scanDuration, filterDuplicates: self.filterDuplicates, filterPeripherals: { $0.filter({ $0.peripheral.identifier.description == peripheral }) }, foundDevice: {
             
             // find matching peripheral by MAC address
-            if $0.peripheral.identifier.description == peripheral {
+            if $0.scanData.peripheral.identifier.description == peripheral {
                 foundDevice = $0
             }
         })

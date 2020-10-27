@@ -7,12 +7,15 @@
 
 import Foundation
 import Bluetooth
+import GATT
 
 public enum SecureDFUControlPoint: GATTProfileCharacteristic {
     
     public static let uuid = BluetoothUUID(rawValue: "8EC90001-F315-4F60-9FB8-838830DAEA50")!
     
-    public static let properies: BitMaskOptionSet<GATT.Characteristic.Property> = [.write, .notify]
+    #if canImport(BluetoothGATT)
+    public static let properties: BitMaskOptionSet<GATT.CharacteristicProperty> = [.write, .notify]
+    #endif
     
     public static let service: GATTProfileService.Type = SecureDFUService.self
     

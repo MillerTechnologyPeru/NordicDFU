@@ -50,7 +50,7 @@ internal extension CentralProtocol {
         return try action(cache)
     }
     
-    func write <T: GATTCharacteristic> (_ characteristic: T,
+    func write <T: GATTProfileCharacteristic> (_ characteristic: T,
                                         for cache: GATTConnectionCache<Peripheral>,
                                         withResponse response: Bool = true,
                                         timeout: Timeout) throws {
@@ -61,7 +61,7 @@ internal extension CentralProtocol {
         try self.write(characteristic, for: foundCharacteristic, timeout: timeout)
     }
     
-    func write <T: GATTCharacteristic> (_ characteristic: T,
+    func write <T: GATTProfileCharacteristic> (_ characteristic: T,
                                         for foundCharacteristic: Characteristic<Peripheral>,
                                         withResponse response: Bool = true,
                                         timeout: Timeout) throws {
@@ -72,7 +72,7 @@ internal extension CentralProtocol {
                             timeout: try timeout.timeRemaining())
     }
     
-    func read <T: GATTCharacteristic> (_ characteristic: T.Type,
+    func read <T: GATTProfileCharacteristic> (_ characteristic: T.Type,
                                        for cache: GATTConnectionCache<Peripheral>,
                                        timeout: Timeout) throws -> T {
         
@@ -88,7 +88,7 @@ internal extension CentralProtocol {
         return value
     }
     
-    func notify <T: GATTCharacteristic> (_ characteristic: T.Type,
+    func notify <T: GATTProfileCharacteristic> (_ characteristic: T.Type,
                                          for cache: GATTConnectionCache<Peripheral>,
                                          timeout: Timeout,
                                          notification: ((ErrorValue<T>) -> ())?) throws {
@@ -99,7 +99,7 @@ internal extension CentralProtocol {
         try notify(characteristic, for: foundCharacteristic, timeout: timeout, notification: notification)
     }
     
-    func notify <T: GATTCharacteristic> (_ characteristic: T.Type,
+    func notify <T: GATTProfileCharacteristic> (_ characteristic: T.Type,
                                          for foundCharacteristic: Characteristic<Peripheral>,
                                          timeout: Timeout,
                                          notification: ((ErrorValue<T>) -> ())?) throws {

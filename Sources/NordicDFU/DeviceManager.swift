@@ -200,7 +200,7 @@ public final class NordicDeviceManager <Central: CentralProtocol> {
     }
 }
 
-public struct NordicPeripheral <Peripheral: Peer, Advertisement: AdvertisementDataProtocol>: Equatable {
+public struct NordicPeripheral <Peripheral: Peer, Advertisement: AdvertisementData>: Equatable {
     
     public let type: NordicPeripheralType
     

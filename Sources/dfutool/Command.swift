@@ -30,7 +30,7 @@ public enum Command {
 
 public extension Command {
     
-    public func execute <Central: CentralProtocol> (_ deviceManager: NordicDeviceManager<Central>) throws {
+    func execute <Central: CentralProtocol> (_ deviceManager: NordicDeviceManager<Central>) throws {
         
         switch self {
             case let .scan(command):
@@ -69,7 +69,7 @@ public extension ArgumentableCommand {
 
 public extension Command {
     
-    public init(arguments: [String]) throws {
+    init(arguments: [String]) throws {
         
         guard let commandTypeString = arguments.first
             else { throw CommandError.noCommand }

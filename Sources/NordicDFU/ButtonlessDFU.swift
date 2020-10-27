@@ -91,7 +91,7 @@ public struct ButtonlessDFUExperimental: ButtonlessDFUProtocol {
     
     public static let uuid = BluetoothUUID(rawValue: "8E400001-F315-4F60-9FB8-838830DAEA50")!
     
-    public static let properies: BitMaskOptionSet<GATT.Characteristic.Property> = [.write, .notify]
+    public static let properties: BitMaskOptionSet<GATT.CharacteristicProperty> = [.write, .notify]
     
     public static let service: GATTProfileService.Type = SecureDFUService.self
     
@@ -102,7 +102,6 @@ public struct ButtonlessDFUExperimental: ButtonlessDFUProtocol {
     public let rawValue: ButtonlessDFUValue
     
     public init(rawValue: ButtonlessDFUValue) {
-        
         self.rawValue = rawValue
     }
 }
@@ -111,7 +110,7 @@ public struct ButtonlessDFUWithoutBondSharing: ButtonlessDFUProtocol {
     
     public static let uuid = BluetoothUUID(rawValue: "8EC90003-F315-4F60-9FB8-838830DAEA50")!
     
-    public static let properies: BitMaskOptionSet<GATT.Characteristic.Property> = [.write, .indicate]
+    public static let properties: BitMaskOptionSet<GATT.CharacteristicProperty> = [.write, .indicate]
     
     public static let service: GATTProfileService.Type = SecureDFUService.self
     
@@ -131,7 +130,7 @@ public struct ButtonlessDFUWithBondSharing: ButtonlessDFUProtocol {
     
     public static let uuid = BluetoothUUID(rawValue: "8EC90004-F315-4F60-9FB8-838830DAEA50")!
     
-    public static let properies: BitMaskOptionSet<GATT.Characteristic.Property> = [.write, .indicate]
+    public static let properties: BitMaskOptionSet<GATT.CharacteristicProperty> = [.write, .indicate]
     
     public static let service: GATTProfileService.Type = SecureDFUService.self
     
