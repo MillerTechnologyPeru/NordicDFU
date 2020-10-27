@@ -39,6 +39,10 @@ playground.xcworkspace
 # Package.pins
 # Package.resolved
 .build/
+*.resolved
+.swiftpm
+NordicDFU.xcodeproj/*
+
 
 # CocoaPods
 #
@@ -63,5 +67,3 @@ fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
 
-# SPM Generated
-NordicDFU.xcodeproj/*
