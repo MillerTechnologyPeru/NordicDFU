@@ -44,9 +44,10 @@ let package = Package(
             .branch("master")
         ),
         .package(
+            name: "ZIPFoundation",
             url: "https://github.com/PureSwift/Zip.git",
             .branch("master")
-        ),
+        )
     ],
     targets: [
         .target(
